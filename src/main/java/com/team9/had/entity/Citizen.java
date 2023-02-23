@@ -17,19 +17,19 @@ public class Citizen {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Integer uhaid;
+    private Integer id;
 
     @Column(nullable = false)
-    private String firstName;
+    private String fname;
 
     @Column(nullable = false)
-    private String lastName;
+    private String lname;
 
     @Column(nullable = false)
     private char gender;
 
     @Column(nullable = false)
-    private Date dateOfBirth;
+    private Date dob;
 
     @Column(nullable = false)
     private String street1;

@@ -37,6 +37,4 @@ public class Hospital {
 
     @Column(name = "contactNo", nullable = false, unique = true)
     private String contactNo;
-
-
 }
