@@ -25,6 +25,8 @@ public class ServiceForReceptionistImpl implements ServiceForReceptionist{
             healthRecord.setCreationTime(new Time(System.currentTimeMillis()));
             healthRecord.setStatus(Constant.HEALTH_RECORD_NOT_ASSESSED);
             healthRecordRepository.save(healthRecord);
+            // Koi bija hospital no doctor aavi gayo to
+            // health record ma receptionist aavse many to one
             return true;
         }
         catch(Exception e){

@@ -12,13 +12,14 @@ import java.io.Serializable;
 
 @RestController
 @RequestMapping("/doctor")
+@CrossOrigin(originPatterns = "*")
 public class ControllerForDoctor {
 
     @Autowired
     private ServiceForDoctor serviceForDoctor;
     @GetMapping("/getNewHealthRecords")
-    public ResponseEntity<Serializable> getNewHealthRecords(@RequestBody LoginModel loginModel){
-        Serializable obj = serviceForDoctor.getNewHealthRecords(loginModel);
+    public ResponseEntity<Serializable> getNewHealthRecords(@RequestParam String loginId){
+        Serializable obj = serviceForDoctor.getNewHealthRecords(loginId);
         if(obj != null){
             return new ResponseEntity<>(obj, HttpStatusCode.valueOf(200));
         }
@@ -28,8 +29,8 @@ public class ControllerForDoctor {
     }
 
     @GetMapping("/getOldHealthRecords")
-    public ResponseEntity<Serializable> getOldHealthRecords(@RequestBody LoginModel loginModel){
-        Serializable obj = serviceForDoctor.getOldHealthRecords(loginModel);
+    public ResponseEntity<Serializable> getOldHealthRecords(@RequestParam String loginId){
+        Serializable obj = serviceForDoctor.getOldHealthRecords(loginId);
         if(obj != null){
             return new ResponseEntity<>(obj, HttpStatusCode.valueOf(200));
         }

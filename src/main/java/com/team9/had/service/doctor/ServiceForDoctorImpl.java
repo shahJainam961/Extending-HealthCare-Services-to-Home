@@ -18,13 +18,13 @@ public class ServiceForDoctorImpl implements ServiceForDoctor{
     private HealthRecordRepository healthRecordRepository;
 
     @Override
-    public Serializable getNewHealthRecords(LoginModel loginModel) {
+    public Serializable getNewHealthRecords(String loginId) {
         ArrayList<Object> obj = new ArrayList<>();
 
         ArrayList<HealthRecord> healthRecordList =
                 healthRecordRepository
                 .findAllByDoctor_LoginIdAndStatusAndCreationDateOrderByCreationTime(
-                        loginModel.getLoginId(), Constant.HEALTH_RECORD_NOT_ASSESSED,
+                        loginId, Constant.HEALTH_RECORD_NOT_ASSESSED,
                         new Date(System.currentTimeMillis())
                 );
         if(healthRecordList==null) return null;
@@ -33,13 +33,13 @@ public class ServiceForDoctorImpl implements ServiceForDoctor{
     }
 
     @Override
-    public Serializable getOldHealthRecords(LoginModel loginModel) {
+    public Serializable getOldHealthRecords(String loginId) {
         ArrayList<Object> obj = new ArrayList<>();
 
         ArrayList<HealthRecord> healthRecordList =
                 healthRecordRepository
                         .findAllByDoctor_LoginIdAndStatusOrderByCreationDateDescCreationTimeDesc(
-                                loginModel.getLoginId(), Constant.HEALTH_RECORD_ASSESSED
+                                loginId, Constant.HEALTH_RECORD_ASSESSED
                         );
         if(healthRecordList==null) return null;
         obj.add(healthRecordList);
@@ -57,6 +57,4 @@ public class ServiceForDoctorImpl implements ServiceForDoctor{
         }
         return true;
     }
-
-
 }

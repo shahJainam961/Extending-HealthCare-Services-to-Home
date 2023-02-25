@@ -6,9 +6,9 @@ import com.team9.had.service.login.LoginModel;
 import java.io.Serializable;
 
 public interface ServiceForDoctor {
-    Serializable getNewHealthRecords(LoginModel loginModel);
+    Serializable getNewHealthRecords(String loginId);
 
-    Serializable getOldHealthRecords(LoginModel loginModel);
+    Serializable getOldHealthRecords(String loginId);
 
     boolean submitHealthRecord(HealthRecord healthRecord);
 }

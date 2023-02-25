@@ -5,20 +5,17 @@ import com.team9.had.service.login.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
 import java.io.Serializable;
 
 @RestController
 @RequestMapping("/common")
+@CrossOrigin(originPatterns = "*")
 public class LoginController {
 
     @Autowired
     private LoginService loginService;
-    @GetMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<Serializable> loggingIn(@RequestBody LoginModel loginModel){
         Serializable obj = loginService.loggingIn(loginModel);
         if(obj != null){
@@ -28,5 +25,4 @@ public class LoginController {
             return new ResponseEntity<>(null, HttpStatusCode.valueOf(401));
         }
     }
-
 }
