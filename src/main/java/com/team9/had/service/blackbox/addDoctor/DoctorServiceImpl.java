@@ -1,9 +1,11 @@
 package com.team9.had.service.blackbox.addDoctor;
 
+import com.team9.had.Constant;
 import com.team9.had.entity.Citizen;
 import com.team9.had.entity.Doctor;
 import com.team9.had.repository.CitizenRepository;
 import com.team9.had.repository.DoctorRepository;
+import org.apache.tomcat.util.bcel.Const;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +28,7 @@ public class DoctorServiceImpl implements DoctorService {
                 System.out.println("citizen = " + citizen);
                 String creds = "DOC"+citizen.getId();
                 doctor.setLoginId(creds);
-                doctor.setPassword(creds);
+                doctor.setPassword(Constant.passwordEncode().encode(creds));
                 doctorRepository.save(doctor);
                 return true;
             }
