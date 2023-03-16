@@ -1,5 +1,6 @@
 package com.team9.had.service.blackbox.addFieldHealthWorker;
 
+import com.team9.had.Constant;
 import com.team9.had.entity.Citizen;
 import com.team9.had.entity.FieldHealthWorker;
 import com.team9.had.repository.CitizenRepository;
@@ -24,7 +25,7 @@ public class FieldHealthWorkerServiceImpl implements FieldHealthWorkerService {
                 System.out.println("citizen = " + citizen);
                 String creds = "FHW"+citizen.getId();
                 fieldHealthWorker.setLoginId(creds);
-                fieldHealthWorker.setPassword(creds);
+                fieldHealthWorker.setPassword(Constant.passwordEncode().encode(creds));
                 fieldHealthWorker.setEnabled(true);
                 fieldHealthWorker.setNoOfCitizensUnderTaken(0);
                 fieldHealthWorkerRepository.save(fieldHealthWorker);

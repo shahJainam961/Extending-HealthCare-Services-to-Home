@@ -1,5 +1,6 @@
 package com.team9.had.service.blackbox.addSupervisor;
 
+import com.team9.had.Constant;
 import com.team9.had.entity.Citizen;
 import com.team9.had.entity.Supervisor;
 import com.team9.had.repository.CitizenRepository;
@@ -24,7 +25,7 @@ public class SupervisorServiceImpl implements SupervisorService {
                 Citizen citizen = citizenRepository.findById(supervisor.getCitizen().getId()).get();
                 String creds = "SUP"+citizen.getId();
                 supervisor.setLoginId(creds);
-                supervisor.setPassword(creds);
+                supervisor.setPassword(Constant.passwordEncode().encode(creds));
                 supervisorRepository.save(supervisor);
                 return true;
             }

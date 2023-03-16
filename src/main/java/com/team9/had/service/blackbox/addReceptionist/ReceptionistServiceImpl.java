@@ -1,5 +1,6 @@
 package com.team9.had.service.blackbox.addReceptionist;
 
+import com.team9.had.Constant;
 import com.team9.had.entity.Citizen;
 import com.team9.had.entity.Receptionist;
 import com.team9.had.repository.CitizenRepository;
@@ -25,7 +26,7 @@ public class ReceptionistServiceImpl implements ReceptionistService {
                 System.out.println("citizen = " + citizen);
                 String creds = "REC"+citizen.getId();
                 receptionist.setLoginId(creds);
-                receptionist.setPassword(creds);
+                receptionist.setPassword(Constant.passwordEncode().encode(creds));
                 receptionistRepository.save(receptionist);
                 return true;
             }

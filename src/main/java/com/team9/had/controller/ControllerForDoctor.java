@@ -1,8 +1,8 @@
 package com.team9.had.controller;
 
+import com.team9.had.Constant;
 import com.team9.had.entity.HealthRecord;
 import com.team9.had.service.doctor.ServiceForDoctor;
-import com.team9.had.service.login.LoginModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -18,25 +18,32 @@ public class ControllerForDoctor {
     @Autowired
     private ServiceForDoctor serviceForDoctor;
     @GetMapping("/getNewHealthRecords")
-    public ResponseEntity<Serializable> getNewHealthRecords(@RequestParam String loginId){
-        Serializable obj = serviceForDoctor.getNewHealthRecords(loginId);
-        if(obj != null){
-            return new ResponseEntity<>(obj, HttpStatusCode.valueOf(200));
+    public ResponseEntity<Serializable> getNewHealthRecords(@RequestParam String loginId, @RequestAttribute String role){
+
+        if(isValid(role)){
+            Serializable obj = serviceForDoctor.getNewHealthRecords(loginId);
+            if(obj != null){
+                return new ResponseEntity<>(obj, HttpStatusCode.valueOf(200));
+            }
+            else{
+                return new ResponseEntity<>(null, HttpStatusCode.valueOf(401));
+            }
         }
-        else{
-            return new ResponseEntity<>(null, HttpStatusCode.valueOf(401));
-        }
+        return new ResponseEntity<>(null, HttpStatusCode.valueOf(401));
     }
 
     @GetMapping("/getOldHealthRecords")
-    public ResponseEntity<Serializable> getOldHealthRecords(@RequestParam String loginId){
-        Serializable obj = serviceForDoctor.getOldHealthRecords(loginId);
-        if(obj != null){
-            return new ResponseEntity<>(obj, HttpStatusCode.valueOf(200));
+    public ResponseEntity<Serializable> getOldHealthRecords(@RequestParam String loginId, @RequestAttribute String role){
+        if(isValid(role)){
+            Serializable obj = serviceForDoctor.getOldHealthRecords(loginId);
+            if(obj != null){
+                return new ResponseEntity<>(obj, HttpStatusCode.valueOf(200));
+            }
+            else{
+                return new ResponseEntity<>(null, HttpStatusCode.valueOf(401));
+            }
         }
-        else{
-            return new ResponseEntity<>(null, HttpStatusCode.valueOf(401));
-        }
+        return new ResponseEntity<>(null, HttpStatusCode.valueOf(401));
     }
 
     @PostMapping("/submitHealthRecord")
@@ -50,4 +57,7 @@ public class ControllerForDoctor {
         }
     }
 
+    public boolean isValid(String role){
+        return role.startsWith(Constant.DOCTOR);
+    }
 }
