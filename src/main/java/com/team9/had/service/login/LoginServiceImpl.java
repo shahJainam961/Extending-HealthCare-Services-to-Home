@@ -53,6 +53,7 @@ public class LoginServiceImpl implements LoginService{
 //               }
 //               else return null;
 //           }
+
             return true;
         }
         else if(loginId.startsWith(Constant.RECEPTIONIST)){
