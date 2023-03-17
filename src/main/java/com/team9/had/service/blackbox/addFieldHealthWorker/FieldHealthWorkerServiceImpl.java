@@ -20,14 +20,12 @@ public class FieldHealthWorkerServiceImpl implements FieldHealthWorkerService {
     @Override
     public boolean addFhw(FieldHealthWorker fieldHealthWorker) {
         try{
-            if(citizenRepository.findById(fieldHealthWorker.getCitizen().getId())!=null && fieldHealthWorkerRepository.findByCitizen_Id(fieldHealthWorker.getCitizen().getId())==null) {
-                Citizen citizen = citizenRepository.findById(fieldHealthWorker.getCitizen().getId()).get();
+            if(citizenRepository.findById(fieldHealthWorker.getCitizen().getUhId())!=null && fieldHealthWorkerRepository.findByCitizenUhId(fieldHealthWorker.getCitizen().getUhId())==null) {
+                Citizen citizen = citizenRepository.findById(fieldHealthWorker.getCitizen().getUhId()).get();
                 System.out.println("citizen = " + citizen);
-                String creds = "FHW"+citizen.getId();
+                String creds = "FHW"+citizen.getUhId();
                 fieldHealthWorker.setLoginId(creds);
                 fieldHealthWorker.setPassword(Constant.passwordEncode().encode(creds));
-                fieldHealthWorker.setEnabled(true);
-                fieldHealthWorker.setNoOfCitizensUnderTaken(0);
                 fieldHealthWorkerRepository.save(fieldHealthWorker);
                 return true;
             }

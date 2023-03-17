@@ -1,7 +1,7 @@
 package com.team9.had.service.doctor;
 
 import com.team9.had.entity.HealthRecord;
-import com.team9.had.service.login.LoginModel;
+import com.team9.had.model.HealthRecordModel;
 
 import java.io.Serializable;
 
@@ -10,5 +10,5 @@ public interface ServiceForDoctor {
 
     Serializable getOldHealthRecords(String loginId);
 
-    boolean submitHealthRecord(HealthRecord healthRecord);
+    boolean submitHealthRecord(HealthRecordModel healthRecordModel);
 }

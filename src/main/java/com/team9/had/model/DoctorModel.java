@@ -1,5 +1,6 @@
-package com.team9.had.service.login;
+package com.team9.had.model;
 
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,8 +10,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class LoginModel {
-
+public class DoctorModel {
     private String loginId;
-    private String password;
+    private CitizenModel citizen;
+    private HospitalModel hospital;
 }

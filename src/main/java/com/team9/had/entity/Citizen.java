@@ -17,7 +17,7 @@ public class Citizen {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Integer id;
+    private Integer uhId;
 
     @Column(nullable = false)
     private String fname;
@@ -33,8 +33,6 @@ public class Citizen {
 
     @Column(nullable = false)
     private String street1;
-
-    private String street2;
 
     @Column(nullable = false)
     private String city;

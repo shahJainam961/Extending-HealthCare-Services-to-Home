@@ -15,16 +15,13 @@ public class Hospital {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Integer id;
+    private Integer hospId;
 
     @Column(name = "name", nullable = false)
     private String name;
 
     @Column(name = "street1", nullable = false)
     private String street1;
-
-    @Column(name = "street2")
-    private String street2;
 
     @Column(name = "city", nullable = false)
     private String city;

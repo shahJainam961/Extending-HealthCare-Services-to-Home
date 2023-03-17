@@ -21,10 +21,10 @@ public class ReceptionistServiceImpl implements ReceptionistService {
     @Override
     public boolean addReceptionist(Receptionist receptionist) {
         try{
-            if(citizenRepository.findById(receptionist.getCitizen().getId())!=null && receptionistRepository.findByCitizen_Id(receptionist.getCitizen().getId())==null) {
-                Citizen citizen = citizenRepository.findById(receptionist.getCitizen().getId()).get();
+            if(citizenRepository.findById(receptionist.getCitizen().getUhId())!=null && receptionistRepository.findByCitizenUhId(receptionist.getCitizen().getUhId())==null) {
+                Citizen citizen = citizenRepository.findById(receptionist.getCitizen().getUhId()).get();
                 System.out.println("citizen = " + citizen);
-                String creds = "REC"+citizen.getId();
+                String creds = "REC"+citizen.getUhId();
                 receptionist.setLoginId(creds);
                 receptionist.setPassword(Constant.passwordEncode().encode(creds));
                 receptionistRepository.save(receptionist);

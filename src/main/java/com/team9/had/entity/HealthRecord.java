@@ -18,7 +18,7 @@ public class HealthRecord {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Integer id;
+    private Integer hrId;
 
     @Column(nullable = false)
     private Date creationDate;
@@ -27,35 +27,23 @@ public class HealthRecord {
     private Time creationTime;
 
     @Column(nullable = false)
-    private String currentStreet1;
-
-    private String currentStreet2;
+    private String street1;
 
     @Column(nullable = false)
-    private String currentCity;
+    private String city;
 
     @Column(nullable = false)
-    private String currentState;
+    private String state;
 
     @Column(nullable = false)
-    private String currentPincode;
+    private String pincode;
 
-    private String symptoms;
-
-    private Double bodyTemperature;
-
-    private Double pulseRate;
-
-    private Double respirationRate;
-
-    private Double bloodPressure;
-    // Body temperature, Pulse rate, Respiration rate (rate of breathing)
-    // Blood pressure (Blood pressure is not considered a vital sign, but is often measured along with the vital signs)
-
-    private String prescription;
-
+    private String fields;
+    private String fieldsValues;
     private String conclusion;
-
+    private String prescription;
+    @Column(nullable = false)
+    private String mobileNo;
     @ManyToOne
     @JoinColumn(name = "doctor_login_id", nullable = false)
     private Doctor doctor;
@@ -67,6 +55,10 @@ public class HealthRecord {
     @ManyToOne
     @JoinColumn(name = "field_health_worker_login_id")
     private FieldHealthWorker fieldHealthWorker;
+
+    @ManyToOne
+    @JoinColumn(name = "supervisor_login_id")
+    private Supervisor supervisor;
 
     @Column(nullable = false)
     private Integer status;

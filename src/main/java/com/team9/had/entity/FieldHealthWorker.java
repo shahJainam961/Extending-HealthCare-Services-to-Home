@@ -35,17 +35,6 @@ public class FieldHealthWorker implements UserDetails {
 
     private String pin;
 
-    @Column(nullable = false)
-    private Boolean enabled;
-
-    @Column(nullable = false)
-    private Integer noOfCitizensUnderTaken;
-
-//    private Integer numberOfTaskCurrentlyAssigned;
-//    private Integer numberOfTaskAssigned;
-//    private Integer numberOfTaskCompleted;
-//    private Integer numberOfTaskBacklogged;
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;

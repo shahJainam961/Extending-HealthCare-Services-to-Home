@@ -2,6 +2,7 @@ package com.team9.had.controller;
 
 import com.team9.had.Constant;
 import com.team9.had.entity.HealthRecord;
+import com.team9.had.model.HealthRecordModel;
 import com.team9.had.service.doctor.ServiceForDoctor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
@@ -47,14 +48,18 @@ public class ControllerForDoctor {
     }
 
     @PostMapping("/submitHealthRecord")
-    public ResponseEntity<Serializable> submitHealthRecord(@RequestBody HealthRecord healthRecord){
-        Serializable obj = serviceForDoctor.submitHealthRecord(healthRecord);
-        if(obj != null){
-            return new ResponseEntity<>(obj, HttpStatusCode.valueOf(200));
+    public ResponseEntity<Serializable> submitHealthRecord(@RequestBody HealthRecordModel healthRecordModel, @RequestAttribute String role){
+//        HealthRecordModel healthRecordModel = Constant.getObjectMapper().convertValue(obj1, HealthRecordModel.class);
+        if(isValid(role)){
+            Serializable obj = serviceForDoctor.submitHealthRecord(healthRecordModel);
+            if(obj != null){
+                return new ResponseEntity<>(obj, HttpStatusCode.valueOf(200));
+            }
+            else{
+                return new ResponseEntity<>(null, HttpStatusCode.valueOf(401));
+            }
         }
-        else{
-            return new ResponseEntity<>(null, HttpStatusCode.valueOf(401));
-        }
+        return new ResponseEntity<>(null, HttpStatusCode.valueOf(401));
     }
 
     public boolean isValid(String role){

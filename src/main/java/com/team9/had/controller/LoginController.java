@@ -6,15 +6,13 @@ import com.team9.had.entity.Doctor;
 import com.team9.had.entity.FieldHealthWorker;
 import com.team9.had.entity.Receptionist;
 import com.team9.had.entity.Supervisor;
-import com.team9.had.repository.DoctorRepository;
-import com.team9.had.service.login.LoginModel;
+import com.team9.had.model.LoginModel;
 import com.team9.had.service.login.LoginService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import java.io.Serializable;
 

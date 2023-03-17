@@ -8,7 +8,9 @@ import java.util.ArrayList;
 
 @Repository
 public interface DoctorRepository extends JpaRepository<Doctor, String> {
-    Doctor findByCitizen_Id(Integer id);
+    Doctor findByCitizenUhId(Integer id);
 
-    ArrayList<Doctor> findAllByHospital_Id(Integer id);
+    ArrayList<Doctor> findAllByHospitalHospId(Integer id);
+
+    Doctor findByLoginId(String loginId);
 }
