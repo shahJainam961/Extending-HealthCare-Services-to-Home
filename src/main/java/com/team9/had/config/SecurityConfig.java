@@ -1,8 +1,6 @@
 package com.team9.had.config;
 
-import jakarta.servlet.Filter;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -29,6 +27,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests()
                 .requestMatchers("/common/**").permitAll()
                 .requestMatchers("/blackbox/**").permitAll()
+                .requestMatchers("/receptionist/**").permitAll()
+                .requestMatchers("/doctor/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)

@@ -1,7 +1,6 @@
 package com.team9.had.controller;
 
 import com.team9.had.Constant;
-import com.team9.had.entity.HealthRecord;
 import com.team9.had.model.HealthRecordModel;
 import com.team9.had.service.doctor.ServiceForDoctor;
 import org.springframework.beans.factory.annotation.Autowired;

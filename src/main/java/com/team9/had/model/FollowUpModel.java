@@ -1,7 +1,5 @@
 package com.team9.had.model;
 
-import com.team9.had.entity.HealthRecord;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

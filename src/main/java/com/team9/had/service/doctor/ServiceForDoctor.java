@@ -1,6 +1,5 @@
 package com.team9.had.service.doctor;
 
-import com.team9.had.entity.HealthRecord;
 import com.team9.had.model.HealthRecordModel;
 
 import java.io.Serializable;

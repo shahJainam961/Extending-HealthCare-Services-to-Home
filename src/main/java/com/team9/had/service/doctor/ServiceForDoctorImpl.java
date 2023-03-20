@@ -9,14 +9,12 @@ import com.team9.had.model.FollowUpModel;
 import com.team9.had.model.HealthRecordModel;
 import com.team9.had.repository.FollowUpRepository;
 import com.team9.had.repository.HealthRecordRepository;
-import org.apache.tomcat.util.bcel.Const;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
 import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Optional;
 
 @Service
 public class ServiceForDoctorImpl implements ServiceForDoctor{
@@ -64,18 +62,9 @@ public class ServiceForDoctorImpl implements ServiceForDoctor{
             }
             healthRecordModels.add(healthRecordModel);
         }
-
-//        healthRecordList.stream().forEach(healthRecord -> {
-//            HealthRecordModel healthRecordModel = Constant.getModelMapper().map(healthRecord, HealthRecordModel.class);
-//            followUpRepository.findByHealthRecord_HrId(healthRecord.getHrId()).stream().forEach(followUp -> {
-//                healthRecordModel.getFollowUps().add(Constant.getModelMapper().map(followUp, FollowUpModel.class));
-//            });
-//            healthRecordModels.add(healthRecordModel);
-//        });
         obj.add(healthRecordModels);
         return obj;
     }
-
     @Override
     public boolean submitHealthRecord(HealthRecordModel healthRecordModel) {
         ArrayList<FollowUp> followUps = new ArrayList<>();
@@ -88,13 +77,15 @@ public class ServiceForDoctorImpl implements ServiceForDoctor{
         healthRecord.setStatus(Constant.HEALTH_RECORD_ASSESSED);
         healthRecord.setConclusion(healthRecordModel.getConclusion());
         healthRecord.setPrescription(healthRecordModel.getPrescription());
+        healthRecord.setFieldHealthWorker(getFieldHealthWorker(healthRecord));
         healthRecord.setSupervisor(getSupervisor());
-        healthRecord.setFieldHealthWorker(getFieldHealthWorker());
+
+        // todo logic for getting FieldHealthWorker and getting Supervisor remaining
         try{
             healthRecordRepository.save(healthRecord);
             followUps.stream().forEach(followUp -> {
                 followUp.setHealthRecord(healthRecord);
-                followUp.setSecretKey(Constant.generateOtp()); // todo generate unique SecretKey
+                followUp.setSecretKey(Constant.generateOtp());
                 followUp.setStatus(Constant.FOLLOW_UP_PENDING);
                 followUpRepository.save(followUp);
             });
@@ -106,7 +97,7 @@ public class ServiceForDoctorImpl implements ServiceForDoctor{
         return true;
     }
 
-    private FieldHealthWorker getFieldHealthWorker() {
+    private FieldHealthWorker getFieldHealthWorker(HealthRecord healthRecord) {
         return null;
     }
 

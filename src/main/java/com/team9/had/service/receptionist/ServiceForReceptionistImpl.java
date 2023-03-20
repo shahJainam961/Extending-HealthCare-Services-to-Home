@@ -2,8 +2,6 @@ package com.team9.had.service.receptionist;
 
 import com.team9.had.Constant;
 import com.team9.had.entity.HealthRecord;
-import com.team9.had.repository.CitizenRepository;
-import com.team9.had.repository.DoctorRepository;
 import com.team9.had.repository.HealthRecordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
