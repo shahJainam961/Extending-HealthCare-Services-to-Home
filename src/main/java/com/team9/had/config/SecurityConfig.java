@@ -29,6 +29,7 @@ public class SecurityConfig {
                 .requestMatchers("/blackbox/**").permitAll()
                 .requestMatchers("/receptionist/**").permitAll()
                 .requestMatchers("/doctor/**").permitAll()
+                .requestMatchers("/fhw/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
