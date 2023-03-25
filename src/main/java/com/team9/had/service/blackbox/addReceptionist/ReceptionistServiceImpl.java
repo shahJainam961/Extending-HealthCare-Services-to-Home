@@ -21,7 +21,7 @@ public class ReceptionistServiceImpl implements ReceptionistService {
     @Override
     public boolean addReceptionist(Receptionist receptionist) {
         try{
-            if(citizenRepository.findById(receptionist.getCitizen().getUhId())!=null && receptionistRepository.findByCitizenUhId(receptionist.getCitizen().getUhId())==null) {
+            if(citizenRepository.findById(receptionist.getCitizen().getUhId())!=null && receptionistRepository.findByCitizen_UhId(receptionist.getCitizen().getUhId())==null) {
                 Citizen citizen = citizenRepository.findById(receptionist.getCitizen().getUhId()).get();
                 System.out.println("citizen = " + citizen);
                 String creds = "REC"+citizen.getUhId();

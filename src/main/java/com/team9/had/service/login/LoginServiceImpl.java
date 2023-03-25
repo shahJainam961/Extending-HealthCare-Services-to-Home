@@ -3,9 +3,15 @@ package com.team9.had.service.login;
 import com.team9.had.Constant;
 import com.team9.had.entity.Doctor;
 import com.team9.had.entity.Receptionist;
-import com.team9.had.model.DoctorModel;
+import com.team9.had.entity.Supervisor;
+import com.team9.had.exception.DoctorNotFoundException;
+import com.team9.had.exception.ReceptionistNotFoundException;
+import com.team9.had.exception.SupervisorNotFoundException;
 import com.team9.had.model.LoginModel;
-import com.team9.had.model.ReceptionistModel;
+import com.team9.had.model.doc.DocModelForDoc;
+import com.team9.had.model.rec.DocModelForRec;
+import com.team9.had.model.rec.RecModelForRec;
+import com.team9.had.model.sup.SupModelForSup;
 import com.team9.had.repository.DoctorRepository;
 import com.team9.had.repository.FieldHealthWorkerRepository;
 import com.team9.had.repository.ReceptionistRepository;
@@ -34,7 +40,7 @@ public class LoginServiceImpl implements LoginService{
     private AuthenticationManager authenticationManager;
 
     @Override
-    public Serializable loggingIn(LoginModel loginModel) {
+    public Serializable loggingIn(LoginModel loginModel) throws DoctorNotFoundException, ReceptionistNotFoundException, SupervisorNotFoundException {
         String loginId = loginModel.getLoginId().trim();
         String password = loginModel.getPassword();
 
@@ -44,32 +50,51 @@ public class LoginServiceImpl implements LoginService{
                 )
         );
 
+
         if(loginId.startsWith(Constant.DOCTOR)){
             Doctor doctor = doctorRepository.findByLoginId(loginId);
+            if(doctor==null) throw new DoctorNotFoundException("Doctor Not Found!!");
+
             ArrayList<Object> obj = new ArrayList<>();
-            DoctorModel doctorModel = Constant.getModelMapper().map(doctor, DoctorModel.class);
-            obj.add(doctorModel);
+            DocModelForDoc docModelForDoc = Constant.getModelMapper().map(doctor, DocModelForDoc.class);
+            obj.add(docModelForDoc);
             return obj;
         }
+
         else if(loginId.startsWith(Constant.RECEPTIONIST)){
             Receptionist receptionist = receptionistRepository.findByLoginId(loginId);
+            if(receptionist==null) throw new ReceptionistNotFoundException("Receptionist Not Found!!");
+
             Integer hospitalId = receptionist.getHospital().getHospId();
-            ArrayList<Doctor> doctorList = doctorRepository.findAllByHospitalHospId(hospitalId);
-            ArrayList<DoctorModel> doctorModels = new ArrayList<>();
+            ArrayList<Doctor> doctors = doctorRepository.findAllByHospital_HospId(hospitalId);
+            ArrayList<DocModelForRec> docModelForRecs = new ArrayList<>();
             ArrayList<Object> obj = new ArrayList<>();
-            obj.add(Constant.getModelMapper().map(receptionist, ReceptionistModel.class));
-            doctorList.stream().forEach((doctor)->{
-                doctorModels.add(Constant.getModelMapper().map(doctor, DoctorModel.class));
+            obj.add(Constant.getModelMapper().map(receptionist, RecModelForRec.class));
+            doctors.stream().forEach((doctor)->{
+                docModelForRecs.add(Constant.getModelMapper().map(doctor, DocModelForRec.class));
             });
-            obj.add(doctorModels);
+            obj.add(docModelForRecs);
             return obj;
         }
         else if(loginId.startsWith(Constant.SUPERVISOR)){
-            return true;
+            Supervisor supervisor = supervisorRepository.findByLoginId(loginId);
+            if(supervisor==null) throw new SupervisorNotFoundException("Supervisor Not Found!!");
+
+            ArrayList<Object> obj = new ArrayList<>();
+            SupModelForSup supModelForSup = Constant.getModelMapper().map(supervisor, SupModelForSup.class);
+            obj.add(supModelForSup);
+            return obj;
         }
         else if(loginId.startsWith(Constant.FIELD_HEALTH_WORKER)){
-            return true;
+//            FieldHealthWorker fieldHealthWorker = fieldHealthWorkerRepository.findByLoginId(loginId);
+//            if(fieldHealthWorker==null) throw new SupervisorNotFoundException("FieldHealthWorker Not Found!!");
+//
+//            ArrayList<Object> obj = new ArrayList<>();
+//            FieldHealthWorkerModel fieldHealthWorkerModel = Constant.getModelMapper().map(fieldHealthWorker, FieldHealthWorkerModel.class);
+//            obj.add(fieldHealthWorkerModel);
+//            return obj;
+            return null;
         }
-        else return null;
+        else return Constant.EMPTY;
     }
 }

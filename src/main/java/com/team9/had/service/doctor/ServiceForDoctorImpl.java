@@ -5,10 +5,12 @@ import com.team9.had.entity.FieldHealthWorker;
 import com.team9.had.entity.FollowUp;
 import com.team9.had.entity.HealthRecord;
 import com.team9.had.entity.Supervisor;
-import com.team9.had.model.FollowUpModel;
-import com.team9.had.model.HealthRecordModel;
+import com.team9.had.model.doc.FupModelForDoc;
+import com.team9.had.model.doc.HrModelForDoc;
+import com.team9.had.repository.CitizenRepository;
 import com.team9.had.repository.FollowUpRepository;
 import com.team9.had.repository.HealthRecordRepository;
+import com.team9.had.repository.SupervisorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,23 +25,26 @@ public class ServiceForDoctorImpl implements ServiceForDoctor{
     private HealthRecordRepository healthRecordRepository;
     @Autowired
     private FollowUpRepository followUpRepository;
+    @Autowired
+    private CitizenRepository citizenRepository;
+    @Autowired
+    private SupervisorRepository supervisorRepository;
 
     @Override
     public Serializable getNewHealthRecords(String loginId) {
         ArrayList<Object> obj = new ArrayList<>();
 
-        ArrayList<HealthRecord> healthRecordList =
+        ArrayList<HealthRecord> healthRecords =
                 healthRecordRepository
                 .findAllByDoctor_LoginIdAndStatusAndCreationDateOrderByCreationTime(
                         loginId, Constant.HEALTH_RECORD_NOT_ASSESSED,
                         new Date(System.currentTimeMillis())
                 );
-        if(healthRecordList==null) return null;
-        ArrayList<HealthRecordModel> newHealthRecordForDoctors = new ArrayList<>();
-        healthRecordList.stream().forEach((healthRecord) -> {
-            newHealthRecordForDoctors.add(Constant.getModelMapper().map(healthRecord, HealthRecordModel.class));
+        ArrayList<HrModelForDoc> hrModelForDocs = new ArrayList<>();
+        healthRecords.stream().forEach((healthRecord) -> {
+            hrModelForDocs.add(Constant.getModelMapper().map(healthRecord, HrModelForDoc.class));
         });
-        obj.add(newHealthRecordForDoctors);
+        obj.add(hrModelForDocs);
         return obj;
     }
 
@@ -47,41 +52,41 @@ public class ServiceForDoctorImpl implements ServiceForDoctor{
     public Serializable getOldHealthRecords(String loginId) {
         ArrayList<Object> obj = new ArrayList<>();
 
-        ArrayList<HealthRecord> healthRecordList =
+        ArrayList<HealthRecord> healthRecords =
                 healthRecordRepository
                         .findAllByDoctor_LoginIdAndStatusOrderByCreationDateDescCreationTimeDesc(
                                 loginId, Constant.HEALTH_RECORD_ASSESSED
                         );
-        ArrayList<HealthRecordModel> healthRecordModels = new ArrayList<>();
+        ArrayList<HrModelForDoc> hrModelForDocs = new ArrayList<>();
 
-        for(HealthRecord healthRecord : healthRecordList){
-            HealthRecordModel healthRecordModel = Constant.getModelMapper().map(healthRecord, HealthRecordModel.class);
-            ArrayList<FollowUp> followUpList = followUpRepository.findByHealthRecord_HrId(healthRecord.getHrId());
-            for(FollowUp followUp : followUpList){
-                healthRecordModel.getFollowUps().add(Constant.getModelMapper().map(followUp, FollowUpModel.class));
+        for(HealthRecord healthRecord : healthRecords){
+            HrModelForDoc hrModelForDoc = Constant.getModelMapper().map(healthRecord, HrModelForDoc.class);
+            ArrayList<FollowUp> followUps = followUpRepository.findByHealthRecord_HrId(healthRecord.getHrId());
+            for(FollowUp followUp : followUps){
+                hrModelForDoc.getFollowUps().add(Constant.getModelMapper().map(followUp, FupModelForDoc.class));
             }
-            healthRecordModels.add(healthRecordModel);
+            hrModelForDocs.add(hrModelForDoc);
         }
-        obj.add(healthRecordModels);
+        obj.add(hrModelForDocs);
         return obj;
     }
     @Override
-    public boolean submitHealthRecord(HealthRecordModel healthRecordModel) {
-        ArrayList<FollowUp> followUps = new ArrayList<>();
-        healthRecordModel.getFollowUps().stream().forEach((followUpModel -> {
-            followUps.add(Constant.getModelMapper().map(followUpModel, FollowUp.class));
-        }));
-        HealthRecord healthRecord = healthRecordRepository.findByHrId(healthRecordModel.getHrId());
-        healthRecord.setFields(healthRecordModel.getFields());
-        healthRecord.setFieldsValues(healthRecordModel.getFieldsValues());
-        healthRecord.setStatus(Constant.HEALTH_RECORD_ASSESSED);
-        healthRecord.setConclusion(healthRecordModel.getConclusion());
-        healthRecord.setPrescription(healthRecordModel.getPrescription());
-        healthRecord.setFieldHealthWorker(getFieldHealthWorker(healthRecord));
-        healthRecord.setSupervisor(getSupervisor());
-
-        // todo logic for getting FieldHealthWorker and getting Supervisor remaining
+    public boolean submitHealthRecord(HrModelForDoc hrModelForDoc) {
         try{
+            ArrayList<FollowUp> followUps = new ArrayList<>();
+            hrModelForDoc.getFollowUps().stream().forEach((fupModelForDoc -> {
+                followUps.add(Constant.getModelMapper().map(fupModelForDoc, FollowUp.class));
+            }));
+            HealthRecord healthRecord = healthRecordRepository.findByHrId(hrModelForDoc.getHrId());
+            healthRecord.setFields(hrModelForDoc.getFields());
+            healthRecord.setFieldsValues(hrModelForDoc.getFieldsValues());
+            healthRecord.setStatus(Constant.HEALTH_RECORD_ASSESSED);
+            healthRecord.setConclusion(hrModelForDoc.getConclusion());
+            healthRecord.setTreatment(hrModelForDoc.getTreatment());
+            healthRecord.setPrescription(hrModelForDoc.getPrescription());
+            healthRecord.setFieldHealthWorker(getFieldHealthWorker(healthRecord));
+            healthRecord.setSupervisor(getSupervisor(healthRecord));
+
             healthRecordRepository.save(healthRecord);
             followUps.stream().forEach(followUp -> {
                 followUp.setHealthRecord(healthRecord);
@@ -97,11 +102,19 @@ public class ServiceForDoctorImpl implements ServiceForDoctor{
         return true;
     }
 
+
+    // todo modify the below function as per the requirement
     private FieldHealthWorker getFieldHealthWorker(HealthRecord healthRecord) {
-        return null;
+        FieldHealthWorker fieldHealthWorker = citizenRepository.findByUhId(healthRecord.getCitizen().getUhId()).getFieldHealthWorker();
+        if(fieldHealthWorker == null) return null;
+        if(!(fieldHealthWorker.getAssignedPincode().equals(healthRecord.getPincode()))) return null;
+        return fieldHealthWorker;
     }
 
-    private Supervisor getSupervisor() {
-        return null;
+    // todo modify the below function as per the requirement
+    private Supervisor getSupervisor(HealthRecord healthRecord) {
+        Supervisor supervisor = supervisorRepository.findByAssignedPincode(Constant.DISTRICT_TO_CODE.get(healthRecord.getDistrict()));
+        if(supervisor == null) return null;
+        return supervisor;
     }
 }

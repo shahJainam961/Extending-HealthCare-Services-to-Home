@@ -22,7 +22,7 @@ public class FieldHealthWorker implements UserDetails {
     private String loginId;
 
     @OneToOne
-    @JoinColumn(name = "citizen_id", unique = true, nullable = false)
+    @JoinColumn(name = "citizen_uh_id", unique = true, nullable = false)
     private Citizen citizen;
 
     @Column(nullable = false)

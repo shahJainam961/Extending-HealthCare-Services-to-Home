@@ -44,6 +44,9 @@ public class Citizen {
     private String pincode;
 
     @Column(nullable = false)
+    private String district;
+
+    @Column(nullable = false)
     private String mobileNo;
 
     @Column(unique = true, nullable = false)

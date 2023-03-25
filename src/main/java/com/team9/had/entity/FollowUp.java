@@ -19,10 +19,8 @@ public class FollowUp {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer fuId;
-
     @Column(nullable = false)
     private Date dateOfFollowUp;
-
     private Date actualDateOfFollowUp;
     private Time actualTimeOfFollowUp;
 
@@ -34,11 +32,15 @@ public class FollowUp {
 
     private String fields;
     private String fieldsValue;
+
     @ManyToOne
-    @JoinColumn(name = "health_record_id", nullable = false)
+    @JoinColumn(name = "health_record_hr_id", nullable = false)
     private HealthRecord healthRecord;
 
     @Column(nullable = false)
     private String secretKey;
 
+    private String observation;
+
+    private String reasonIfDelayed;
 }

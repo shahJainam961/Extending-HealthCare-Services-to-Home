@@ -22,7 +22,7 @@ public class DoctorServiceImpl implements DoctorService {
     @Override
     public boolean addDoctor(Doctor doctor) {
         try{
-            if(citizenRepository.findById(doctor.getCitizen().getUhId())!=null && doctorRepository.findByCitizenUhId(doctor.getCitizen().getUhId())==null) {
+            if(citizenRepository.findById(doctor.getCitizen().getUhId())!=null && doctorRepository.findByCitizen_UhId(doctor.getCitizen().getUhId())==null) {
                 Citizen citizen = citizenRepository.findById(doctor.getCitizen().getUhId()).get();
                 System.out.println("citizen = " + citizen);
                 String creds = "DOC"+citizen.getUhId();

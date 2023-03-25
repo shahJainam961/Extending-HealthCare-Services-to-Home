@@ -1,4 +1,4 @@
-package com.team9.had.model;
+package com.team9.had.model.doc;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,11 +8,13 @@ import lombok.Setter;
 import java.sql.Date;
 import java.sql.Time;
 
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class FollowUpModel {
+public class FupModelForDoc {
+
     private Integer fuId;
     private Date dateOfFollowUp;
     private Date actualDateOfFollowUp;
@@ -21,9 +23,7 @@ public class FollowUpModel {
     private String instruction;
     private String fields;
     private String fieldsValue;
-    private String secretKey;
-    private String street1;
-    private String city;
-    private String state;
-    private String pincode;
+    private String observation;
+    private String reasonIfDelayed;
+
 }

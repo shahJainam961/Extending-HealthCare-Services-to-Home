@@ -30,6 +30,9 @@ public class HealthRecord {
     private String street1;
 
     @Column(nullable = false)
+    private String district;
+
+    @Column(nullable = false)
     private String city;
 
     @Column(nullable = false)
@@ -41,6 +44,7 @@ public class HealthRecord {
     private String fields;
     private String fieldsValues;
     private String conclusion;
+    private String treatment;
     private String prescription;
     @Column(nullable = false)
     private String mobileNo;
@@ -49,7 +53,7 @@ public class HealthRecord {
     private Doctor doctor;
 
     @ManyToOne
-    @JoinColumn(name = "citizen_id", nullable = false)
+    @JoinColumn(name = "citizen_uh_id", nullable = false)
     private Citizen citizen;
 
     @ManyToOne
@@ -59,6 +63,10 @@ public class HealthRecord {
     @ManyToOne
     @JoinColumn(name = "supervisor_login_id")
     private Supervisor supervisor;
+
+    @ManyToOne
+    @JoinColumn(name = "receptionist_login_id", nullable = false)
+    private Receptionist receptionist;
 
     @Column(nullable = false)
     private Integer status;

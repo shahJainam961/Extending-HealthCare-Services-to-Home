@@ -21,7 +21,7 @@ public class SupervisorServiceImpl implements SupervisorService {
     @Override
     public boolean addSupervisor(Supervisor supervisor) {
         try{
-            if(citizenRepository.findById(supervisor.getCitizen().getUhId())!=null && supervisorRepository.findByCitizenUhId(supervisor.getCitizen().getUhId())==null) {
+            if(citizenRepository.findById(supervisor.getCitizen().getUhId())!=null && supervisorRepository.findByCitizen_UhId(supervisor.getCitizen().getUhId())==null) {
                 Citizen citizen = citizenRepository.findById(supervisor.getCitizen().getUhId()).get();
                 String creds = "SUP"+citizen.getUhId();
                 supervisor.setLoginId(creds);

@@ -26,6 +26,9 @@ public class Hospital {
     @Column(name = "city", nullable = false)
     private String city;
 
+    @Column(nullable = false)
+    private String district;
+
     @Column(name = "state", nullable = false)
     private String state;
 

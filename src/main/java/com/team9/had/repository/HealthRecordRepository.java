@@ -19,4 +19,8 @@ public interface HealthRecordRepository extends JpaRepository<HealthRecord, Inte
 
     HealthRecord findByHrId(Integer hrId);
 
+    ArrayList<HealthRecord> findAllByFieldHealthWorkerNullAndSupervisor_LoginId(String loginId);
+
+    ArrayList<HealthRecord> findAllByFieldHealthWorkerNullAndCitizen_UhId(Integer uhId);
+
 }

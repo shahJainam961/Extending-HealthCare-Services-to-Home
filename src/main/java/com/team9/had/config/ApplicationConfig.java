@@ -28,17 +28,17 @@ public class ApplicationConfig {
     private final FieldHealthWorkerRepository fieldHealthWorkerRepository;
     @Bean
     public UserDetailsService userDetailsService(){
-        return loginid -> {
-            if(loginid.startsWith(Constant.DOCTOR)){
-                return doctorRepository.findById(loginid).orElseThrow(()->new UsernameNotFoundException("User not found"));
+        return loginId -> {
+            if(loginId.startsWith(Constant.DOCTOR)){
+                return doctorRepository.findById(loginId).orElseThrow(()->new UsernameNotFoundException("User not found"));
             }
-            else if(loginid.startsWith(Constant.RECEPTIONIST)){
-                return receptionistRepository.findById(loginid).orElseThrow(()->new UsernameNotFoundException("User not found"));
+            else if(loginId.startsWith(Constant.RECEPTIONIST)){
+                return receptionistRepository.findById(loginId).orElseThrow(()->new UsernameNotFoundException("User not found"));
             }
-            else if(loginid.startsWith(Constant.FIELD_HEALTH_WORKER)){
-                return fieldHealthWorkerRepository.findById(loginid).orElseThrow(()->new UsernameNotFoundException("User not found"));
+            else if(loginId.startsWith(Constant.FIELD_HEALTH_WORKER)){
+                return fieldHealthWorkerRepository.findById(loginId).orElseThrow(()->new UsernameNotFoundException("User not found"));
             }
-            return supervisorRepository.findById(loginid).orElseThrow(()->new UsernameNotFoundException("User not found"));
+            return supervisorRepository.findById(loginId).orElseThrow(()->new UsernameNotFoundException("User not found"));
         };
     }
 

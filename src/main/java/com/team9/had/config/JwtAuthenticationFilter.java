@@ -12,12 +12,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
+@CrossOrigin("*")
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
@@ -28,15 +30,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
-        final String authHeader = request.getHeader("Authorization");
+        String authHeader = request.getHeader("Authorization");
+//        authHeader = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJSRUMxMyIsImlhdCI6MTY3OTU4NzM3NSwiZXhwIjoxNjc5NjczNzc1fQ.r5pV2-Q6TIDiGTwKFKDm-sws6MnTcT5wrv5BJBp08X8";
         final String jwt;
-        final String loginId;
+        String loginId = null;
         if(authHeader == null || !authHeader.startsWith("Bearer ")){
             filterChain.doFilter(request, response);
             return;
         }
         jwt = authHeader.substring(7);
-        loginId = jwtService.extractLoginId(jwt);//todo extract the loginId from the jwt token;
+        try{
+            loginId = jwtService.extractLoginId(jwt);
+        }
+        catch(Exception e){
+            response.setHeader("tokenValid","false");
+        }
         if(loginId!=null && SecurityContextHolder.getContext().getAuthentication()==null){
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(loginId);
             if(jwtService.isTokenValid(jwt, userDetails)){

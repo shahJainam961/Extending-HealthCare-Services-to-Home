@@ -6,19 +6,22 @@ import com.team9.had.entity.Doctor;
 import com.team9.had.entity.FieldHealthWorker;
 import com.team9.had.entity.Receptionist;
 import com.team9.had.entity.Supervisor;
+import com.team9.had.exception.DoctorNotFoundException;
+import com.team9.had.exception.ReceptionistNotFoundException;
+import com.team9.had.exception.SupervisorNotFoundException;
 import com.team9.had.model.LoginModel;
 import com.team9.had.service.login.LoginService;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.io.Serializable;
 
 @RestController
 @RequestMapping("/common")
-@CrossOrigin(originPatterns = "*")
+@CrossOrigin("*")
 public class LoginController {
 
     @Autowired
@@ -26,7 +29,7 @@ public class LoginController {
     @Autowired
     private LoginService loginService;
     @PostMapping("/login")
-    public ResponseEntity<Serializable> loggingIn(@RequestBody LoginModel loginModel, HttpServletResponse httpServletResponse){
+    public ResponseEntity<Serializable> loggingIn(@RequestBody LoginModel loginModel, HttpServletResponse httpServletResponse) throws DoctorNotFoundException, ReceptionistNotFoundException, SupervisorNotFoundException {
         Serializable obj = loginService.loggingIn(loginModel);
         String loginId = loginModel.getLoginId();
         String authToken = null;
@@ -51,10 +54,7 @@ public class LoginController {
                 userDetails.setLoginId(loginId);
                 authToken = jwtService.generateToken(userDetails);
             }
-            Cookie jwtToken = new Cookie("token", authToken);
-            jwtToken.setMaxAge(Constant.AGE/Constant.MILLI);
-            jwtToken.setPath("/");
-            httpServletResponse.addCookie(jwtToken);
+            httpServletResponse.setHeader("token", authToken);
             return new ResponseEntity<>(obj, HttpStatusCode.valueOf(200));
         }
         else{

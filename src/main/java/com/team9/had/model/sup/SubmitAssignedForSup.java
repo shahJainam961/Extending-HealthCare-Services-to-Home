@@ -1,4 +1,4 @@
-package com.team9.had.model;
+package com.team9.had.model.sup;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,8 +9,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class DoctorModel {
-    private String loginId;
-    private CitizenModel citizen;
-    private HospitalModel hospital;
+public class SubmitAssignedForSup {
+
+    CizModelForSup cizModelForSup;
+    FhwModelForSup fhwModelForSup;
 }

@@ -1,16 +1,19 @@
-package com.team9.had.model;
+package com.team9.had.model.rec;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReceptionistModel {
+public class RecModelForRec {
+
     private String loginId;
-    private CitizenModel citizen;
-    private HospitalModel hospital;
+    private CizModelForRec citizen;
+    private HosModelForRec hospital;
+
 }

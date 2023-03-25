@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ReceptionistRepository extends JpaRepository<Receptionist, String> {
-    Receptionist findByCitizenUhId(Integer id);
+    Receptionist findByCitizen_UhId(Integer uhId);
     Receptionist findByLoginId(String loginId);
 }
