@@ -25,10 +25,10 @@ public class Citizen {
     @Column(nullable = false)
     private String lname;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 1)
     private char gender;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "DATE")
     private Date dob;
 
     @Column(nullable = false)
@@ -40,16 +40,16 @@ public class Citizen {
     @Column(nullable = false)
     private String state;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length=6)
     private String pincode;
 
     @Column(nullable = false)
     private String district;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length=10)
     private String mobileNo;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = false, length=12)
     private String govId;
 
     @ManyToOne

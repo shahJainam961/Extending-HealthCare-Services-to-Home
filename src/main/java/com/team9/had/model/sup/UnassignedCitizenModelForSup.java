@@ -5,12 +5,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class SubmitAssignedForSup {
-
+public class UnassignedCitizenModelForSup {
     CizModelForSup citizen;
-    FhwModelForSup fieldHealthWorker;
+    List<FhwModelForSup> fieldHealthWorkers = new ArrayList<>();
 }

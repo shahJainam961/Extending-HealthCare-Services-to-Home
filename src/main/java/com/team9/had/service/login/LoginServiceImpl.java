@@ -2,6 +2,7 @@ package com.team9.had.service.login;
 
 import com.team9.had.Constant;
 import com.team9.had.entity.Doctor;
+import com.team9.had.entity.FieldHealthWorker;
 import com.team9.had.entity.Receptionist;
 import com.team9.had.entity.Supervisor;
 import com.team9.had.exception.DoctorNotFoundException;
@@ -9,6 +10,7 @@ import com.team9.had.exception.ReceptionistNotFoundException;
 import com.team9.had.exception.SupervisorNotFoundException;
 import com.team9.had.model.LoginModel;
 import com.team9.had.model.doc.DocModelForDoc;
+import com.team9.had.model.fhw.FhwModelForFhw;
 import com.team9.had.model.rec.DocModelForRec;
 import com.team9.had.model.rec.RecModelForRec;
 import com.team9.had.model.sup.SupModelForSup;
@@ -86,14 +88,13 @@ public class LoginServiceImpl implements LoginService{
             return obj;
         }
         else if(loginId.startsWith(Constant.FIELD_HEALTH_WORKER)){
-//            FieldHealthWorker fieldHealthWorker = fieldHealthWorkerRepository.findByLoginId(loginId);
-//            if(fieldHealthWorker==null) throw new SupervisorNotFoundException("FieldHealthWorker Not Found!!");
-//
-//            ArrayList<Object> obj = new ArrayList<>();
-//            FieldHealthWorkerModel fieldHealthWorkerModel = Constant.getModelMapper().map(fieldHealthWorker, FieldHealthWorkerModel.class);
-//            obj.add(fieldHealthWorkerModel);
-//            return obj;
-            return null;
+            FieldHealthWorker fieldHealthWorker = fieldHealthWorkerRepository.findByLoginId(loginId);
+            if(fieldHealthWorker==null) throw new SupervisorNotFoundException("FieldHealthWorker Not Found!!");
+
+            ArrayList<Object> obj = new ArrayList<>();
+            FhwModelForFhw fhwModelForFhw = Constant.getModelMapper().map(fieldHealthWorker, FhwModelForFhw.class);
+            obj.add(fhwModelForFhw);
+            return obj;
         }
         else return Constant.EMPTY;
     }

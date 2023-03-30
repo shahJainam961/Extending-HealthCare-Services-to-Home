@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 @Service
 public class ServiceForSupervisorImpl implements ServiceForSupervisor{
@@ -33,7 +32,7 @@ public class ServiceForSupervisorImpl implements ServiceForSupervisor{
     public Serializable getUnassignedCitizens(String loginId, String role) {
         ArrayList<Object> obj = new ArrayList<>();
         ArrayList<HealthRecord> unassignedHealthRecords = healthRecordRepository.findAllByFieldHealthWorkerNullAndSupervisor_LoginId(loginId);
-        HashMap<CizModelForSup, ArrayList<FhwModelForSup>> unassignedCitizensToFhw = new HashMap<>();
+        ArrayList<UnassignedCitizenModelForSup> unassignedCitizenModelForSups = new ArrayList<>();
         for (HealthRecord unassignedHealthRecord : unassignedHealthRecords) {
             Citizen citizen = unassignedHealthRecord.getCitizen();
             CizModelForSup cizModelForSup = Constant.getModelMapper().map(citizen, CizModelForSup.class);
@@ -42,16 +41,19 @@ public class ServiceForSupervisorImpl implements ServiceForSupervisor{
             for(FieldHealthWorker fieldHealthWorker : fieldHealthWorkers){
                 fhwModelForSups.add(Constant.getModelMapper().map(fieldHealthWorker, FhwModelForSup.class));
             }
-            unassignedCitizensToFhw.put(cizModelForSup, fhwModelForSups);
+            UnassignedCitizenModelForSup unassignedCitizenModelForSup = new UnassignedCitizenModelForSup();
+            unassignedCitizenModelForSup.setCitizen(cizModelForSup);
+            unassignedCitizenModelForSup.setFieldHealthWorkers(fhwModelForSups);
+            unassignedCitizenModelForSups.add(unassignedCitizenModelForSup);
         }
-        obj.add(unassignedCitizensToFhw);
+        obj.add(unassignedCitizenModelForSups);
         return obj;
     }
 
     @Override
     public Serializable submitAssignment(SubmitAssignedForSup submitAssignedForSup) {
-        CizModelForSup cizModelForSup = submitAssignedForSup.getCizModelForSup();
-        FhwModelForSup fhwModelForSup = submitAssignedForSup.getFhwModelForSup();
+        CizModelForSup cizModelForSup = submitAssignedForSup.getCitizen();
+        FhwModelForSup fhwModelForSup = submitAssignedForSup.getFieldHealthWorker();
         Citizen citizen = citizenRepository.findByUhId(cizModelForSup.getUhId());
         FieldHealthWorker fieldHealthWorker = fieldHealthWorkerRepository.findByLoginId(fhwModelForSup.getLoginId());
 

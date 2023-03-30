@@ -2,10 +2,13 @@ package com.team9.had.controller;
 
 import com.team9.had.entity.*;
 import com.team9.had.service.blackbox.addCitizen.CitizenService;
+import com.team9.had.service.blackbox.addCity.CityService;
+import com.team9.had.service.blackbox.addDistrict.DistrictService;
 import com.team9.had.service.blackbox.addDoctor.DoctorService;
 import com.team9.had.service.blackbox.addFieldHealthWorker.FieldHealthWorkerService;
 import com.team9.had.service.blackbox.addHospital.HospitalService;
 import com.team9.had.service.blackbox.addReceptionist.ReceptionistService;
+import com.team9.had.service.blackbox.addState.StateService;
 import com.team9.had.service.blackbox.addSupervisor.SupervisorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -37,6 +41,13 @@ public class BlackboxController {
 
     @Autowired
     private HospitalService hospitalService;
+
+    @Autowired
+    private StateService stateService;
+    @Autowired
+    private CityService cityService;
+    @Autowired
+    private DistrictService districtService;
 
     @PostMapping("/addCitizen")
     public ResponseEntity<String> addCitizen(@RequestBody Citizen citizen){
@@ -132,6 +143,31 @@ public class BlackboxController {
             return new ResponseEntity<>("Supervisors added Successfully!!", HttpStatus.OK);
         }
         return  new ResponseEntity<>("Something went wrong!!", HttpStatusCode.valueOf(412));
+    }
+
+
+    @PostMapping("/addStates")
+    public ResponseEntity<String> addStates(@RequestBody ArrayList<State> states){
+        if(stateService.addStates(states)){
+            return new ResponseEntity<>("States added successfully!!", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Something went wrong!!", HttpStatus.OK);
+    }
+
+    @PostMapping("/addDistricts")
+    public ResponseEntity<String> addDistricts(@RequestBody ArrayList<District> districts){
+        if(districtService.addDistricts(districts)){
+            return new ResponseEntity<>("Districts added successfully!!", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Something went wrong!!", HttpStatus.OK);
+    }
+
+    @PostMapping("/addCities")
+    public ResponseEntity<String> addCities(@RequestBody ArrayList<City> cities){
+        if(cityService.addCities(cities)){
+            return new ResponseEntity<>("Cities added successfully!!", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Something went wrong!!", HttpStatus.OK);
     }
 
 }

@@ -1,72 +1,63 @@
-//package com.team9.had.service.fhw;
-//
-//import com.team9.had.Constant;
-//import com.team9.had.entity.FollowUp;
-//import com.team9.had.model.CitizenApplicationModel;
-//import com.team9.had.model.FollowUpApplicationModel;
-//import com.team9.had.repository.FollowUpRepository;
-//import org.springframework.stereotype.Service;
-//
-//import java.io.Serializable;
-//import java.util.ArrayList;
-//
-//@Service
-//public class ServiceForFhwImpl implements ServiceForFhw {
-//    private final FollowUpRepository followUpRepository;
-//
-//    public ServiceForFhwImpl(FollowUpRepository followUpRepository) {
-//        this.followUpRepository = followUpRepository;
-//    }
-//
-//    @Override
-//    public Serializable download(String loginId) {
-//
-//        ArrayList<Object> obj = new ArrayList<>();
-//        ArrayList<FollowUpApplicationModel> app = new ArrayList<>();
-//
-//        ArrayList<FollowUp> pendingFollowUps = followUpRepository.findAllByHealthRecord_FieldHealthWorker_LoginIdAndStatus(loginId, Constant.FOLLOW_UP_PENDING);
-//        ArrayList<FollowUp> completedFollowUps = followUpRepository.findAllByHealthRecord_FieldHealthWorker_LoginIdAndStatus(loginId, Constant.FOLLOW_UP_DONE);
-//        ArrayList<FollowUp> backloggedFollowUps = followUpRepository.findAllByHealthRecord_FieldHealthWorker_LoginIdAndStatus(loginId, Constant.FOLLOW_UP_BACKLOGGED);
-//
-//
-//        ArrayList<FollowUpApplicationModel>  pendingFollowUpModels = getFollowUpModels(pendingFollowUps);
-//        ArrayList<FollowUpApplicationModel>  completedFollowUpModels = getFollowUpModels(completedFollowUps);
-//        ArrayList<FollowUpApplicationModel>  backloggedFollowUpModels = getFollowUpModels(backloggedFollowUps);
-//        obj.add(pendingFollowUpModels);
-//        obj.add(completedFollowUpModels);
-//        obj.add(backloggedFollowUpModels);
-//
-//        return obj;
-//    }
-//
-//    private ArrayList<FollowUpApplicationModel> getFollowUpModels(ArrayList<FollowUp> followUps) {
-//        ArrayList<FollowUpApplicationModel> tmp = new ArrayList<>();
-//        for(FollowUp followUp : followUps){
-//            FollowUpApplicationModel followUpModel = Constant.getModelMapper().map(followUp, FollowUpApplicationModel.class);
-//            followUpModel.setCitizen(Constant.getModelMapper().map(followUp.getHealthRecord().getCitizen(), CitizenApplicationModel.class));
-//            followUpModel.setStreet1(followUp.getHealthRecord().getStreet1());
-//            followUpModel.setCity(followUp.getHealthRecord().getCity());
-//            followUpModel.setState(followUp.getHealthRecord().getState());
-//            followUpModel.setPincode(followUp.getHealthRecord().getPincode());
-//            followUpModel.setPrescription(followUp.getHealthRecord().getPrescription());
-//            tmp.add(followUpModel);
-//        }
-//        return tmp;
-//    }
-//
-////    @Override
-////    @Scheduled(fixedDelay = 5000, initialDelay = 5000)
-////    public void backlogSyncing() {
-////        System.out.println("Syncing the backlog status...");
-////
-////        ArrayList<FollowUp> pendingFollowUps = followUpRepository.findAllByStatus(Constant.FOLLOW_UP_PENDING);
-////
-////        f+or(FollowUp followUp : pendingFollowUps){
-////            if(followUp.getDateOfFollowUp().before(DateUtils.truncate(new Date(), java.util.Calendar.DAY_OF_MONTH))){
-////                followUp.setStatus(Constant.FOLLOW_UP_BACKLOGGED);
-////                followUpRepository.save(followUp);
-////            }
-////        }
-////    }
-//
-//}
+package com.team9.had.service.fhw;
+
+import com.team9.had.Constant;
+import com.team9.had.entity.FollowUp;
+import com.team9.had.model.fhw.SyncModelForFhw;
+import com.team9.had.model.fhw.ModelForFhw;
+import com.team9.had.repository.FollowUpRepository;
+import com.team9.had.repository.HealthRecordRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+public class ServiceForFhwImpl implements ServiceForFhw{
+
+    @Autowired
+    private FollowUpRepository followUpRepository;
+    @Autowired
+    private HealthRecordRepository healthRecordRepository;
+
+    @Override
+    public Serializable sync(ModelForFhw modelForFhw, String role) {
+
+        try{
+            modelForFhw.getFollowUps().forEach((syncModelForFhw)->{
+                // todo validation of every followups
+                FollowUp followUp = Constant.getModelMapper().map(syncModelForFhw, FollowUp.class);
+                followUpRepository.save(followUp);
+            });
+
+            List<SyncModelForFhw> followUps1 = new ArrayList<>();
+            ArrayList<FollowUp> followUps = followUpRepository.findAllByHealthRecord_FieldHealthWorker_LoginIdAndStatus(role, Constant.FOLLOW_UP_PENDING);
+            followUps.forEach((followUp)->{
+                SyncModelForFhw syncModelForFhw1 = Constant.getModelMapper().map(followUp, SyncModelForFhw.class);
+                syncModelForFhw1.setStreet1(followUp.getHealthRecord().getStreet1());
+                syncModelForFhw1.setDistrict(followUp.getHealthRecord().getDistrict());
+                syncModelForFhw1.setCity(followUp.getHealthRecord().getCity());
+                syncModelForFhw1.setPincode(followUp.getHealthRecord().getPincode());
+                syncModelForFhw1.setMobileNo(followUp.getHealthRecord().getMobileNo());
+                syncModelForFhw1.setUhId(followUp.getHealthRecord().getCitizen().getUhId());
+                syncModelForFhw1.setFname(followUp.getHealthRecord().getCitizen().getFname());
+                syncModelForFhw1.setLname(followUp.getHealthRecord().getCitizen().getLname());
+                syncModelForFhw1.setGender(followUp.getHealthRecord().getCitizen().getGender());
+                syncModelForFhw1.setDob(followUp.getHealthRecord().getCitizen().getDob());
+                syncModelForFhw1.setState(followUp.getHealthRecord().getState());
+                syncModelForFhw1.setPrescription(followUp.getHealthRecord().getPrescription());
+                followUps1.add(syncModelForFhw1);
+            });
+            ModelForFhw modelForFhw1 = new ModelForFhw();
+            modelForFhw1.setFollowUps(followUps1);
+            ArrayList<Object> obj = new ArrayList<>();
+            obj.add(modelForFhw1);
+            return obj;
+        }
+        catch(Exception e){
+            System.out.println("e = " + e);
+            return null;
+        }
+    }
+}

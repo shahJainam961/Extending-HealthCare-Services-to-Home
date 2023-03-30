@@ -13,7 +13,9 @@ import com.team9.had.model.LoginModel;
 import com.team9.had.service.login.LoginService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +23,7 @@ import java.io.Serializable;
 
 @RestController
 @RequestMapping("/common")
-@CrossOrigin("*")
+@CrossOrigin(originPatterns = "*", exposedHeaders = "*")
 public class LoginController {
 
     @Autowired
@@ -58,7 +60,7 @@ public class LoginController {
             return new ResponseEntity<>(obj, HttpStatusCode.valueOf(200));
         }
         else{
-            return new ResponseEntity<>(null, HttpStatusCode.valueOf(401));
+            return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(401));
         }
     }
 }

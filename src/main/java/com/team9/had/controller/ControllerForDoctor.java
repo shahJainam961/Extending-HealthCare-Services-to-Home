@@ -20,11 +20,11 @@ public class ControllerForDoctor {
     @GetMapping("/getNewHealthRecords")
     public ResponseEntity<Serializable> getNewHealthRecords(@RequestParam String loginId, @RequestAttribute String role){
 
-        if(Constant.isAuthorised(role, Constant.DOCTOR)){
+            if(Constant.isAuthorised(role, Constant.DOCTOR)){
             Serializable obj = serviceForDoctor.getNewHealthRecords(loginId);
             return new ResponseEntity<>(obj, HttpStatusCode.valueOf(200));
         }
-        return new ResponseEntity<>(null, HttpStatusCode.valueOf(401));
+        return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(401));
     }
 
     @GetMapping("/getOldHealthRecords")
@@ -33,7 +33,7 @@ public class ControllerForDoctor {
             Serializable obj = serviceForDoctor.getOldHealthRecords(loginId);
             return new ResponseEntity<>(obj, HttpStatusCode.valueOf(200));
         }
-        return new ResponseEntity<>(null, HttpStatusCode.valueOf(401));
+        return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(401));
     }
 
     @PostMapping("/submitHealthRecord")
@@ -42,7 +42,16 @@ public class ControllerForDoctor {
             Serializable obj = serviceForDoctor.submitHealthRecord(hrModelForDoc);
             return new ResponseEntity<>(obj, HttpStatusCode.valueOf(200));
         }
-        return new ResponseEntity<>(null, HttpStatusCode.valueOf(401));
+        return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(401));
+    }
+
+    @GetMapping("/getConsentData")
+    public ResponseEntity<Serializable> getConsentData(@RequestParam Integer uhId, @RequestAttribute String role){
+        if(Constant.isAuthorised(role, Constant.DOCTOR)){
+            Serializable obj = serviceForDoctor.getConsentData(uhId);
+            return new ResponseEntity<>(obj, HttpStatusCode.valueOf(200));
+        }
+        return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(401));
     }
 
 }

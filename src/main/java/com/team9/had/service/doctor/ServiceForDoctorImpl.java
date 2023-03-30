@@ -1,16 +1,10 @@
 package com.team9.had.service.doctor;
 
 import com.team9.had.Constant;
-import com.team9.had.entity.FieldHealthWorker;
-import com.team9.had.entity.FollowUp;
-import com.team9.had.entity.HealthRecord;
-import com.team9.had.entity.Supervisor;
+import com.team9.had.entity.*;
 import com.team9.had.model.doc.FupModelForDoc;
 import com.team9.had.model.doc.HrModelForDoc;
-import com.team9.had.repository.CitizenRepository;
-import com.team9.had.repository.FollowUpRepository;
-import com.team9.had.repository.HealthRecordRepository;
-import com.team9.had.repository.SupervisorRepository;
+import com.team9.had.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +23,11 @@ public class ServiceForDoctorImpl implements ServiceForDoctor{
     private CitizenRepository citizenRepository;
     @Autowired
     private SupervisorRepository supervisorRepository;
+    @Autowired
+    private FieldHealthWorkerRepository fieldHealthWorkerRepository;
 
+    @Autowired
+    private CityRepository cityRepository;
     @Override
     public Serializable getNewHealthRecords(String loginId) {
         ArrayList<Object> obj = new ArrayList<>();
@@ -102,19 +100,44 @@ public class ServiceForDoctorImpl implements ServiceForDoctor{
         return true;
     }
 
+    @Override
+    public Serializable getConsentData(Integer uhId) {
+        // todo validation
+
+        ArrayList<HealthRecord> healthRecords = healthRecordRepository.findAllByCitizen_UhIdAndStatusOrderByCreationDateDescCreationTimeDesc(
+                    uhId, Constant.HEALTH_RECORD_ASSESSED
+        );
+
+        ArrayList<Object> obj = new ArrayList<>();
+        ArrayList<HrModelForDoc> hrModelForDocs = new ArrayList<>();
+        healthRecords.forEach((healthRecord)->{
+            HrModelForDoc hrModelForDoc = Constant.getModelMapper().map(healthRecord, HrModelForDoc.class);
+            hrModelForDocs.add(hrModelForDoc);
+        });
+        obj.add(hrModelForDocs);
+        return obj;
+
+    }
+
 
     // todo modify the below function as per the requirement
     private FieldHealthWorker getFieldHealthWorker(HealthRecord healthRecord) {
-        FieldHealthWorker fieldHealthWorker = citizenRepository.findByUhId(healthRecord.getCitizen().getUhId()).getFieldHealthWorker();
-        if(fieldHealthWorker == null) return null;
-        if(!(fieldHealthWorker.getAssignedPincode().equals(healthRecord.getPincode()))) return null;
+//        FieldHealthWorker fieldHealthWorker = citizenRepository.findByUhId(healthRecord.getCitizen().getUhId()).getFieldHealthWorker();
+//        if(fieldHealthWorker == null) return null;
+//        if(!(fieldHealthWorker.getAssignedPincode().equals(healthRecord.getPincode()))) return null;
+//        return fieldHealthWorker;
+        ArrayList<FieldHealthWorker> fieldHealthWorkers = fieldHealthWorkerRepository.findAllByAssignedPincode(healthRecord.getPincode());
+        FieldHealthWorker fieldHealthWorker = fieldHealthWorkers.get(0);
         return fieldHealthWorker;
     }
 
     // todo modify the below function as per the requirement
     private Supervisor getSupervisor(HealthRecord healthRecord) {
-        Supervisor supervisor = supervisorRepository.findByAssignedPincode(Constant.DISTRICT_TO_CODE.get(healthRecord.getDistrict()));
-        if(supervisor == null) return null;
+//        Supervisor supervisor = supervisorRepository.findByAssignedPincode(Constant.DISTRICT_TO_CODE.get(healthRecord.getDistrict()));
+//        if(supervisor == null) return null;
+//        return supervisor;
+        City city = cityRepository.findByCityName(healthRecord.getDistrict());
+        Supervisor supervisor = supervisorRepository.findByAssignedPincode(city.getPincode());
         return supervisor;
     }
 }

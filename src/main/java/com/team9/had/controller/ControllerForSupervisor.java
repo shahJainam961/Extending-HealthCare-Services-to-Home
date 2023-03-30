@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.Serializable;
 
 @RestController
-@CrossOrigin(originPatterns = "*")
+@CrossOrigin("*")
 @RequestMapping("/supervisor")
 public class ControllerForSupervisor {
 
@@ -29,7 +29,7 @@ public class ControllerForSupervisor {
     }
 
     @PostMapping("/submitAssignment")
-    public ResponseEntity<Serializable> submitAssignment(SubmitAssignedForSup submitAssignedForSup, @RequestAttribute String role){
+    public ResponseEntity<Serializable> submitAssignment(@RequestBody  SubmitAssignedForSup submitAssignedForSup, @RequestAttribute String role){
         if(Constant.isAuthorised(role, Constant.SUPERVISOR)){
             Serializable obj = serviceForSupervisor.submitAssignment(submitAssignedForSup);
             return new ResponseEntity<>(obj, HttpStatusCode.valueOf(200));
@@ -47,7 +47,7 @@ public class ControllerForSupervisor {
     }
 
     @PostMapping("/reassign")
-    public ResponseEntity<Serializable> reassign(ReassignedForSup reassignedForSup, @RequestAttribute String role){
+    public ResponseEntity<Serializable> reassign(@RequestBody  ReassignedForSup reassignedForSup, @RequestAttribute String role){
         if(Constant.isAuthorised(role, Constant.SUPERVISOR)){
             Serializable obj = serviceForSupervisor.reassign(reassignedForSup);
             return new ResponseEntity<>(obj, HttpStatusCode.valueOf(200));

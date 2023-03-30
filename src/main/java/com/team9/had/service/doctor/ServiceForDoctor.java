@@ -10,4 +10,6 @@ public interface ServiceForDoctor {
     Serializable getOldHealthRecords(String loginId);
 
     boolean submitHealthRecord(HrModelForDoc hrModelForDoc);
+
+    Serializable getConsentData(Integer uhId);
 }

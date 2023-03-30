@@ -1,4 +1,5 @@
-package com.team9.had.model.sup;
+package com.team9.had.model.fhw;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,8 +10,9 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class SubmitAssignedForSup {
+public class FhwModelForFhw {
 
-    CizModelForSup citizen;
-    FhwModelForSup fieldHealthWorker;
+    private String loginId;
+    private CizModelForFhw citizen;
+
 }

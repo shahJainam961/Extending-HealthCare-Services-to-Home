@@ -54,7 +54,7 @@ public class ServiceForReceptionistImpl implements ServiceForReceptionist{
         healthRecord.setReceptionist(receptionistRepository.findByLoginId(role));
         healthRecord.setDoctor(doctor);
         healthRecord.setCitizen(citizen);
-        healthRecord.setPincode(Constant.TALUKA_TO_CODE.get(healthRecord.getCity()));
+        healthRecord.setPincode(hrModelForRec.getPincode());
         healthRecordRepository.save(healthRecord);
         obj.add(true);
         return obj;
