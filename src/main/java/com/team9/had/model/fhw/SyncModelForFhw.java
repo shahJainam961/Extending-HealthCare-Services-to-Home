@@ -1,6 +1,5 @@
 package com.team9.had.model.fhw;
 
-import com.team9.had.entity.HealthRecord;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

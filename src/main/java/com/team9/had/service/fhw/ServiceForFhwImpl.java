@@ -2,8 +2,8 @@ package com.team9.had.service.fhw;
 
 import com.team9.had.Constant;
 import com.team9.had.entity.FollowUp;
-import com.team9.had.model.fhw.SyncModelForFhw;
 import com.team9.had.model.fhw.ModelForFhw;
+import com.team9.had.model.fhw.SyncModelForFhw;
 import com.team9.had.repository.FollowUpRepository;
 import com.team9.had.repository.HealthRecordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
