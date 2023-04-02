@@ -1,16 +1,14 @@
 package com.team9.had.controller;
 
-import com.team9.had.Constant;
 import com.team9.had.config.JwtService;
 import com.team9.had.entity.Doctor;
 import com.team9.had.entity.FieldHealthWorker;
 import com.team9.had.entity.Receptionist;
 import com.team9.had.entity.Supervisor;
-import com.team9.had.exception.DoctorNotFoundException;
-import com.team9.had.exception.ReceptionistNotFoundException;
-import com.team9.had.exception.SupervisorNotFoundException;
+import com.team9.had.exception.UserNotFoundException;
 import com.team9.had.model.LoginModel;
 import com.team9.had.service.login.LoginService;
+import com.team9.had.utils.Constant;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
@@ -29,7 +27,7 @@ public class LoginController {
     @Autowired
     private LoginService loginService;
     @PostMapping("/login")
-    public ResponseEntity<Serializable> loggingIn(@RequestBody LoginModel loginModel, HttpServletResponse httpServletResponse) throws DoctorNotFoundException, ReceptionistNotFoundException, SupervisorNotFoundException {
+    public ResponseEntity<Serializable> loggingIn(@RequestBody LoginModel loginModel, HttpServletResponse httpServletResponse) throws UserNotFoundException {
         Serializable obj = loginService.loggingIn(loginModel);
         String loginId = loginModel.getLoginId();
         String authToken = null;

@@ -31,7 +31,7 @@ public class Citizen {
     @Column(nullable = false, columnDefinition = "DATE")
     private Date dob;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 1000)
     private String street1;
 
     @Column(nullable = false)

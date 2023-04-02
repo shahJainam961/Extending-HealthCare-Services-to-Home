@@ -1,8 +1,8 @@
 package com.team9.had.controller;
 
-import com.team9.had.Constant;
 import com.team9.had.model.doc.HrModelForDoc;
 import com.team9.had.service.doctor.ServiceForDoctor;
+import com.team9.had.utils.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +20,7 @@ public class ControllerForDoctor {
     @GetMapping("/getNewHealthRecords")
     public ResponseEntity<Serializable> getNewHealthRecords(@RequestParam String loginId, @RequestAttribute String role){
 
-            if(Constant.isAuthorised(role, Constant.DOCTOR)){
+        if(Constant.isAuthorised(role, Constant.DOCTOR)){
             Serializable obj = serviceForDoctor.getNewHealthRecords(loginId);
             return new ResponseEntity<>(obj, HttpStatusCode.valueOf(200));
         }

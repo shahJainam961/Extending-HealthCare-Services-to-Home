@@ -28,9 +28,10 @@ public class FieldHealthWorker implements UserDetails {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 6)
     private String assignedPincode;
 
+    @Column(length = 6)
     private String pin;
 
     @Override

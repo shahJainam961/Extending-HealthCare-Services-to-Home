@@ -26,7 +26,7 @@ public class HealthRecord {
     @Column(nullable = false)
     private Time creationTime;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 1000)
     private String street1;
 
     @Column(nullable = false)
@@ -38,13 +38,18 @@ public class HealthRecord {
     @Column(nullable = false)
     private String state;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 6)
     private String pincode;
 
+    @Column(length = 999999999)
     private String fields;
+    @Column(length = 999999999)
     private String fieldsValues;
+    @Column(length = 999999999)
     private String conclusion;
+    @Column(length = 999999999)
     private String treatment;
+    @Column(length = 999999999)
     private String prescription;
     @Column(nullable = false)
     private String mobileNo;

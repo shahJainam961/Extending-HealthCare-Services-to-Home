@@ -20,7 +20,7 @@ public class Hospital {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "street1", nullable = false)
+    @Column(name = "street1", nullable = false, length = 1000)
     private String street1;
 
     @Column(name = "city", nullable = false)
@@ -32,7 +32,7 @@ public class Hospital {
     @Column(name = "state", nullable = false)
     private String state;
 
-    @Column(name = "pincode", nullable = false)
+    @Column(name = "pincode", nullable = false, length = 6)
     private String pincode;
 
     @Column(name = "contactNo", nullable = false, unique = true)

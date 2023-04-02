@@ -16,45 +16,12 @@ import java.util.ArrayList;
 @ResponseStatus
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(CitizenNotFoundException.class)
-    public ResponseEntity<Serializable> citizenNotFoundException(CitizenNotFoundException exception){
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<Serializable> userNotFoundException(UserNotFoundException exception){
         ArrayList<Object> obj = new ArrayList<>();
         ErrorMessage errorMessage = new ErrorMessage(exception.getMessage());
         obj.add(errorMessage);
         return new ResponseEntity<>(obj, HttpStatusCode.valueOf(404));
     }
-
-    @ExceptionHandler(DoctorNotFoundException.class)
-    public ResponseEntity<Serializable> doctorNotFoundException(DoctorNotFoundException exception){
-        ArrayList<Object> obj = new ArrayList<>();
-        ErrorMessage errorMessage = new ErrorMessage(exception.getMessage());
-        obj.add(errorMessage);
-        return new ResponseEntity<>(obj, HttpStatusCode.valueOf(404));
-    }
-
-
-    @ExceptionHandler(ReceptionistNotFoundException.class)
-    public ResponseEntity<Serializable> receptinistNotFoundException(ReceptionistNotFoundException exception){
-        ArrayList<Object> obj = new ArrayList<>();
-        ErrorMessage errorMessage = new ErrorMessage(exception.getMessage());
-        obj.add(errorMessage);
-        return new ResponseEntity<>(obj, HttpStatusCode.valueOf(404));
-    }
-
-    @ExceptionHandler(SupervisorNotFoundException.class)
-    public ResponseEntity<Serializable> supervisorNotFoundException(SupervisorNotFoundException exception){
-        ArrayList<Object> obj = new ArrayList<>();
-        ErrorMessage errorMessage = new ErrorMessage(exception.getMessage());
-        obj.add(errorMessage);
-        return new ResponseEntity<>(obj, HttpStatusCode.valueOf(404));
-    }
-
-//    @ExceptionHandler(Exception.class)
-//    public ResponseEntity<Serializable> exception(Exception exception){
-//        ArrayList<Object> obj = new ArrayList<>();
-//        ErrorMessage errorMessage = new ErrorMessage(exception.getMessage());
-//        obj.add(errorMessage);
-//        return new ResponseEntity<>(obj, HttpStatusCode.valueOf(500));
-//    }
 
 }

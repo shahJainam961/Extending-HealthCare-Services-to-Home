@@ -1,10 +1,10 @@
 package com.team9.had.service.doctor;
 
-import com.team9.had.Constant;
 import com.team9.had.entity.*;
 import com.team9.had.model.doc.FupModelForDoc;
 import com.team9.had.model.doc.HrModelForDoc;
 import com.team9.had.repository.*;
+import com.team9.had.utils.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -122,20 +122,14 @@ public class ServiceForDoctorImpl implements ServiceForDoctor{
 
     // todo modify the below function as per the requirement
     private FieldHealthWorker getFieldHealthWorker(HealthRecord healthRecord) {
-//        FieldHealthWorker fieldHealthWorker = citizenRepository.findByUhId(healthRecord.getCitizen().getUhId()).getFieldHealthWorker();
-//        if(fieldHealthWorker == null) return null;
-//        if(!(fieldHealthWorker.getAssignedPincode().equals(healthRecord.getPincode()))) return null;
-//        return fieldHealthWorker;
-        ArrayList<FieldHealthWorker> fieldHealthWorkers = fieldHealthWorkerRepository.findAllByAssignedPincode(healthRecord.getPincode());
-        FieldHealthWorker fieldHealthWorker = fieldHealthWorkers.get(0);
+        FieldHealthWorker fieldHealthWorker = citizenRepository.findByUhId(healthRecord.getCitizen().getUhId()).getFieldHealthWorker();
+        if(fieldHealthWorker == null) return null;
+        if(!(fieldHealthWorker.getAssignedPincode().equals(healthRecord.getPincode()))) return null;
         return fieldHealthWorker;
     }
 
     // todo modify the below function as per the requirement
     private Supervisor getSupervisor(HealthRecord healthRecord) {
-//        Supervisor supervisor = supervisorRepository.findByAssignedPincode(Constant.DISTRICT_TO_CODE.get(healthRecord.getDistrict()));
-//        if(supervisor == null) return null;
-//        return supervisor;
         City city = cityRepository.findByCityName(healthRecord.getDistrict());
         Supervisor supervisor = supervisorRepository.findByAssignedPincode(city.getPincode());
         return supervisor;

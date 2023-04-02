@@ -30,7 +30,7 @@ public class Supervisor implements UserDetails {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "assignedPincode", nullable = false)
+    @Column(name = "assignedPincode", nullable = false, length = 6)
     private String assignedPincode;
 
     @Override

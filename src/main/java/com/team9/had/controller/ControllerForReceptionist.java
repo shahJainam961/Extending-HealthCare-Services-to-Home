@@ -1,10 +1,9 @@
 package com.team9.had.controller;
 
-import com.team9.had.Constant;
-import com.team9.had.exception.CitizenNotFoundException;
-import com.team9.had.exception.DoctorNotFoundException;
+import com.team9.had.exception.UserNotFoundException;
 import com.team9.had.model.rec.HrModelForRec;
 import com.team9.had.service.receptionist.ServiceForReceptionist;
+import com.team9.had.utils.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +20,7 @@ public class ControllerForReceptionist {
     private ServiceForReceptionist serviceForReceptionist;
 
     @PostMapping("/createHealthRecord")
-    public ResponseEntity<Serializable> createHealthRecord(@RequestBody HrModelForRec hrModelForRec, @RequestAttribute String role) throws CitizenNotFoundException, DoctorNotFoundException {
+    public ResponseEntity<Serializable> createHealthRecord(@RequestBody HrModelForRec hrModelForRec, @RequestAttribute String role) throws UserNotFoundException {
         if(Constant.isAuthorised(role, Constant.RECEPTIONIST)){
             Serializable obj = serviceForReceptionist.createHealthRecord(hrModelForRec, role);
             return new ResponseEntity<>(obj, HttpStatusCode.valueOf(200));
@@ -30,7 +29,7 @@ public class ControllerForReceptionist {
     }
 
     @GetMapping("/confirmation")
-    public ResponseEntity<Serializable> confirmation(@RequestParam Integer uhId, @RequestAttribute String role) throws CitizenNotFoundException {
+    public ResponseEntity<Serializable> confirmation(@RequestParam Integer uhId, @RequestAttribute String role) throws UserNotFoundException {
 
         if(Constant.isAuthorised(role, Constant.RECEPTIONIST)){
             Serializable obj = serviceForReceptionist.confirmation(uhId);

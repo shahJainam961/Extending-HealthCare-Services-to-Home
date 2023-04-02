@@ -1,6 +1,8 @@
 package com.team9.had.controller;
 
 import com.team9.had.entity.*;
+import com.team9.had.exception.UserNotFoundException;
+import com.team9.had.model.LoginModel;
 import com.team9.had.service.blackbox.addCitizen.CitizenService;
 import com.team9.had.service.blackbox.addCity.CityService;
 import com.team9.had.service.blackbox.addDistrict.DistrictService;
@@ -10,20 +12,25 @@ import com.team9.had.service.blackbox.addHospital.HospitalService;
 import com.team9.had.service.blackbox.addReceptionist.ReceptionistService;
 import com.team9.had.service.blackbox.addState.StateService;
 import com.team9.had.service.blackbox.addSupervisor.SupervisorService;
+import com.team9.had.service.blackbox.getOtp.OTPService;
+import com.team9.had.service.blackbox.resetPassword.ResetPasswordService;
+import com.team9.had.service.blackbox.resetPassword.SecretService;
+import com.team9.had.utils.Constant;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/blackbox")
+@CrossOrigin(originPatterns = "*", exposedHeaders = "*")
 public class BlackboxController {
 
     @Autowired
@@ -48,6 +55,17 @@ public class BlackboxController {
     private CityService cityService;
     @Autowired
     private DistrictService districtService;
+
+//    @Autowired
+//    private SendSms sendSms;
+
+    @Autowired
+    private OTPService otpService;
+    @Autowired
+    private ResetPasswordService resetPasswordService;
+
+    @Autowired
+    private SecretService secretService;
 
     @PostMapping("/addCitizen")
     public ResponseEntity<String> addCitizen(@RequestBody Citizen citizen){
@@ -170,4 +188,36 @@ public class BlackboxController {
         return new ResponseEntity<>("Something went wrong!!", HttpStatus.OK);
     }
 
+//    @Scheduled(cron = "0 * * * * *")
+//    public void f(){
+//        System.out.println("===========================================================================================");
+//        sendSms.sendMessage();
+//        System.out.println("===========================================================================================");
+//    }
+
+    @GetMapping("/getOtp")
+    public ResponseEntity<Serializable> getOtp(@RequestParam String loginId) throws UserNotFoundException {
+        if(otpService.getOtp(loginId)){
+            return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(200));
+        }
+        return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(401));
+    }
+
+    @PostMapping("/validateOtp")
+    public ResponseEntity<Serializable> validateOtp(@RequestBody OTP otpModel, HttpServletResponse httpServletResponse) throws Exception {
+        if(otpService.validateOtp(otpModel)){
+            String encryptedSecret = secretService.getSecret(otpModel.getLoginId());
+            httpServletResponse.setHeader("secret", encryptedSecret);
+            return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(200));
+        }
+        return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(401));
+    }
+
+    @PostMapping("/resetPassword")
+    public ResponseEntity<Serializable> resetPassword(@RequestBody LoginModel loginModel, HttpServletRequest httpServletRequest) throws Exception {
+        if(resetPasswordService.resetPassword(loginModel, httpServletRequest)){
+            return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(200));
+        }
+        return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(401));
+    }
 }

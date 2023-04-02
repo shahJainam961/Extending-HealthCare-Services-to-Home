@@ -30,17 +30,21 @@ public class FollowUp {
     @Column(nullable = false)
     private String instruction;
 
+    @Column(length = 999999999)
     private String fields;
+    @Column(length = 999999999)
     private String fieldsValue;
 
     @ManyToOne
     @JoinColumn(name = "health_record_hr_id", nullable = false)
     private HealthRecord healthRecord;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 6)
     private String secretKey;
 
+    @Column(length = 999999999)
     private String observation;
 
+    @Column(length = 999999999)
     private String reasonIfDelayed;
 }

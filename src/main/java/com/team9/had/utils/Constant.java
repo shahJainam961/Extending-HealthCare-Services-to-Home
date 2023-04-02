@@ -1,4 +1,4 @@
-package com.team9.had;
+package com.team9.had.utils;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -22,6 +22,11 @@ public interface Constant {
     Integer MILLI = 1000;
     Integer OTP_LENGTH = 6;
 
+    String ACCOUNT_SID = "AC4dc6465df71d2b5f60edc0facfa02cd1";
+    String AUTH_TOKEN = "f950ce7fca5f9d4db4c33354be34d147";
+
+    String SECRET_KEY = "8y/B?E(H+MbQeThWmZq4t6w9z$C&F)J@";
+
     static PasswordEncoder passwordEncode(){
         return new BCryptPasswordEncoder();
     }
@@ -42,24 +47,11 @@ public interface Constant {
             otp += numbers.charAt(new Random().nextInt(numbers.length()));
         return otp;
     }
-    HashMap<String, List<String>> STATE_TO_DISTRICT = new HashMap<>() {{
-        put("Karnataka", Arrays.asList("Bangalore", "Mysore", "Hassan"));
-    }};
+
     HashMap<String, List<String>> DISTRICT_TO_TALUKA = new HashMap<>() {{
         put("Bangalore", Arrays.asList("Bangalore", "Electronic City", "HSR Layout", "Indiranagar", "Jayanagar"));
         put("Mysore", Arrays.asList("Mysore", "Nazarbad", "Kuvempunagar", "Gokulam", "Saraswathipuram"));
         put("Hassan", Arrays.asList("Hassan", "Alur", "Arakalagudu", "Belur", "Channarayapatna"));
-    }};
-    HashMap<String, String> STATE_TO_CODE = new HashMap<>(){{
-        put("11", "Karnataka");
-    }};
-    HashMap<String, String> CODE_TO_STATE = new HashMap<>(){{
-        put("Karnataka", "11");
-    }};
-    HashMap<String, String> DISTRICT_TO_CODE = new HashMap<>(){{
-       put("Bangalore", "1101");
-       put("Mysore", "1102");
-       put("Hassan", "1103");
     }};
     HashMap<String, String> CODE_TO_DISTRICT = new HashMap<>(){{
         put("1101", "Bangalore");
@@ -84,24 +76,5 @@ public interface Constant {
         put("Arakalagudu", "573102");
         put("Belur", "573216");
         put("Channarayapatna", "573131");
-    }};
-    HashMap<String, String> CODE_TO_TALUKA = new HashMap<>(){{
-        put("560001", "Bangalore");
-        put("560100", "Electronic City");
-        put("560102", "HSR Layout");
-        put("560038", "Indiranagar");
-        put("560041", "Jayanagar");
-
-        put("570001", "Mysore");
-        put("570028", "Nazarbad");
-        put("570023", "Kuvempunagar");
-        put("570002", "Gokulam");
-        put("570009", "Saraswathipuram");
-
-        put("573201", "Hassan");
-        put("573214", "Alur");
-        put("573102", "Arakalagudu");
-        put("573216", "Belur");
-        put("573131", "Channarayapatna");
     }};
 }

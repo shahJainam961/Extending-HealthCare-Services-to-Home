@@ -1,17 +1,16 @@
 package com.team9.had.service.receptionist;
 
-import com.team9.had.Constant;
 import com.team9.had.entity.Citizen;
 import com.team9.had.entity.Doctor;
 import com.team9.had.entity.HealthRecord;
-import com.team9.had.exception.CitizenNotFoundException;
-import com.team9.had.exception.DoctorNotFoundException;
+import com.team9.had.exception.UserNotFoundException;
 import com.team9.had.model.rec.CizModelForRec;
 import com.team9.had.model.rec.HrModelForRec;
 import com.team9.had.repository.CitizenRepository;
 import com.team9.had.repository.DoctorRepository;
 import com.team9.had.repository.HealthRecordRepository;
 import com.team9.had.repository.ReceptionistRepository;
+import com.team9.had.utils.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,17 +32,17 @@ public class ServiceForReceptionistImpl implements ServiceForReceptionist{
     private ReceptionistRepository receptionistRepository;
 
     @Override
-    public Serializable createHealthRecord(HrModelForRec hrModelForRec, String role) throws CitizenNotFoundException, DoctorNotFoundException {
+    public Serializable createHealthRecord(HrModelForRec hrModelForRec, String role) throws UserNotFoundException {
 
         // todo validation of the request object!
 
         Integer uhId = hrModelForRec.getCitizen().getUhId();
         Citizen citizen = citizenRepository.findByUhId(uhId);
-        if(citizen==null) throw new CitizenNotFoundException("Citizen Not Found!!");
+        if(citizen==null) throw new UserNotFoundException("User Not Found!!");
 
         String loginId = hrModelForRec.getDoctor().getLoginId();
         Doctor doctor = doctorRepository.findByLoginId(loginId);
-        if(doctor==null) throw new DoctorNotFoundException("Doctor Not Found!!");
+        if(doctor==null) throw new UserNotFoundException("User Not Found!!");
 
         HealthRecord healthRecord = Constant.getModelMapper().map(hrModelForRec, HealthRecord.class);
 
@@ -61,11 +60,11 @@ public class ServiceForReceptionistImpl implements ServiceForReceptionist{
     }
 
     @Override
-    public Serializable confirmation(Integer uhId) throws CitizenNotFoundException {
+    public Serializable confirmation(Integer uhId) throws UserNotFoundException {
         // todo validation of the request object!
 
         Citizen citizen = citizenRepository.findByUhId(uhId);
-        if(citizen==null) throw new CitizenNotFoundException("Citizen Not Found!!");
+        if(citizen==null) throw new UserNotFoundException("User Not Found!!");
         ArrayList<Object> obj = new ArrayList<>();
         CizModelForRec cizModelForRec = Constant.getModelMapper().map(citizen, CizModelForRec.class);
         obj.add(cizModelForRec);

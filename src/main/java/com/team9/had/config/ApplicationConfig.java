@@ -1,10 +1,10 @@
 package com.team9.had.config;
 
-import com.team9.had.Constant;
 import com.team9.had.repository.DoctorRepository;
 import com.team9.had.repository.FieldHealthWorkerRepository;
 import com.team9.had.repository.ReceptionistRepository;
 import com.team9.had.repository.SupervisorRepository;
+import com.team9.had.utils.Constant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

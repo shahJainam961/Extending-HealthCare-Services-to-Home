@@ -1,6 +1,6 @@
 package com.team9.had.config;
 
-import com.team9.had.Constant;
+import com.team9.had.utils.Constant;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

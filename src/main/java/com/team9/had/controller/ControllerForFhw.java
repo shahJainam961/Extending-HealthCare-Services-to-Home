@@ -1,8 +1,8 @@
 package com.team9.had.controller;
 
-import com.team9.had.Constant;
 import com.team9.had.model.fhw.ModelForFhw;
 import com.team9.had.service.fhw.ServiceForFhw;
+import com.team9.had.utils.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +26,4 @@ public class ControllerForFhw {
         }
         return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(401));
     }
-
-
 }

@@ -1,10 +1,10 @@
 package com.team9.had.service.blackbox.addFieldHealthWorker;
 
-import com.team9.had.Constant;
 import com.team9.had.entity.Citizen;
 import com.team9.had.entity.FieldHealthWorker;
 import com.team9.had.repository.CitizenRepository;
 import com.team9.had.repository.FieldHealthWorkerRepository;
+import com.team9.had.utils.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

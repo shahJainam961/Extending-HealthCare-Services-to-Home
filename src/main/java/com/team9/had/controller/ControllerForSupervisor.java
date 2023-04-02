@@ -1,9 +1,9 @@
 package com.team9.had.controller;
 
-import com.team9.had.Constant;
 import com.team9.had.model.sup.ReassignedForSup;
 import com.team9.had.model.sup.SubmitAssignedForSup;
 import com.team9.had.service.supervisor.ServiceForSupervisor;
+import com.team9.had.utils.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
