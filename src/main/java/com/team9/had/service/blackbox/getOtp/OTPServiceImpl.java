@@ -93,6 +93,7 @@ public class OTPServiceImpl implements OTPService{
         // expiry
         if(actualModelMilli<otpModelMilli){
             otpRepository.delete(actualModel);
+            return false;
         }
 
         String actualModelOtp = actualModel.getOtp();

@@ -23,7 +23,7 @@ public interface Constant {
     Integer OTP_LENGTH = 6;
 
     String ACCOUNT_SID = "AC4dc6465df71d2b5f60edc0facfa02cd1";
-    String AUTH_TOKEN = "f950ce7fca5f9d4db4c33354be34d147";
+    String AUTH_TOKEN = "73bed48e0c17d0546fd1589cfa789b7e";
 
     String SECRET_KEY = "8y/B?E(H+MbQeThWmZq4t6w9z$C&F)J@";
 

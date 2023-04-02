@@ -37,22 +37,22 @@ public class ControllerForSupervisor {
         return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(401));
     }
 
-    @GetMapping("/getFhws")
-    public ResponseEntity<Serializable> getFhws(@RequestParam String loginId, @RequestAttribute String role){
-        if(Constant.isAuthorised(role, Constant.SUPERVISOR)){
-            Serializable obj = serviceForSupervisor.getFhws(loginId, role);
-            return new ResponseEntity<>(obj, HttpStatusCode.valueOf(200));
-        }
-        return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(401));
-    }
-
-    @PostMapping("/reassign")
-    public ResponseEntity<Serializable> reassign(@RequestBody  ReassignedForSup reassignedForSup, @RequestAttribute String role){
-        if(Constant.isAuthorised(role, Constant.SUPERVISOR)){
-            Serializable obj = serviceForSupervisor.reassign(reassignedForSup);
-            return new ResponseEntity<>(obj, HttpStatusCode.valueOf(200));
-        }
-        return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(401));
-    }
+//    @GetMapping("/getFhws")
+//    public ResponseEntity<Serializable> getFhws(@RequestParam String loginId, @RequestAttribute String role){
+//        if(Constant.isAuthorised(role, Constant.SUPERVISOR)){
+//            Serializable obj = serviceForSupervisor.getFhws(loginId, role);
+//            return new ResponseEntity<>(obj, HttpStatusCode.valueOf(200));
+//        }
+//        return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(401));
+//    }
+//
+//    @PostMapping("/reassign")
+//    public ResponseEntity<Serializable> reassign(@RequestBody  ReassignedForSup reassignedForSup, @RequestAttribute String role){
+//        if(Constant.isAuthorised(role, Constant.SUPERVISOR)){
+//            Serializable obj = serviceForSupervisor.reassign(reassignedForSup);
+//            return new ResponseEntity<>(obj, HttpStatusCode.valueOf(200));
+//        }
+//        return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(401));
+//    }
 
 }
