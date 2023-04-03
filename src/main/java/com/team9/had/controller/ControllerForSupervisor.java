@@ -1,6 +1,5 @@
 package com.team9.had.controller;
 
-import com.team9.had.model.sup.ReassignedForSup;
 import com.team9.had.model.sup.SubmitAssignedForSup;
 import com.team9.had.service.supervisor.ServiceForSupervisor;
 import com.team9.had.utils.Constant;

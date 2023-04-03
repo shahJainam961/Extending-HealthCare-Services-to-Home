@@ -24,4 +24,11 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return new ResponseEntity<>(obj, HttpStatusCode.valueOf(404));
     }
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Serializable> userNotFoundException(Exception exception){
+        ArrayList<Object> obj = new ArrayList<>();
+        ErrorMessage errorMessage = new ErrorMessage(exception.getMessage());
+        obj.add(errorMessage);
+        return new ResponseEntity<>(obj, HttpStatusCode.valueOf(404));
+    }
 }

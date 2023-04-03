@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class ServiceForFhwImpl implements ServiceForFhw{
@@ -31,7 +30,7 @@ public class ServiceForFhwImpl implements ServiceForFhw{
                 followUpRepository.save(followUp);
             });
 
-            List<SyncModelForFhw> followUps1 = new ArrayList<>();
+            ArrayList<SyncModelForFhw> followUps1 = new ArrayList<>();
             ArrayList<FollowUp> followUps = followUpRepository.findAllByHealthRecord_FieldHealthWorker_LoginIdAndStatus(role, Constant.FOLLOW_UP_PENDING);
             followUps.forEach((followUp)->{
                 SyncModelForFhw syncModelForFhw1 = Constant.getModelMapper().map(followUp, SyncModelForFhw.class);
