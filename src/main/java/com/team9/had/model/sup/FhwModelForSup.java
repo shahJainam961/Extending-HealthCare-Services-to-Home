@@ -13,5 +13,6 @@ public class FhwModelForSup {
 
     private String loginId;
     private CizModelForSup citizen;
+    private Integer citizenAssigned;
 
 }

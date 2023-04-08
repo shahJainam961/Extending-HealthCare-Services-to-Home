@@ -12,7 +12,8 @@ import com.team9.had.service.blackbox.addHospital.HospitalService;
 import com.team9.had.service.blackbox.addReceptionist.ReceptionistService;
 import com.team9.had.service.blackbox.addState.StateService;
 import com.team9.had.service.blackbox.addSupervisor.SupervisorService;
-import com.team9.had.service.blackbox.getOtp.OTPService;
+import com.team9.had.service.blackbox.OtpService.OTPService;
+import com.team9.had.service.blackbox.jobForScheduler.SendSmsForFollowUps;
 import com.team9.had.service.blackbox.resetPassword.ResetPasswordService;
 import com.team9.had.service.blackbox.resetPassword.SecretService;
 import com.team9.had.utils.Constant;
@@ -56,8 +57,8 @@ public class BlackboxController {
     @Autowired
     private DistrictService districtService;
 
-//    @Autowired
-//    private SendSms sendSms;
+    @Autowired
+    private SendSmsForFollowUps sendSmsForFollowUps;
 
     @Autowired
     private OTPService otpService;
@@ -72,7 +73,7 @@ public class BlackboxController {
         if(citizenService.addCitizen(citizen)){
             return new ResponseEntity<>("Citizen added Successfully!!", HttpStatus.OK);
         }
-        return  new ResponseEntity<>("Something went wrong!!", HttpStatusCode.valueOf(412));
+        return  new ResponseEntity<>("Something went wrong!!", HttpStatusCode.valueOf(Constant.HTTP_BAD_REQUEST));
     }
 
     @PostMapping("/addCitizens")
@@ -80,7 +81,7 @@ public class BlackboxController {
         if(citizenService.addCitizens(citizens)){
             return new ResponseEntity<>("Citizens added Successfully!!", HttpStatus.OK);
         }
-        return  new ResponseEntity<>("Something went wrong!!", HttpStatusCode.valueOf(412));
+        return  new ResponseEntity<>("Something went wrong!!", HttpStatusCode.valueOf(Constant.HTTP_BAD_REQUEST));
     }
 
     @PostMapping("/addHospital")
@@ -88,7 +89,7 @@ public class BlackboxController {
         if(hospitalService.addHospital(hospital)){
             return new ResponseEntity<>("Hospital added Successfully!!", HttpStatus.OK);
         }
-        return  new ResponseEntity<>("Something went wrong!!", HttpStatusCode.valueOf(412));
+        return  new ResponseEntity<>("Something went wrong!!", HttpStatusCode.valueOf(Constant.HTTP_BAD_REQUEST));
     }
 
     @PostMapping("/addHospitals")
@@ -96,7 +97,7 @@ public class BlackboxController {
         if(hospitalService.addHospitals(hospitals)){
             return new ResponseEntity<>("Hospitals added Successfully!!", HttpStatus.OK);
         }
-        return  new ResponseEntity<>("Something went wrong!!", HttpStatusCode.valueOf(412));
+        return  new ResponseEntity<>("Something went wrong!!", HttpStatusCode.valueOf(Constant.HTTP_BAD_REQUEST));
     }
 
     @PostMapping("/addDoctor")
@@ -104,7 +105,7 @@ public class BlackboxController {
         if(doctorService.addDoctor(doctor)){
             return new ResponseEntity<>("Doctor added Successfully!!", HttpStatus.OK);
         }
-        return  new ResponseEntity<>("Something went wrong!!", HttpStatusCode.valueOf(412));
+        return  new ResponseEntity<>("Something went wrong!!", HttpStatusCode.valueOf(Constant.HTTP_BAD_REQUEST));
     }
 
     @PostMapping("/addDoctors")
@@ -112,7 +113,7 @@ public class BlackboxController {
         if(doctorService.addDoctors(doctors)){
             return new ResponseEntity<>("Doctors added Successfully!!", HttpStatus.OK);
         }
-        return  new ResponseEntity<>("Something went wrong!!", HttpStatusCode.valueOf(412));
+        return  new ResponseEntity<>("Something went wrong!!", HttpStatusCode.valueOf(Constant.HTTP_BAD_REQUEST));
     }
 
     @PostMapping("/addReceptionist")
@@ -120,7 +121,7 @@ public class BlackboxController {
         if(receptionistService.addReceptionist(receptionist)){
             return new ResponseEntity<>("Receptionist added Successfully!!", HttpStatus.OK);
         }
-        return  new ResponseEntity<>("Something went wrong!!", HttpStatusCode.valueOf(412));
+        return  new ResponseEntity<>("Something went wrong!!", HttpStatusCode.valueOf(Constant.HTTP_BAD_REQUEST));
     }
 
     @PostMapping("/addReceptionists")
@@ -128,7 +129,7 @@ public class BlackboxController {
         if(receptionistService.addReceptionists(receptionists)){
             return new ResponseEntity<>("Receptionists added Successfully!!", HttpStatus.OK);
         }
-        return  new ResponseEntity<>("Something went wrong!!", HttpStatusCode.valueOf(412));
+        return  new ResponseEntity<>("Something went wrong!!", HttpStatusCode.valueOf(Constant.HTTP_BAD_REQUEST));
     }
 
     @PostMapping("/addFhw")
@@ -136,7 +137,7 @@ public class BlackboxController {
         if(fieldHealthWorkerService.addFhw(fieldHealthWorker)){
             return new ResponseEntity<>("FHW added Successfully!!", HttpStatus.OK);
         }
-        return  new ResponseEntity<>("Something went wrong!!", HttpStatusCode.valueOf(412));
+        return  new ResponseEntity<>("Something went wrong!!", HttpStatusCode.valueOf(Constant.HTTP_BAD_REQUEST));
     }
 
     @PostMapping("/addFhws")
@@ -144,7 +145,7 @@ public class BlackboxController {
         if(fieldHealthWorkerService.addFhws(fieldHealthWorkers)){
             return new ResponseEntity<>("FHWs added Successfully!!", HttpStatus.OK);
         }
-        return  new ResponseEntity<>("Something went wrong!!", HttpStatusCode.valueOf(412));
+        return  new ResponseEntity<>("Something went wrong!!", HttpStatusCode.valueOf(Constant.HTTP_BAD_REQUEST));
     }
 
     @PostMapping("/addSupervisor")
@@ -152,7 +153,7 @@ public class BlackboxController {
         if(supervisorService.addSupervisor(supervisor)){
             return new ResponseEntity<>("Supervisor added Successfully!!", HttpStatus.OK);
         }
-        return  new ResponseEntity<>("Something went wrong!!", HttpStatusCode.valueOf(412));
+        return  new ResponseEntity<>("Something went wrong!!", HttpStatusCode.valueOf(Constant.HTTP_BAD_REQUEST));
     }
 
     @PostMapping("/addSupervisors")
@@ -160,7 +161,7 @@ public class BlackboxController {
         if(supervisorService.addSupervisors(supervisors)){
             return new ResponseEntity<>("Supervisors added Successfully!!", HttpStatus.OK);
         }
-        return  new ResponseEntity<>("Something went wrong!!", HttpStatusCode.valueOf(412));
+        return  new ResponseEntity<>("Something went wrong!!", HttpStatusCode.valueOf(Constant.HTTP_BAD_REQUEST));
     }
 
 
@@ -169,7 +170,7 @@ public class BlackboxController {
         if(stateService.addStates(states)){
             return new ResponseEntity<>("States added successfully!!", HttpStatus.OK);
         }
-        return new ResponseEntity<>("Something went wrong!!", HttpStatus.OK);
+        return new ResponseEntity<>("Something went wrong!!", HttpStatusCode.valueOf(Constant.HTTP_BAD_REQUEST));
     }
 
     @PostMapping("/addDistricts")
@@ -177,7 +178,7 @@ public class BlackboxController {
         if(districtService.addDistricts(districts)){
             return new ResponseEntity<>("Districts added successfully!!", HttpStatus.OK);
         }
-        return new ResponseEntity<>("Something went wrong!!", HttpStatus.OK);
+        return new ResponseEntity<>("Something went wrong!!", HttpStatusCode.valueOf(Constant.HTTP_BAD_REQUEST));
     }
 
     @PostMapping("/addCities")
@@ -185,39 +186,41 @@ public class BlackboxController {
         if(cityService.addCities(cities)){
             return new ResponseEntity<>("Cities added successfully!!", HttpStatus.OK);
         }
-        return new ResponseEntity<>("Something went wrong!!", HttpStatus.OK);
+        return new ResponseEntity<>("Something went wrong!!", HttpStatusCode.valueOf(Constant.HTTP_BAD_REQUEST));
     }
 
 //    @Scheduled(cron = "0 * * * * *")
-//    public void f(){
-//        System.out.println("===========================================================================================");
-//        sendSms.sendMessage();
-//        System.out.println("===========================================================================================");
-//    }
+    @GetMapping("/f")
+    public void f(){
+        System.out.println("===========================================================================================");
+        sendSmsForFollowUps.sendMessage();
+        System.out.println("===========================================================================================");
+    }
 
     @GetMapping("/getOtp")
     public ResponseEntity<Serializable> getOtp(@RequestParam String loginId) throws UserNotFoundException {
         if(otpService.getOtp(loginId)){
-            return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(200));
+            return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(Constant.HTTP_OK));
         }
-        return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(401));
+        return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(Constant.HTTP_INTERNAL_SERVER_ERROR));
     }
 
     @PostMapping("/validateOtp")
     public ResponseEntity<Serializable> validateOtp(@RequestBody OTP otpModel, HttpServletResponse httpServletResponse) throws Exception {
-        if(otpService.validateOtp(otpModel)){
+        String status = otpService.validateOtp(otpModel);
+        if(status.equals(Constant.OTP_VALID)){
             String encryptedSecret = secretService.getSecret(otpModel.getLoginId());
-            httpServletResponse.setHeader("secret", encryptedSecret);
-            return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(200));
+            httpServletResponse.setHeader(Constant.FORGOT_PASSWORD_SECRET, encryptedSecret);
+            return new ResponseEntity<>(status, HttpStatusCode.valueOf(Constant.HTTP_OK));
         }
-        return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(401));
+        return new ResponseEntity<>(status, HttpStatusCode.valueOf(Constant.HTTP_OK));
     }
 
     @PostMapping("/resetPassword")
     public ResponseEntity<Serializable> resetPassword(@RequestBody LoginModel loginModel, HttpServletRequest httpServletRequest) throws Exception {
         if(resetPasswordService.resetPassword(loginModel, httpServletRequest)){
-            return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(200));
+            return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(Constant.HTTP_OK));
         }
-        return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(401));
+        return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(Constant.HTTP_UNAUTHENTICATED));
     }
 }

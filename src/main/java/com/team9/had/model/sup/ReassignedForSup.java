@@ -12,6 +12,6 @@ import java.util.ArrayList;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReassignedForSup {
-    ArrayList<CizModelForSup> cizModelForSups = new ArrayList<>();
-    FhwModelForSup fhwModelForSup;
+    private ArrayList<CizModelForSup> citizens = new ArrayList<>();
+    private FhwModelForSup fieldHealthWorker;
 }

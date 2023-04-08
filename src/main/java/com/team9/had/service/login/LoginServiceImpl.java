@@ -4,6 +4,8 @@ import com.team9.had.entity.Doctor;
 import com.team9.had.entity.FieldHealthWorker;
 import com.team9.had.entity.Receptionist;
 import com.team9.had.entity.Supervisor;
+import com.team9.had.exception.BadCredentialException;
+import com.team9.had.exception.BadRequestException;
 import com.team9.had.exception.UserNotFoundException;
 import com.team9.had.model.LoginModel;
 import com.team9.had.model.doc.DocModelForDoc;
@@ -40,20 +42,27 @@ public class LoginServiceImpl implements LoginService{
     private AuthenticationManager authenticationManager;
 
     @Override
-    public Serializable loggingIn(LoginModel loginModel) throws UserNotFoundException {
+    public Serializable loggingIn(LoginModel loginModel) throws UserNotFoundException, BadCredentialException {
+        // todo validation of loginModel, if any null then throw bad request
         String loginId = loginModel.getLoginId().trim();
         String password = loginModel.getPassword();
 
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginId, password
-                )
-        );
+        try{
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            loginId, password
+                    )
+            );
+        }
+        catch(Exception e){
+            System.out.println("e = " + e);
+            throw new BadCredentialException("Invalid Credentials!!");
+        }
 
 
         if(loginId.startsWith(Constant.DOCTOR)){
             Doctor doctor = doctorRepository.findByLoginId(loginId);
-            if(doctor==null) throw new UserNotFoundException("User Not Found!!");
+            if(doctor==null) throw new UserNotFoundException(Constant.USER_NOT_FOUND_MSG);
 
             ArrayList<Object> obj = new ArrayList<>();
             DocModelForDoc docModelForDoc = Constant.getModelMapper().map(doctor, DocModelForDoc.class);
@@ -63,7 +72,7 @@ public class LoginServiceImpl implements LoginService{
 
         else if(loginId.startsWith(Constant.RECEPTIONIST)){
             Receptionist receptionist = receptionistRepository.findByLoginId(loginId);
-            if(receptionist==null) throw new UserNotFoundException("User Not Found!!");
+            if(receptionist==null) throw new UserNotFoundException(Constant.USER_NOT_FOUND_MSG);
 
             Integer hospitalId = receptionist.getHospital().getHospId();
             ArrayList<Doctor> doctors = doctorRepository.findAllByHospital_HospId(hospitalId);
@@ -78,7 +87,7 @@ public class LoginServiceImpl implements LoginService{
         }
         else if(loginId.startsWith(Constant.SUPERVISOR)){
             Supervisor supervisor = supervisorRepository.findByLoginId(loginId);
-            if(supervisor==null) throw new UserNotFoundException("User Not Found!!");
+            if(supervisor==null) throw new UserNotFoundException(Constant.USER_NOT_FOUND_MSG);
 
             ArrayList<Object> obj = new ArrayList<>();
             SupModelForSup supModelForSup = Constant.getModelMapper().map(supervisor, SupModelForSup.class);
@@ -87,13 +96,13 @@ public class LoginServiceImpl implements LoginService{
         }
         else if(loginId.startsWith(Constant.FIELD_HEALTH_WORKER)){
             FieldHealthWorker fieldHealthWorker = fieldHealthWorkerRepository.findByLoginId(loginId);
-            if(fieldHealthWorker==null) throw new UserNotFoundException("User Not Found!!");
+            if(fieldHealthWorker==null) throw new UserNotFoundException(Constant.USER_NOT_FOUND_MSG);
 
             ArrayList<Object> obj = new ArrayList<>();
             FhwModelForFhw fhwModelForFhw = Constant.getModelMapper().map(fieldHealthWorker, FhwModelForFhw.class);
             obj.add(fhwModelForFhw);
             return obj;
         }
-        else return Constant.EMPTY;
+        else return null;
     }
 }

@@ -1,5 +1,7 @@
 package com.team9.had.controller;
 
+import com.team9.had.exception.UserNotFoundException;
+import com.team9.had.model.sup.ReassignedForSup;
 import com.team9.had.model.sup.SubmitAssignedForSup;
 import com.team9.had.service.supervisor.ServiceForSupervisor;
 import com.team9.had.utils.Constant;
@@ -22,36 +24,38 @@ public class ControllerForSupervisor {
     public ResponseEntity<Serializable> getUnassignedCitizens(@RequestParam String loginId, @RequestAttribute String role){
         if(Constant.isAuthorised(role, Constant.SUPERVISOR)){
             Serializable obj = serviceForSupervisor.getUnassignedCitizens(loginId, role);
-            return new ResponseEntity<>(obj, HttpStatusCode.valueOf(200));
+            return new ResponseEntity<>(obj, HttpStatusCode.valueOf(Constant.HTTP_OK));
         }
-        return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(401));
+        return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(Constant.HTTP_UNAUTHORISED));
     }
 
     @PostMapping("/submitAssignment")
-    public ResponseEntity<Serializable> submitAssignment(@RequestBody  SubmitAssignedForSup submitAssignedForSup, @RequestAttribute String role){
+    public ResponseEntity<Serializable> submitAssignment(@RequestBody  SubmitAssignedForSup submitAssignedForSup, @RequestAttribute String role) throws UserNotFoundException {
         if(Constant.isAuthorised(role, Constant.SUPERVISOR)){
-            Serializable obj = serviceForSupervisor.submitAssignment(submitAssignedForSup);
-            return new ResponseEntity<>(obj, HttpStatusCode.valueOf(200));
+            if(serviceForSupervisor.submitAssignment(submitAssignedForSup))
+                return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(Constant.HTTP_OK));
+            else
+                return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(Constant.HTTP_BAD_REQUEST));
         }
-        return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(401));
+        return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(Constant.HTTP_UNAUTHORISED));
     }
 
-//    @GetMapping("/getFhws")
-//    public ResponseEntity<Serializable> getFhws(@RequestParam String loginId, @RequestAttribute String role){
-//        if(Constant.isAuthorised(role, Constant.SUPERVISOR)){
-//            Serializable obj = serviceForSupervisor.getFhws(loginId, role);
-//            return new ResponseEntity<>(obj, HttpStatusCode.valueOf(200));
-//        }
-//        return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(401));
-//    }
-//
-//    @PostMapping("/reassign")
-//    public ResponseEntity<Serializable> reassign(@RequestBody  ReassignedForSup reassignedForSup, @RequestAttribute String role){
-//        if(Constant.isAuthorised(role, Constant.SUPERVISOR)){
-//            Serializable obj = serviceForSupervisor.reassign(reassignedForSup);
-//            return new ResponseEntity<>(obj, HttpStatusCode.valueOf(200));
-//        }
-//        return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(401));
-//    }
+    @GetMapping("/getFhws")
+    public ResponseEntity<Serializable> getFhws(@RequestParam String loginId, @RequestAttribute String role){
+        if(Constant.isAuthorised(role, Constant.SUPERVISOR)){
+            Serializable obj = serviceForSupervisor.getFhws(loginId, role);
+            return new ResponseEntity<>(obj, HttpStatusCode.valueOf(Constant.HTTP_OK));
+        }
+        return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(Constant.HTTP_UNAUTHORISED));
+    }
+
+    @PostMapping("/reassign")
+    public ResponseEntity<Serializable> reassign(@RequestBody ReassignedForSup reassignedForSup, @RequestAttribute String role){
+        if(Constant.isAuthorised(role, Constant.SUPERVISOR)){
+            Serializable obj = serviceForSupervisor.reassign(reassignedForSup);
+            return new ResponseEntity<>(obj, HttpStatusCode.valueOf(Constant.HTTP_OK));
+        }
+        return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(Constant.HTTP_UNAUTHORISED));
+    }
 
 }

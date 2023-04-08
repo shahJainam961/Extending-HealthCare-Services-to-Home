@@ -1,11 +1,10 @@
-package com.team9.had.service.blackbox.getOtp;
+package com.team9.had.service.blackbox.OtpService;
 
 import com.team9.had.entity.*;
 import com.team9.had.exception.UserNotFoundException;
 import com.team9.had.repository.*;
+import com.team9.had.service.twilio.TwilioMessaging;
 import com.team9.had.utils.Constant;
-import com.twilio.Twilio;
-import com.twilio.rest.api.v2010.account.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,50 +26,44 @@ public class OTPServiceImpl implements OTPService{
 
 
     public boolean getOtp(String loginId) throws UserNotFoundException {
-        String mobileNo = "+91";
+        // todo validations --> loginId null hoi to Bad Request moklvaani
+        String mobileNo = Constant.MOBILE_PREFIX;
 
         if(loginId.startsWith(Constant.DOCTOR)){
             Doctor doctor = doctorRepository.findByLoginId(loginId);
-            if(doctor==null) {throw new UserNotFoundException("User Not Found!!");}//throw
+            if(doctor==null) {throw new UserNotFoundException(Constant.USER_NOT_FOUND_MSG);}
             mobileNo += doctor.getCitizen().getMobileNo();
         }
         else if(loginId.startsWith(Constant.RECEPTIONIST)){
             Receptionist receptionist = receptionistRepository.findByLoginId(loginId);
-            if(receptionist==null){throw new UserNotFoundException("User Not Found!!");}
+            if(receptionist==null){throw new UserNotFoundException(Constant.USER_NOT_FOUND_MSG);}
             mobileNo += receptionist.getCitizen().getMobileNo();
         }
         else if(loginId.startsWith(Constant.SUPERVISOR)){
             Supervisor supervisor = supervisorRepository.findByLoginId(loginId);
-            if(supervisor==null){throw new UserNotFoundException("User Not Found!!");}
+            if(supervisor==null){throw new UserNotFoundException(Constant.USER_NOT_FOUND_MSG);}
             mobileNo += supervisor.getCitizen().getMobileNo();
         }
         else if(loginId.startsWith(Constant.FIELD_HEALTH_WORKER)){
             FieldHealthWorker fieldHealthWorker = fieldHealthWorkerRepository.findByLoginId(loginId);
-            if(fieldHealthWorker==null){throw new UserNotFoundException("User Not Found!!");}
+            if(fieldHealthWorker==null){throw new UserNotFoundException(Constant.USER_NOT_FOUND_MSG);}
             mobileNo += fieldHealthWorker.getCitizen().getMobileNo();
         }
         else{
-            throw new UserNotFoundException("User Not Found!!");
+            throw new UserNotFoundException(Constant.USER_NOT_FOUND_MSG);
         }
 
         try{
             System.out.println("mobileNo = " + mobileNo);
-            Twilio.init(Constant.ACCOUNT_SID, Constant.AUTH_TOKEN);
-
             String otp = Constant.generateOtp();
-            Date date = new Date(System.currentTimeMillis()+(1000*60*30));
+            Date date = new Date(System.currentTimeMillis()+ Constant.OTP_EXPIRATION_TIME);
+            String msg = "\n Password reset request (OPT : Valid for 30 minutes | Invalid after 30 minutes or on again requesting for otp) \nOTP: "+otp+"  \n Note: Do not share the otp to anyone!!";
+
+            boolean flag = TwilioMessaging.sendMessage(msg, mobileNo);
+            if(!flag) return false;
 
             OTP otp1 = new OTP(loginId, otp, date);
             otpRepository.save(otp1);
-            String msg = "\n Password reset request (OPT : Valid for 30 minutes/Invalid after 30 minutes or on again requesting for otp) \nOTP: "+otp+"  \n Note: Do not share the otp to anyone!!";
-
-            Message message = Message.creator(
-                            new com.twilio.type.PhoneNumber("+919426629406"),
-// to give actual number but now only supports one mobile number code for fetching actual number is above commented
-                            new com.twilio.type.PhoneNumber("+14344361379"),
-                            msg)
-                    .create();
-            System.out.println("message = " + message.getSid());
             return true;
         }
         catch (Exception e){
@@ -80,12 +73,13 @@ public class OTPServiceImpl implements OTPService{
     }
 
     @Override
-    public boolean validateOtp(OTP otpModel) {
+    public String validateOtp(OTP otpModel) {
+        // todo validations --> otpModel ma thi fields ekad null hoi to bad requst moklvaani
         String loginId = otpModel.getLoginId();
 
         OTP actualModel = otpRepository.findByLoginId(loginId);
 
-        if(actualModel==null) return  false;
+        if(actualModel==null) return Constant.OTP_EXPIRED;
 
         long actualModelMilli = actualModel.getDate().getTime();
         long otpModelMilli = new Date(System.currentTimeMillis()).getTime();
@@ -93,18 +87,18 @@ public class OTPServiceImpl implements OTPService{
         // expiry
         if(actualModelMilli<otpModelMilli){
             otpRepository.delete(actualModel);
-            return false;
+            return Constant.OTP_EXPIRED;
         }
 
         String actualModelOtp = actualModel.getOtp();
         String otpModelOtp = otpModel.getOtp();
 
-        // non expiry and otpmatch
+        // non expiry and otp-match
         if(otpModelOtp.equals(actualModelOtp)) {
             otpRepository.delete(actualModel);
+            return Constant.OTP_VALID;
         }
-
-        return true;
+        return Constant.OTP_INVALID;
     }
 
 }

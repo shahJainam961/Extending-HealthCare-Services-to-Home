@@ -22,20 +22,21 @@ public class ControllerForReceptionist {
     @PostMapping("/createHealthRecord")
     public ResponseEntity<Serializable> createHealthRecord(@RequestBody HrModelForRec hrModelForRec, @RequestAttribute String role) throws UserNotFoundException {
         if(Constant.isAuthorised(role, Constant.RECEPTIONIST)){
-            Serializable obj = serviceForReceptionist.createHealthRecord(hrModelForRec, role);
-            return new ResponseEntity<>(obj, HttpStatusCode.valueOf(200));
+            if(serviceForReceptionist.createHealthRecord(hrModelForRec, role))
+                return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(Constant.HTTP_OK));
+            else
+                return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(Constant.HTTP_BAD_REQUEST));
         }
-        return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(401));
+        return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(Constant.HTTP_UNAUTHORISED));
     }
 
     @GetMapping("/confirmation")
     public ResponseEntity<Serializable> confirmation(@RequestParam Integer uhId, @RequestAttribute String role) throws UserNotFoundException {
-
         if(Constant.isAuthorised(role, Constant.RECEPTIONIST)){
             Serializable obj = serviceForReceptionist.confirmation(uhId);
-            return new ResponseEntity<>(obj, HttpStatusCode.valueOf(200));
+            return new ResponseEntity<>(obj, HttpStatusCode.valueOf(Constant.HTTP_OK));
         }
-        return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(401));
+        return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(Constant.HTTP_UNAUTHORISED));
     }
 
 }

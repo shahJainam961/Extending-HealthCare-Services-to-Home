@@ -5,6 +5,7 @@ import com.team9.had.entity.Doctor;
 import com.team9.had.entity.FieldHealthWorker;
 import com.team9.had.entity.Receptionist;
 import com.team9.had.entity.Supervisor;
+import com.team9.had.exception.BadCredentialException;
 import com.team9.had.exception.UserNotFoundException;
 import com.team9.had.model.LoginModel;
 import com.team9.had.service.login.LoginService;
@@ -27,7 +28,7 @@ public class LoginController {
     @Autowired
     private LoginService loginService;
     @PostMapping("/login")
-    public ResponseEntity<Serializable> loggingIn(@RequestBody LoginModel loginModel, HttpServletResponse httpServletResponse) throws UserNotFoundException {
+    public ResponseEntity<Serializable> loggingIn(@RequestBody LoginModel loginModel, HttpServletResponse httpServletResponse) throws UserNotFoundException, BadCredentialException {
         Serializable obj = loginService.loggingIn(loginModel);
         String loginId = loginModel.getLoginId();
         String authToken = null;
@@ -53,10 +54,10 @@ public class LoginController {
                 authToken = jwtService.generateToken(userDetails);
             }
             httpServletResponse.setHeader("token", authToken);
-            return new ResponseEntity<>(obj, HttpStatusCode.valueOf(200));
+            return new ResponseEntity<>(obj, HttpStatusCode.valueOf(Constant.HTTP_OK));
         }
         else{
-            return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(401));
+            return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(Constant.HTTP_UNAUTHENTICATED));
         }
     }
 }

@@ -22,8 +22,8 @@ public class ControllerForFhw {
     public ResponseEntity<Serializable> sync(@RequestBody ModelForFhw modelForFhw, @RequestAttribute String role){
         if(Constant.isAuthorised(role, Constant.FIELD_HEALTH_WORKER)){
             Serializable obj = serviceForFhw.sync(modelForFhw, role);
-            return new ResponseEntity<>(obj, HttpStatusCode.valueOf(200));
+            return new ResponseEntity<>(obj, HttpStatusCode.valueOf(Constant.HTTP_OK));
         }
-        return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(401));
+        return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(Constant.HTTP_UNAUTHORISED));
     }
 }

@@ -1,6 +1,7 @@
 package com.team9.had.service.doctor;
 
 import com.team9.had.entity.*;
+import com.team9.had.exception.InternalServerError;
 import com.team9.had.model.doc.FupModelForDoc;
 import com.team9.had.model.doc.HrModelForDoc;
 import com.team9.had.repository.*;
@@ -23,21 +24,20 @@ public class ServiceForDoctorImpl implements ServiceForDoctor{
     private CitizenRepository citizenRepository;
     @Autowired
     private SupervisorRepository supervisorRepository;
-    @Autowired
-    private FieldHealthWorkerRepository fieldHealthWorkerRepository;
 
     @Autowired
     private CityRepository cityRepository;
     @Override
-    public Serializable getNewHealthRecords(String loginId) {
+    public Serializable getNewHealthRecords(String loginId){
+        // todo validation --> loginId null hoi to bad request moklvaani
         ArrayList<Object> obj = new ArrayList<>();
 
         ArrayList<HealthRecord> healthRecords =
                 healthRecordRepository
-                .findAllByDoctor_LoginIdAndStatusAndCreationDateOrderByCreationTime(
-                        loginId, Constant.HEALTH_RECORD_NOT_ASSESSED,
-                        new Date(System.currentTimeMillis())
-                );
+                        .findAllByDoctor_LoginIdAndStatusAndCreationDateOrderByCreationTime(
+                                loginId, Constant.HEALTH_RECORD_NOT_ASSESSED,
+                                new Date(System.currentTimeMillis())
+                        );
         ArrayList<HrModelForDoc> hrModelForDocs = new ArrayList<>();
         healthRecords.stream().forEach((healthRecord) -> {
             hrModelForDocs.add(Constant.getModelMapper().map(healthRecord, HrModelForDoc.class));
@@ -48,6 +48,7 @@ public class ServiceForDoctorImpl implements ServiceForDoctor{
 
     @Override
     public Serializable getOldHealthRecords(String loginId) {
+        // todo validations  --> loginId null hoi to bad request moklvaani
         ArrayList<Object> obj = new ArrayList<>();
 
         ArrayList<HealthRecord> healthRecords =
@@ -70,12 +71,14 @@ public class ServiceForDoctorImpl implements ServiceForDoctor{
     }
     @Override
     public boolean submitHealthRecord(HrModelForDoc hrModelForDoc) {
+        // todo validations  --> nullity check for hrModelForDoc, if any null then return false
         try{
             ArrayList<FollowUp> followUps = new ArrayList<>();
             hrModelForDoc.getFollowUps().stream().forEach((fupModelForDoc -> {
                 followUps.add(Constant.getModelMapper().map(fupModelForDoc, FollowUp.class));
             }));
             HealthRecord healthRecord = healthRecordRepository.findByHrId(hrModelForDoc.getHrId());
+            // todo validation --> healthRecord null hase to return false
             healthRecord.setFields(hrModelForDoc.getFields());
             healthRecord.setFieldsValues(hrModelForDoc.getFieldsValues());
             healthRecord.setStatus(Constant.HEALTH_RECORD_ASSESSED);
@@ -102,8 +105,7 @@ public class ServiceForDoctorImpl implements ServiceForDoctor{
 
     @Override
     public Serializable getConsentData(Integer uhId) {
-        // todo validation
-
+        // todo validation --> uhId, if null then bad request
         ArrayList<HealthRecord> healthRecords = healthRecordRepository.findAllByCitizen_UhIdAndStatusOrderByCreationDateDescCreationTimeDesc(
                     uhId, Constant.HEALTH_RECORD_ASSESSED
         );
@@ -116,11 +118,8 @@ public class ServiceForDoctorImpl implements ServiceForDoctor{
         });
         obj.add(hrModelForDocs);
         return obj;
-
     }
 
-
-    // todo modify the below function as per the requirement
     private FieldHealthWorker getFieldHealthWorker(HealthRecord healthRecord) {
         FieldHealthWorker fieldHealthWorker = citizenRepository.findByUhId(healthRecord.getCitizen().getUhId()).getFieldHealthWorker();
         if(fieldHealthWorker == null) return null;
@@ -128,10 +127,10 @@ public class ServiceForDoctorImpl implements ServiceForDoctor{
         return fieldHealthWorker;
     }
 
-    // todo modify the below function as per the requirement
     private Supervisor getSupervisor(HealthRecord healthRecord) {
         City city = cityRepository.findByCityName(healthRecord.getDistrict());
         Supervisor supervisor = supervisorRepository.findByAssignedPincode(city.getPincode());
+        // todo validation --> supervisor null hoi to user not found exception
         return supervisor;
     }
 }

@@ -6,13 +6,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class UnassignedCitizenModelForSup {
-    CizModelForSup citizen;
-    List<FhwModelForSup> fieldHealthWorkers = new ArrayList<>();
+    private CizModelForSup citizen;
+    private ArrayList<FhwModelForSup> fieldHealthWorkers = new ArrayList<>();
 }

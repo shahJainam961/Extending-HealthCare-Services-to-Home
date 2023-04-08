@@ -12,8 +12,7 @@ import java.util.ArrayList;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GetFhwModelForSup {
-    FhwModelForSup fhwModelForSup;
-    ArrayList<CizModelForSup> cizModelForSups = new ArrayList<>();
-    Integer citizensAssigned;
-    ArrayList<FhwModelForSup> otherFhwModelForSups;
+    FhwModelForSup fieldHealthWorker;
+    ArrayList<CizModelForSup> citizens = new ArrayList<>();
+    ArrayList<FhwModelForSup> fieldHealthWorkers;
 }

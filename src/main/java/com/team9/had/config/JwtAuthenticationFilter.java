@@ -1,5 +1,7 @@
 package com.team9.had.config;
 
+import com.team9.had.exception.UserNotFoundException;
+import com.team9.had.utils.Constant;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,20 +30,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
-        String authHeader = request.getHeader("Authorization");
+        String authHeader = request.getHeader(Constant.JWT_AUTH_HEADER);
         final String jwt;
-        String loginId = null;
-        if(authHeader == null || !authHeader.startsWith("Bearer ")){
+        String loginId;
+        if(authHeader == null || !authHeader.startsWith(Constant.JWT_TOKEN_PREFIX)){
             filterChain.doFilter(request, response);
             return;
         }
         jwt = authHeader.substring(7);
-        try{
-            loginId = jwtService.extractLoginId(jwt);
-        }
-        catch(Exception e){
-            response.setHeader("tokenValid","false");
-        }
+        loginId = jwtService.extractLoginId(jwt);
         if(loginId!=null && SecurityContextHolder.getContext().getAuthentication()==null){
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(loginId);
             if(jwtService.isTokenValid(jwt, userDetails)){
@@ -55,7 +52,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 );
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
-            request.setAttribute("role",loginId);
+            request.setAttribute(Constant.ROLE_HEADER,loginId);
         }
         filterChain.doFilter(request, response);
     }

@@ -4,7 +4,6 @@ import com.team9.had.entity.FollowUp;
 import com.team9.had.model.fhw.ModelForFhw;
 import com.team9.had.model.fhw.SyncModelForFhw;
 import com.team9.had.repository.FollowUpRepository;
-import com.team9.had.repository.HealthRecordRepository;
 import com.team9.had.utils.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,15 +16,12 @@ public class ServiceForFhwImpl implements ServiceForFhw{
 
     @Autowired
     private FollowUpRepository followUpRepository;
-    @Autowired
-    private HealthRecordRepository healthRecordRepository;
 
     @Override
     public Serializable sync(ModelForFhw modelForFhw, String role) {
-
+        // todo validation of every followups --> throw bad request
         try{
             modelForFhw.getFollowUps().forEach((syncModelForFhw)->{
-                // todo validation of every followups
                 FollowUp followUp = Constant.getModelMapper().map(syncModelForFhw, FollowUp.class);
                 followUpRepository.save(followUp);
             });

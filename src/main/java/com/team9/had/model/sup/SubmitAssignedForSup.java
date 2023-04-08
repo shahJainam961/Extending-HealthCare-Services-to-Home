@@ -11,6 +11,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class SubmitAssignedForSup {
 
-    CizModelForSup citizen;
-    FhwModelForSup fieldHealthWorker;
+    private CizModelForSup citizen;
+    private FhwModelForSup fieldHealthWorker;
 }

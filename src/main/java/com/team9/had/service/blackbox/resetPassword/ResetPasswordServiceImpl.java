@@ -27,24 +27,30 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
 
     @Override
     public boolean resetPassword(LoginModel loginModel, HttpServletRequest httpServletRequest) throws Exception {
-
-        String encryptedSecret = httpServletRequest.getHeader("secret");
-
+        // todo validations --> loginModel nullity check, if null then throw bad request
+        String encryptedSecret = httpServletRequest.getHeader(Constant.FORGOT_PASSWORD_SECRET);
+        if(encryptedSecret==null) return false;
         SecretForResetPassword secretForResetPassword = secretRepository.findBySecret(encryptedSecret);
         if(secretForResetPassword==null) return false;
         else{
-            String secret = EncryptDecrypt.decrypt(encryptedSecret, Constant.SECRET_KEY);
-            int index = secret.indexOf('#');
-            String loginId = secret.substring(0, index);
-            if(!(loginId.equals(loginModel.getLoginId()))) return false;
-            secretRepository.delete(secretForResetPassword);
+            try{
+                String secret = EncryptDecrypt.decrypt(encryptedSecret, Constant.SECRET_KEY);
+                int index = secret.indexOf(Constant.HASH);
+                String loginId = secret.substring(0, index);
+                if(!(loginId.equals(loginModel.getLoginId()))) return false;
+                secretRepository.delete(secretForResetPassword);
+            }
+            catch(Exception e){
+                System.out.println("e = " + e);
+                return false;
+            }
         }
 
         String loginId = loginModel.getLoginId();
         String password = loginModel.getPassword();
         if(loginId.startsWith(Constant.DOCTOR)){
             Doctor doctor = doctorRepository.findByLoginId(loginId);
-            if(doctor==null) {throw new UserNotFoundException("User Not Found!!");}
+            if(doctor==null) {throw new UserNotFoundException(Constant.USER_NOT_FOUND_MSG);}
             try{
                 doctor.setPassword(Constant.passwordEncode().encode(password));
                 doctorRepository.save(doctor);
@@ -56,7 +62,7 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
         }
         else if(loginId.startsWith(Constant.RECEPTIONIST)){
             Receptionist receptionist = receptionistRepository.findByLoginId(loginId);
-            if(receptionist==null){throw new UserNotFoundException("User Not Found!!");}
+            if(receptionist==null){throw new UserNotFoundException(Constant.USER_NOT_FOUND_MSG);}
             try{
                 receptionist.setPassword(Constant.passwordEncode().encode(password));
                 receptionistRepository.save(receptionist);
@@ -68,7 +74,7 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
         }
         else if(loginId.startsWith(Constant.SUPERVISOR)){
             Supervisor supervisor = supervisorRepository.findByLoginId(loginId);
-            if(supervisor==null){throw new UserNotFoundException("User Not Found!!");}
+            if(supervisor==null){throw new UserNotFoundException(Constant.USER_NOT_FOUND_MSG);}
             try{
                 supervisor.setPassword(Constant.passwordEncode().encode(password));
                 supervisorRepository.save(supervisor);
@@ -80,7 +86,7 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
         }
         else if(loginId.startsWith(Constant.FIELD_HEALTH_WORKER)){
             FieldHealthWorker fieldHealthWorker = fieldHealthWorkerRepository.findByLoginId(loginId);
-            if(fieldHealthWorker==null){throw new UserNotFoundException("User Not Found!!");}
+            if(fieldHealthWorker==null){throw new UserNotFoundException(Constant.USER_NOT_FOUND_MSG);}
             try{
                 fieldHealthWorker.setPassword(Constant.passwordEncode().encode(password));
                 fieldHealthWorkerRepository.save(fieldHealthWorker);
@@ -91,7 +97,7 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
             }
         }
         else{
-            throw new UserNotFoundException("User Not Found!!");
+            throw new UserNotFoundException(Constant.USER_NOT_FOUND_MSG);
         }
         return true;
     }
