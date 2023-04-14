@@ -19,8 +19,12 @@ public class SyncModelForFhw {
     private Time actualTimeOfFollowUp;
     private Integer status;
     private String instruction;
-    private String fields;
-    private String fieldsValue;
+    private String bloodSugar;
+    private String bloodOxygen;
+    private String skinColor;
+    private String eyeColor;
+    private String temperature;
+    private String inflammation;
     private String secretKey;
     private String observation;
     private String reasonIfDelayed;

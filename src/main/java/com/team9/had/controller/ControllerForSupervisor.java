@@ -58,4 +58,13 @@ public class ControllerForSupervisor {
         return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(Constant.HTTP_UNAUTHORISED));
     }
 
+    @GetMapping("/stats")
+    public ResponseEntity<Serializable> stats(@RequestParam String loginId, @RequestAttribute String role){
+        if(Constant.isAuthorised(role, Constant.SUPERVISOR)){
+            Serializable obj = serviceForSupervisor.stats(loginId);
+            return new ResponseEntity<>(obj, HttpStatusCode.valueOf(Constant.HTTP_OK));
+        }
+        return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(Constant.HTTP_UNAUTHORISED));
+    }
+
 }

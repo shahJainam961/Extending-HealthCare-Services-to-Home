@@ -28,6 +28,8 @@ public class ServiceForSupervisorImpl implements ServiceForSupervisor{
     private DistrictRepository districtRepository;
     @Autowired
     private CityRepository cityRepository;
+    @Autowired
+    private FollowUpRepository followUpRepository;
 
     @Override
     public Serializable getUnassignedCitizens(String loginId, String role) {
@@ -145,5 +147,36 @@ public class ServiceForSupervisorImpl implements ServiceForSupervisor{
             System.out.println("e = " + e);
             return false;
         }
+    }
+
+    @Override
+    public Serializable stats(String loginId) {
+        // todo validation --> loginId null hoi to bad request throw
+        ArrayList<Object> obj = new ArrayList<>();
+        Supervisor supervisor = supervisorRepository.findByLoginId(loginId);
+        Integer did = cityRepository.findByPincode(supervisor.getAssignedPincode()).getDistrict().getDid();
+
+        ArrayList<City> cities = cityRepository.findAllByDistrict_Did(did);
+        ArrayList<FhwModelForStat> fhwModelForStats = new ArrayList<>();
+        cities.forEach(city -> {
+            String assignedPincode = city.getPincode();
+            ArrayList<FieldHealthWorker> fieldHealthWorkers = fieldHealthWorkerRepository.findAllByAssignedPincode(assignedPincode);
+            fieldHealthWorkers.forEach(fieldHealthWorker -> {
+                FhwModelForStat fhwModelForStat = new FhwModelForStat();
+                FhwModelForSup fhwModelForSup = Constant.getModelMapper().map(fieldHealthWorker, FhwModelForSup.class);
+                fhwModelForSup.setCitizenAssigned(citizenRepository.findAllByFieldHealthWorker_LoginId(fieldHealthWorker.getLoginId()).size());
+                fhwModelForStat.setFieldHealthWorker(fhwModelForSup);
+                ArrayList<HealthRecord> healthRecords = healthRecordRepository.findAllByFieldHealthWorker_LoginId(fieldHealthWorker.getLoginId());
+                healthRecords.forEach(healthRecord -> {
+                    ArrayList<FollowUp> followUps = followUpRepository.findAllByHealthRecord_HrId(healthRecord.getHrId());
+                    followUps.forEach(followUp -> {
+                        fhwModelForStat.getFollowUps().add(Constant.getModelMapper().map(followUp, FollowUpModelForSup.class));
+                    });
+                });
+                fhwModelForStats.add(fhwModelForStat);
+            });
+        });
+        obj.add(fhwModelForStats);
+        return obj;
     }
 }

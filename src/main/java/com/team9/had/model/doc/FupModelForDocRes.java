@@ -7,14 +7,12 @@ import lombok.Setter;
 
 import java.sql.Date;
 import java.sql.Time;
-import java.util.ArrayList;
-
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class FupModelForDoc {
+public class FupModelForDocRes {
 
     private Integer fuId;
     private Date dateOfFollowUp;
@@ -22,8 +20,14 @@ public class FupModelForDoc {
     private Time actualTimeOfFollowUp;
     private Integer status;
     private String instruction;
-    private ArrayList<Boolean> vitals;
+
+    private String bloodSugar;
+    private String bloodOxygen;
+    private String skinColor;
+    private String eyeColor;
+    private String temperature;
+    private String inflammation;
+
     private String observation;
     private String reasonIfDelayed;
-
 }

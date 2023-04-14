@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 @Repository
 public interface FollowUpRepository extends JpaRepository<FollowUp, Integer> {
-    ArrayList<FollowUp> findByHealthRecord_HrId(Integer hrId);
+    ArrayList<FollowUp> findAllByHealthRecord_HrId(Integer hrId);
 
     ArrayList<FollowUp> findAllByHealthRecord_FieldHealthWorker_LoginIdAndStatus(String loginId, Integer status);
 

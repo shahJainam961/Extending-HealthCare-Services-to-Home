@@ -14,4 +14,6 @@ public interface ServiceForSupervisor {
     Serializable getFhws(String loginId, String role);
 
     boolean reassign(ReassignedForSup reassignedForSup);
+
+    Serializable stats(String loginId);
 }

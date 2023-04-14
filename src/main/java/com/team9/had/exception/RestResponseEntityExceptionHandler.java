@@ -4,7 +4,6 @@ package com.team9.had.exception;
 import com.team9.had.model.ErrorMessage;
 import com.team9.had.utils.Constant;
 import jakarta.transaction.TransactionRequiredException;
-import org.apache.tomcat.util.bcel.Const;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatusCode;

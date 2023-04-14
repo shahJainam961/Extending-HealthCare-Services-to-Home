@@ -30,10 +30,12 @@ public class FollowUp {
     @Column(nullable = false)
     private String instruction;
 
-    @Column(length = 999999999)
-    private String fields;
-    @Column(length = 999999999)
-    private String fieldsValue;
+    private String bloodSugar;
+    private String bloodOxygen;
+    private String skinColor;
+    private String eyeColor;
+    private String temperature;
+    private String inflammation;
 
     @ManyToOne
     @JoinColumn(name = "health_record_hr_id", nullable = false)

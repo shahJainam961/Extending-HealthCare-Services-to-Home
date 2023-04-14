@@ -1,6 +1,5 @@
 package com.team9.had.config;
 
-import com.team9.had.exception.UserNotFoundException;
 import com.team9.had.utils.Constant;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

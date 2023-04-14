@@ -1,4 +1,4 @@
-package com.team9.had.model.doc;
+package com.team9.had.model.sup;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,23 +7,17 @@ import lombok.Setter;
 
 import java.sql.Date;
 import java.sql.Time;
-import java.util.ArrayList;
-
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class FupModelForDoc {
+public class FollowUpModelForSup {
 
     private Integer fuId;
     private Date dateOfFollowUp;
     private Date actualDateOfFollowUp;
     private Time actualTimeOfFollowUp;
     private Integer status;
-    private String instruction;
-    private ArrayList<Boolean> vitals;
-    private String observation;
     private String reasonIfDelayed;
-
 }

@@ -13,8 +13,8 @@ public interface HealthRecordRepository extends JpaRepository<HealthRecord, Inte
             String loginId, Integer status, Date creationDate
     );
 
-    ArrayList<HealthRecord> findAllByDoctor_LoginIdAndStatusOrderByCreationDateDescCreationTimeDesc(
-            String loginId, Integer status
+    ArrayList<HealthRecord> findAllByDoctor_LoginIdAndStatusAndCreationDateBetweenOrderByCreationDateDescCreationTimeDesc(
+            String loginId, Integer status, Date startDate, Date endDate
     );
 
     HealthRecord findByHrId(Integer hrId);
@@ -25,4 +25,5 @@ public interface HealthRecordRepository extends JpaRepository<HealthRecord, Inte
 
     ArrayList<HealthRecord> findAllByCitizen_UhIdAndStatusOrderByCreationDateDescCreationTimeDesc(Integer uhId, Integer status);
 
+    ArrayList<HealthRecord> findAllByFieldHealthWorker_LoginId(String loginId);
 }
