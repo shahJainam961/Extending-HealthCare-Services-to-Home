@@ -1,9 +1,10 @@
 package com.team9.had.service.doctor;
 
 import com.team9.had.entity.*;
-import com.team9.had.exception.InternalServerError;
-import com.team9.had.model.doc.FupModelForDoc;
+import com.team9.had.model.doc.FupModelForDocRes;
 import com.team9.had.model.doc.HrModelForDoc;
+import com.team9.had.model.doc.HrModelForDocRes;
+import com.team9.had.model.doc.StartDateEndDateModel;
 import com.team9.had.repository.*;
 import com.team9.had.utils.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,22 +48,23 @@ public class ServiceForDoctorImpl implements ServiceForDoctor{
     }
 
     @Override
-    public Serializable getOldHealthRecords(String loginId) {
+    public Serializable getOldHealthRecords(String loginId, StartDateEndDateModel startDateEndDateModel) throws Exception {
         // todo validations  --> loginId null hoi to bad request moklvaani
         ArrayList<Object> obj = new ArrayList<>();
-
+        Date startDate = startDateEndDateModel.getStartDate();
+        Date endDate = startDateEndDateModel.getEndDate();
         ArrayList<HealthRecord> healthRecords =
                 healthRecordRepository
-                        .findAllByDoctor_LoginIdAndStatusOrderByCreationDateDescCreationTimeDesc(
-                                loginId, Constant.HEALTH_RECORD_ASSESSED
+                        .findAllByDoctor_LoginIdAndStatusAndCreationDateBetweenOrderByCreationDateDescCreationTimeDesc(
+                                loginId, Constant.HEALTH_RECORD_ASSESSED, startDate, endDate
                         );
-        ArrayList<HrModelForDoc> hrModelForDocs = new ArrayList<>();
+        ArrayList<HrModelForDocRes> hrModelForDocs = new ArrayList<>();
 
         for(HealthRecord healthRecord : healthRecords){
-            HrModelForDoc hrModelForDoc = Constant.getModelMapper().map(healthRecord, HrModelForDoc.class);
-            ArrayList<FollowUp> followUps = followUpRepository.findByHealthRecord_HrId(healthRecord.getHrId());
+            HrModelForDocRes hrModelForDoc = Constant.getModelMapper().map(healthRecord, HrModelForDocRes.class);
+            ArrayList<FollowUp> followUps = followUpRepository.findAllByHealthRecord_HrId(healthRecord.getHrId());
             for(FollowUp followUp : followUps){
-                hrModelForDoc.getFollowUps().add(Constant.getModelMapper().map(followUp, FupModelForDoc.class));
+                hrModelForDoc.getFollowUps().add(Constant.getModelMapper().map(followUp, FupModelForDocRes.class));
             }
             hrModelForDocs.add(hrModelForDoc);
         }
@@ -75,12 +77,18 @@ public class ServiceForDoctorImpl implements ServiceForDoctor{
         try{
             ArrayList<FollowUp> followUps = new ArrayList<>();
             hrModelForDoc.getFollowUps().stream().forEach((fupModelForDoc -> {
-                followUps.add(Constant.getModelMapper().map(fupModelForDoc, FollowUp.class));
+                FollowUp followUp = Constant.getModelMapper().map(fupModelForDoc, FollowUp.class);
+                ArrayList<Boolean> vitals = fupModelForDoc.getVitals();
+                followUp.setBloodSugar(vitals.get(0)?"":null);
+                followUp.setBloodOxygen(vitals.get(1)?"":null);
+                followUp.setSkinColor(vitals.get(2)?"":null);
+                followUp.setEyeColor(vitals.get(3)?"":null);
+                followUp.setTemperature(vitals.get(4)?"":null);
+                followUp.setInflammation(vitals.get(5)?"":null);
+                followUps.add(followUp);
             }));
             HealthRecord healthRecord = healthRecordRepository.findByHrId(hrModelForDoc.getHrId());
             // todo validation --> healthRecord null hase to return false
-            healthRecord.setFields(hrModelForDoc.getFields());
-            healthRecord.setFieldsValues(hrModelForDoc.getFieldsValues());
             healthRecord.setStatus(Constant.HEALTH_RECORD_ASSESSED);
             healthRecord.setConclusion(hrModelForDoc.getConclusion());
             healthRecord.setTreatment(hrModelForDoc.getTreatment());
@@ -107,7 +115,7 @@ public class ServiceForDoctorImpl implements ServiceForDoctor{
     public Serializable getConsentData(Integer uhId) {
         // todo validation --> uhId, if null then bad request
         ArrayList<HealthRecord> healthRecords = healthRecordRepository.findAllByCitizen_UhIdAndStatusOrderByCreationDateDescCreationTimeDesc(
-                    uhId, Constant.HEALTH_RECORD_ASSESSED
+                uhId, Constant.HEALTH_RECORD_ASSESSED
         );
 
         ArrayList<Object> obj = new ArrayList<>();

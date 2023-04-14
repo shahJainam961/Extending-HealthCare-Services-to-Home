@@ -14,5 +14,4 @@ import java.sql.Date;
 public class StartDateEndDateModel {
     private Date startDate;
     private Date endDate;
-
 }
