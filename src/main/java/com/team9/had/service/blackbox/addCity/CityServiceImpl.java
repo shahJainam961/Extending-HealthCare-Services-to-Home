@@ -1,6 +1,6 @@
 package com.team9.had.service.blackbox.addCity;
 
-import com.team9.had.entity.City;
+import com.team9.had.model.City;
 import com.team9.had.repository.CityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

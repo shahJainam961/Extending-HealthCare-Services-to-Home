@@ -1,6 +1,6 @@
 package com.team9.had.service.blackbox.addCitizen;
 
-import com.team9.had.entity.Citizen;
+import com.team9.had.model.Citizen;
 import com.team9.had.repository.CitizenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,8 +1,8 @@
 package com.team9.had.service.blackbox.resetPassword;
 
-import com.team9.had.entity.*;
-import com.team9.had.exception.UserNotFoundException;
-import com.team9.had.model.LoginModel;
+import com.team9.had.customModel.LoginModel;
+import com.team9.had.exception.ResourceNotFoundException;
+import com.team9.had.model.*;
 import com.team9.had.repository.*;
 import com.team9.had.utils.Constant;
 import com.team9.had.utils.EncryptDecrypt;
@@ -50,7 +50,7 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
         String password = loginModel.getPassword();
         if(loginId.startsWith(Constant.DOCTOR)){
             Doctor doctor = doctorRepository.findByLoginId(loginId);
-            if(doctor==null) {throw new UserNotFoundException(Constant.USER_NOT_FOUND_MSG);}
+            if(doctor==null) {throw new ResourceNotFoundException(Constant.RESOURCE_NOT_FOUND_MSG);}
             try{
                 doctor.setPassword(Constant.passwordEncode().encode(password));
                 doctorRepository.save(doctor);
@@ -62,7 +62,7 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
         }
         else if(loginId.startsWith(Constant.RECEPTIONIST)){
             Receptionist receptionist = receptionistRepository.findByLoginId(loginId);
-            if(receptionist==null){throw new UserNotFoundException(Constant.USER_NOT_FOUND_MSG);}
+            if(receptionist==null){throw new ResourceNotFoundException(Constant.RESOURCE_NOT_FOUND_MSG);}
             try{
                 receptionist.setPassword(Constant.passwordEncode().encode(password));
                 receptionistRepository.save(receptionist);
@@ -74,7 +74,7 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
         }
         else if(loginId.startsWith(Constant.SUPERVISOR)){
             Supervisor supervisor = supervisorRepository.findByLoginId(loginId);
-            if(supervisor==null){throw new UserNotFoundException(Constant.USER_NOT_FOUND_MSG);}
+            if(supervisor==null){throw new ResourceNotFoundException(Constant.RESOURCE_NOT_FOUND_MSG);}
             try{
                 supervisor.setPassword(Constant.passwordEncode().encode(password));
                 supervisorRepository.save(supervisor);
@@ -86,7 +86,7 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
         }
         else if(loginId.startsWith(Constant.FIELD_HEALTH_WORKER)){
             FieldHealthWorker fieldHealthWorker = fieldHealthWorkerRepository.findByLoginId(loginId);
-            if(fieldHealthWorker==null){throw new UserNotFoundException(Constant.USER_NOT_FOUND_MSG);}
+            if(fieldHealthWorker==null){throw new ResourceNotFoundException(Constant.RESOURCE_NOT_FOUND_MSG);}
             try{
                 fieldHealthWorker.setPassword(Constant.passwordEncode().encode(password));
                 fieldHealthWorkerRepository.save(fieldHealthWorker);
@@ -97,7 +97,7 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
             }
         }
         else{
-            throw new UserNotFoundException(Constant.USER_NOT_FOUND_MSG);
+            throw new ResourceNotFoundException(Constant.RESOURCE_NOT_FOUND_MSG);
         }
         return true;
     }

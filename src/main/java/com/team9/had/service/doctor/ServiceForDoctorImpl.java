@@ -1,12 +1,15 @@
 package com.team9.had.service.doctor;
 
-import com.team9.had.entity.*;
-import com.team9.had.model.doc.FupModelForDocRes;
-import com.team9.had.model.doc.HrModelForDoc;
-import com.team9.had.model.doc.HrModelForDocRes;
-import com.team9.had.model.doc.StartDateEndDateModel;
+import com.team9.had.customModel.doc.FupModelForDocRes;
+import com.team9.had.customModel.doc.HrModelForDoc;
+import com.team9.had.customModel.doc.HrModelForDocRes;
+import com.team9.had.customModel.doc.StartDateEndDateModel;
+import com.team9.had.exception.BadRequestException;
+import com.team9.had.exception.ResourceNotFoundException;
+import com.team9.had.model.*;
 import com.team9.had.repository.*;
 import com.team9.had.utils.Constant;
+import com.team9.had.utils.V;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,8 +32,10 @@ public class ServiceForDoctorImpl implements ServiceForDoctor{
     @Autowired
     private CityRepository cityRepository;
     @Override
-    public Serializable getNewHealthRecords(String loginId){
-        // todo validation --> loginId null hoi to bad request moklvaani
+    public Serializable getNewHealthRecords(String loginId) throws Exception {
+
+        if(loginId==null) throw new BadRequestException(Constant.BAD_REQUEST_MSG);
+
         ArrayList<Object> obj = new ArrayList<>();
 
         ArrayList<HealthRecord> healthRecords =
@@ -49,7 +54,9 @@ public class ServiceForDoctorImpl implements ServiceForDoctor{
 
     @Override
     public Serializable getOldHealthRecords(String loginId, StartDateEndDateModel startDateEndDateModel) throws Exception {
-        // todo validations  --> loginId null hoi to bad request moklvaani
+
+        if(loginId==null || !V.validateStartDateEndDateModel(startDateEndDateModel)) throw new BadRequestException(Constant.BAD_REQUEST_MSG);
+
         ArrayList<Object> obj = new ArrayList<>();
         Date startDate = startDateEndDateModel.getStartDate();
         Date endDate = startDateEndDateModel.getEndDate();
@@ -74,30 +81,34 @@ public class ServiceForDoctorImpl implements ServiceForDoctor{
 
 
     @Override
-    public boolean submitHealthRecord(HrModelForDoc hrModelForDoc) {
-        // todo validations  --> nullity check for hrModelForDoc, if any null then return false
-        try{
-            ArrayList<FollowUp> followUps = new ArrayList<>();
-            hrModelForDoc.getFollowUps().stream().forEach((fupModelForDoc -> {
-                FollowUp followUp = Constant.getModelMapper().map(fupModelForDoc, FollowUp.class);
-                ArrayList<Boolean> vitals = fupModelForDoc.getVitals();
-                followUp.setBloodSugar(vitals.get(0)?"":null);
-                followUp.setBloodOxygen(vitals.get(1)?"":null);
-                followUp.setSkinColor(vitals.get(2)?"":null);
-                followUp.setEyeColor(vitals.get(3)?"":null);
-                followUp.setTemperature(vitals.get(4)?"":null);
-                followUp.setInflammation(vitals.get(5)?"":null);
-                followUps.add(followUp);
-            }));
-            HealthRecord healthRecord = healthRecordRepository.findByHrId(hrModelForDoc.getHrId());
-            // todo validation --> healthRecord null hase to return false
-            healthRecord.setStatus(Constant.HEALTH_RECORD_ASSESSED);
-            healthRecord.setConclusion(hrModelForDoc.getConclusion());
-            healthRecord.setTreatment(hrModelForDoc.getTreatment());
-            healthRecord.setPrescription(hrModelForDoc.getPrescription());
-            healthRecord.setFieldHealthWorker(getFieldHealthWorker(healthRecord));
-            healthRecord.setSupervisor(getSupervisor(healthRecord));
+    public boolean submitHealthRecord(HrModelForDoc hrModelForDoc) throws Exception{
 
+        if(!V.validateHrModelForDoc(hrModelForDoc)) throw new BadRequestException(Constant.BAD_REQUEST_MSG);
+
+        ArrayList<FollowUp> followUps = new ArrayList<>();
+        hrModelForDoc.getFollowUps().stream().forEach((fupModelForDoc -> {
+            FollowUp followUp = Constant.getModelMapper().map(fupModelForDoc, FollowUp.class);
+            ArrayList<Boolean> vitals = fupModelForDoc.getVitals();
+            followUp.setBloodSugar(vitals.get(0)?"":null);
+            followUp.setBloodOxygen(vitals.get(1)?"":null);
+            followUp.setSkinColor(vitals.get(2)?"":null);
+            followUp.setEyeColor(vitals.get(3)?"":null);
+            followUp.setTemperature(vitals.get(4)?"":null);
+            followUp.setInflammation(vitals.get(5)?"":null);
+            followUps.add(followUp);
+        }));
+        HealthRecord healthRecord = healthRecordRepository.findByHrId(hrModelForDoc.getHrId());
+        if(healthRecord==null) throw new ResourceNotFoundException(Constant.RESOURCE_NOT_FOUND_MSG);
+
+
+        healthRecord.setStatus(Constant.HEALTH_RECORD_ASSESSED);
+        healthRecord.setConclusion(hrModelForDoc.getConclusion());
+        healthRecord.setTreatment(hrModelForDoc.getTreatment());
+        healthRecord.setPrescription(hrModelForDoc.getPrescription());
+        healthRecord.setFieldHealthWorker(getFieldHealthWorker(healthRecord));
+        healthRecord.setSupervisor(getSupervisor(healthRecord));
+
+        try{
             healthRecordRepository.save(healthRecord);
             followUps.stream().forEach(followUp -> {
                 followUp.setHealthRecord(healthRecord);
@@ -114,8 +125,10 @@ public class ServiceForDoctorImpl implements ServiceForDoctor{
     }
 
     @Override
-    public Serializable getConsentData(Integer uhId) {
-        // todo validation --> uhId, if null then bad request
+    public Serializable getConsentData(Integer uhId) throws Exception{
+
+        if(uhId==null) throw new BadRequestException((Constant.BAD_REQUEST_MSG));
+
         ArrayList<HealthRecord> healthRecords = healthRecordRepository.findAllByCitizen_UhIdAndStatusOrderByCreationDateDescCreationTimeDesc(
                 uhId, Constant.HEALTH_RECORD_ASSESSED
         );
@@ -137,10 +150,10 @@ public class ServiceForDoctorImpl implements ServiceForDoctor{
         return fieldHealthWorker;
     }
 
-    private Supervisor getSupervisor(HealthRecord healthRecord) {
+    private Supervisor getSupervisor(HealthRecord healthRecord) throws Exception {
         City city = cityRepository.findByCityName(healthRecord.getDistrict());
         Supervisor supervisor = supervisorRepository.findByAssignedPincode(city.getPincode());
-        // todo validation --> supervisor null hoi to user not found exception
+        if(supervisor==null) throw new BadRequestException(Constant.BAD_REQUEST_MSG);
         return supervisor;
     }
 }

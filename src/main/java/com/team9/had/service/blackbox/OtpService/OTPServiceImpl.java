@@ -1,7 +1,7 @@
 package com.team9.had.service.blackbox.OtpService;
 
-import com.team9.had.entity.*;
-import com.team9.had.exception.UserNotFoundException;
+import com.team9.had.exception.ResourceNotFoundException;
+import com.team9.had.model.*;
 import com.team9.had.repository.*;
 import com.team9.had.service.twilio.TwilioMessaging;
 import com.team9.had.utils.Constant;
@@ -25,32 +25,32 @@ public class OTPServiceImpl implements OTPService{
     private FieldHealthWorkerRepository fieldHealthWorkerRepository;
 
 
-    public boolean getOtp(String loginId) throws UserNotFoundException {
+    public boolean getOtp(String loginId) throws ResourceNotFoundException {
         // todo validations --> loginId null hoi to Bad Request moklvaani
         String mobileNo = Constant.MOBILE_PREFIX;
 
         if(loginId.startsWith(Constant.DOCTOR)){
             Doctor doctor = doctorRepository.findByLoginId(loginId);
-            if(doctor==null) {throw new UserNotFoundException(Constant.USER_NOT_FOUND_MSG);}
+            if(doctor==null) {throw new ResourceNotFoundException(Constant.RESOURCE_NOT_FOUND_MSG);}
             mobileNo += doctor.getCitizen().getMobileNo();
         }
         else if(loginId.startsWith(Constant.RECEPTIONIST)){
             Receptionist receptionist = receptionistRepository.findByLoginId(loginId);
-            if(receptionist==null){throw new UserNotFoundException(Constant.USER_NOT_FOUND_MSG);}
+            if(receptionist==null){throw new ResourceNotFoundException(Constant.RESOURCE_NOT_FOUND_MSG);}
             mobileNo += receptionist.getCitizen().getMobileNo();
         }
         else if(loginId.startsWith(Constant.SUPERVISOR)){
             Supervisor supervisor = supervisorRepository.findByLoginId(loginId);
-            if(supervisor==null){throw new UserNotFoundException(Constant.USER_NOT_FOUND_MSG);}
+            if(supervisor==null){throw new ResourceNotFoundException(Constant.RESOURCE_NOT_FOUND_MSG);}
             mobileNo += supervisor.getCitizen().getMobileNo();
         }
         else if(loginId.startsWith(Constant.FIELD_HEALTH_WORKER)){
             FieldHealthWorker fieldHealthWorker = fieldHealthWorkerRepository.findByLoginId(loginId);
-            if(fieldHealthWorker==null){throw new UserNotFoundException(Constant.USER_NOT_FOUND_MSG);}
+            if(fieldHealthWorker==null){throw new ResourceNotFoundException(Constant.RESOURCE_NOT_FOUND_MSG);}
             mobileNo += fieldHealthWorker.getCitizen().getMobileNo();
         }
         else{
-            throw new UserNotFoundException(Constant.USER_NOT_FOUND_MSG);
+            throw new ResourceNotFoundException(Constant.RESOURCE_NOT_FOUND_MSG);
         }
 
         try{

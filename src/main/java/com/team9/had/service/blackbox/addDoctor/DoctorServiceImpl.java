@@ -1,7 +1,7 @@
 package com.team9.had.service.blackbox.addDoctor;
 
-import com.team9.had.entity.Citizen;
-import com.team9.had.entity.Doctor;
+import com.team9.had.model.Citizen;
+import com.team9.had.model.Doctor;
 import com.team9.had.repository.CitizenRepository;
 import com.team9.had.repository.DoctorRepository;
 import com.team9.had.utils.Constant;

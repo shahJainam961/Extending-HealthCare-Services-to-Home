@@ -1,6 +1,6 @@
 package com.team9.had.service.blackbox.addHospital;
 
-import com.team9.had.entity.Hospital;
+import com.team9.had.model.Hospital;
 
 import java.util.List;
 

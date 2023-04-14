@@ -1,7 +1,7 @@
 package com.team9.had.service.blackbox.addReceptionist;
 
-import com.team9.had.entity.Citizen;
-import com.team9.had.entity.Receptionist;
+import com.team9.had.model.Citizen;
+import com.team9.had.model.Receptionist;
 import com.team9.had.repository.CitizenRepository;
 import com.team9.had.repository.ReceptionistRepository;
 import com.team9.had.utils.Constant;

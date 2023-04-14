@@ -1,6 +1,6 @@
 package com.team9.had.repository;
 
-import com.team9.had.entity.State;
+import com.team9.had.model.State;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

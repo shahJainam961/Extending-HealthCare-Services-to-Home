@@ -1,7 +1,7 @@
 package com.team9.had.service.blackbox.resetPassword;
 
 
-import com.team9.had.entity.SecretForResetPassword;
+import com.team9.had.model.SecretForResetPassword;
 import com.team9.had.repository.SecretRepository;
 import com.team9.had.utils.Constant;
 import com.team9.had.utils.EncryptDecrypt;

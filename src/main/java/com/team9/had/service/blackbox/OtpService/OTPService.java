@@ -1,11 +1,11 @@
 package com.team9.had.service.blackbox.OtpService;
 
-import com.team9.had.entity.OTP;
-import com.team9.had.exception.UserNotFoundException;
+import com.team9.had.exception.ResourceNotFoundException;
+import com.team9.had.model.OTP;
 
 public interface OTPService {
 
-    boolean getOtp(String loginId) throws UserNotFoundException;
+    boolean getOtp(String loginId) throws ResourceNotFoundException;
 
     String validateOtp(OTP otpModel);
 

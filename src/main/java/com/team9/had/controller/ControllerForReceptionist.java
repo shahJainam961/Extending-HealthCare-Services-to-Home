@@ -1,6 +1,6 @@
 package com.team9.had.controller;
 
-import com.team9.had.model.rec.HrModelForRec;
+import com.team9.had.customModel.rec.HrModelForRec;
 import com.team9.had.service.receptionist.ServiceForReceptionist;
 import com.team9.had.utils.Constant;
 import org.springframework.beans.factory.annotation.Autowired;

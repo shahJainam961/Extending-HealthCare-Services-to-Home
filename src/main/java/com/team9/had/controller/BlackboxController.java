@@ -1,8 +1,8 @@
 package com.team9.had.controller;
 
-import com.team9.had.entity.*;
-import com.team9.had.exception.UserNotFoundException;
-import com.team9.had.model.LoginModel;
+import com.team9.had.customModel.LoginModel;
+import com.team9.had.exception.ResourceNotFoundException;
+import com.team9.had.model.*;
 import com.team9.had.service.blackbox.OtpService.OTPService;
 import com.team9.had.service.blackbox.addCitizen.CitizenService;
 import com.team9.had.service.blackbox.addCity.CityService;
@@ -198,7 +198,7 @@ public class BlackboxController {
     }
 
     @GetMapping("/getOtp")
-    public ResponseEntity<Serializable> getOtp(@RequestParam String loginId) throws UserNotFoundException {
+    public ResponseEntity<Serializable> getOtp(@RequestParam String loginId) throws ResourceNotFoundException {
         if(otpService.getOtp(loginId)){
             return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(Constant.HTTP_OK));
         }

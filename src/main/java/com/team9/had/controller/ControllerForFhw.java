@@ -1,6 +1,6 @@
 package com.team9.had.controller;
 
-import com.team9.had.model.fhw.ModelForFhw;
+import com.team9.had.customModel.fhw.ModelForFhw;
 import com.team9.had.service.fhw.ServiceForFhw;
 import com.team9.had.utils.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ public class ControllerForFhw {
     private ServiceForFhw serviceForFhw;
 
     @PostMapping("/sync")
-    public ResponseEntity<Serializable> sync(@RequestBody ModelForFhw modelForFhw, @RequestAttribute String role){
+    public ResponseEntity<Serializable> sync(@RequestBody ModelForFhw modelForFhw, @RequestAttribute String role) throws Exception{
         if(Constant.isAuthorised(role, Constant.FIELD_HEALTH_WORKER)){
             Serializable obj = serviceForFhw.sync(modelForFhw, role);
             return new ResponseEntity<>(obj, HttpStatusCode.valueOf(Constant.HTTP_OK));

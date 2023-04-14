@@ -1,6 +1,6 @@
 package com.team9.had.service.blackbox.addState;
 
-import com.team9.had.entity.State;
+import com.team9.had.model.State;
 import com.team9.had.repository.StateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

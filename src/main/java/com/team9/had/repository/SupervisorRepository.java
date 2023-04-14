@@ -1,6 +1,6 @@
 package com.team9.had.repository;
 
-import com.team9.had.entity.Supervisor;
+import com.team9.had.model.Supervisor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

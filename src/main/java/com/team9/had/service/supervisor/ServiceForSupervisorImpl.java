@@ -1,10 +1,12 @@
 package com.team9.had.service.supervisor;
 
-import com.team9.had.entity.*;
-import com.team9.had.exception.UserNotFoundException;
-import com.team9.had.model.sup.*;
+import com.team9.had.customModel.sup.*;
+import com.team9.had.exception.BadRequestException;
+import com.team9.had.exception.ResourceNotFoundException;
+import com.team9.had.model.*;
 import com.team9.had.repository.*;
 import com.team9.had.utils.Constant;
+import com.team9.had.utils.V;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,8 +34,10 @@ public class ServiceForSupervisorImpl implements ServiceForSupervisor{
     private FollowUpRepository followUpRepository;
 
     @Override
-    public Serializable getUnassignedCitizens(String loginId, String role) {
-        //todo validation loginId null hoi to bad request
+    public Serializable getUnassignedCitizens(String loginId, String role) throws Exception{
+
+        if(loginId==null) throw new ResourceNotFoundException(Constant.RESOURCE_NOT_FOUND_MSG);
+
         ArrayList<Object> obj = new ArrayList<>();
         ArrayList<HealthRecord> unassignedHealthRecords = healthRecordRepository.findAllByFieldHealthWorkerNullAndSupervisor_LoginId(loginId);
         ArrayList<UnassignedCitizenModelForSup> unassignedCitizenModelForSups = new ArrayList<>();
@@ -53,7 +57,6 @@ public class ServiceForSupervisorImpl implements ServiceForSupervisor{
                 Integer citizenAssigned = citizens.size();
                 fhwModelForSup.setCitizenAssigned(citizenAssigned);
                 fhwModelForSups.add(fhwModelForSup);
-
             }
             UnassignedCitizenModelForSup unassignedCitizenModelForSup = new UnassignedCitizenModelForSup();
             unassignedCitizenModelForSup.setCitizen(cizModelForSup);
@@ -65,14 +68,16 @@ public class ServiceForSupervisorImpl implements ServiceForSupervisor{
     }
 
     @Override
-    public boolean submitAssignment(SubmitAssignedForSup submitAssignedForSup) throws UserNotFoundException {
-        // todo validation of submitAssignedForSup --> ekad null then throw bad request
+    public boolean submitAssignment(SubmitAssignedForSup submitAssignedForSup) throws Exception{
+
+        if(!V.validateSubmitAssignedForSup(submitAssignedForSup)) throw new BadRequestException(Constant.BAD_REQUEST_MSG);
+
         CizModelForSup cizModelForSup = submitAssignedForSup.getCitizen();
         FhwModelForSup fhwModelForSup = submitAssignedForSup.getFieldHealthWorker();
         Citizen citizen = citizenRepository.findByUhId(cizModelForSup.getUhId());
         FieldHealthWorker fieldHealthWorker = fieldHealthWorkerRepository.findByLoginId(fhwModelForSup.getLoginId());
 
-        if(citizen==null || fieldHealthWorker==null) throw new UserNotFoundException("User Not Found!!");
+        if(citizen==null || fieldHealthWorker==null) throw new ResourceNotFoundException(Constant.RESOURCE_NOT_FOUND_MSG);
 
         try{
             citizen.setFieldHealthWorker(fieldHealthWorker);
@@ -90,11 +95,15 @@ public class ServiceForSupervisorImpl implements ServiceForSupervisor{
     }
 
     @Override
-    public Serializable getFhws(String loginId, String role){
-        // todo validation of loginId, if null then throw bad request
+    public Serializable getFhws(String loginId, String role) throws Exception{
+
+        if(loginId==null) throw new ResourceNotFoundException(Constant.RESOURCE_NOT_FOUND_MSG);
+
         ArrayList<Object> obj = new ArrayList<>();
         Supervisor supervisor = supervisorRepository.findByLoginId(loginId);
-        // todo throw user not found if supervisor is null
+
+        if(supervisor==null) throw new ResourceNotFoundException(Constant.RESOURCE_NOT_FOUND_MSG);
+
         String districtName = cityRepository.findByPincode(supervisor.getAssignedPincode()).getCityName();
         Integer did = districtRepository.findByDistrictName(districtName).getDid();
         ArrayList<City> cities = cityRepository.findAllByDistrict_Did(did);
@@ -131,8 +140,10 @@ public class ServiceForSupervisorImpl implements ServiceForSupervisor{
     }
 
     @Override
-    public boolean reassign(ReassignedForSup reassignedForSup){
-        // todo validation of ReassignedForSup, if any required is null then throw bad request
+    public boolean reassign(ReassignedForSup reassignedForSup) throws Exception{
+
+        if(!V.validateReassignedForSup(reassignedForSup)) throw new BadRequestException(Constant.BAD_REQUEST_MSG);
+
         try{
             ArrayList<CizModelForSup> cizModelForSups = reassignedForSup.getCitizens();
             FieldHealthWorker fieldHealthWorker = fieldHealthWorkerRepository.findByLoginId(reassignedForSup.getFieldHealthWorker().getLoginId());
@@ -150,8 +161,10 @@ public class ServiceForSupervisorImpl implements ServiceForSupervisor{
     }
 
     @Override
-    public Serializable stats(String loginId) {
-        // todo validation --> loginId null hoi to bad request throw
+    public Serializable stats(String loginId) throws Exception{
+
+        if(loginId==null) throw new BadRequestException(Constant.BAD_REQUEST_MSG);
+
         ArrayList<Object> obj = new ArrayList<>();
         Supervisor supervisor = supervisorRepository.findByLoginId(loginId);
         Integer did = cityRepository.findByPincode(supervisor.getAssignedPincode()).getDistrict().getDid();

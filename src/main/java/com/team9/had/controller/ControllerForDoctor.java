@@ -1,8 +1,7 @@
 package com.team9.had.controller;
 
-import com.team9.had.exception.InternalServerError;
-import com.team9.had.model.doc.HrModelForDoc;
-import com.team9.had.model.doc.StartDateEndDateModel;
+import com.team9.had.customModel.doc.HrModelForDoc;
+import com.team9.had.customModel.doc.StartDateEndDateModel;
 import com.team9.had.service.doctor.ServiceForDoctor;
 import com.team9.had.utils.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,7 @@ public class ControllerForDoctor {
     @Autowired
     private ServiceForDoctor serviceForDoctor;
     @GetMapping("/getNewHealthRecords")
-    public ResponseEntity<Serializable> getNewHealthRecords(@RequestParam String loginId, @RequestAttribute String role) throws InternalServerError {
+    public ResponseEntity<Serializable> getNewHealthRecords(@RequestParam String loginId, @RequestAttribute String role) throws Exception {
         if(Constant.isAuthorised(role, Constant.DOCTOR)){
             Serializable obj = serviceForDoctor.getNewHealthRecords(loginId);
             return new ResponseEntity<>(obj, HttpStatusCode.valueOf(Constant.HTTP_OK));
@@ -38,7 +37,7 @@ public class ControllerForDoctor {
     }
 
     @PostMapping("/submitHealthRecord")
-    public ResponseEntity<Serializable> submitHealthRecord(@RequestBody HrModelForDoc hrModelForDoc, @RequestAttribute String role){
+    public ResponseEntity<Serializable> submitHealthRecord(@RequestBody HrModelForDoc hrModelForDoc, @RequestAttribute String role) throws Exception{
         if(Constant.isAuthorised(role, Constant.DOCTOR)){
             Serializable obj = serviceForDoctor.submitHealthRecord(hrModelForDoc);
             return new ResponseEntity<>(obj, HttpStatusCode.valueOf(Constant.HTTP_OK));
@@ -47,7 +46,7 @@ public class ControllerForDoctor {
     }
 
     @GetMapping("/getConsentData")
-    public ResponseEntity<Serializable> getConsentData(@RequestParam Integer uhId, @RequestAttribute String role){
+    public ResponseEntity<Serializable> getConsentData(@RequestParam Integer uhId, @RequestAttribute String role) throws Exception{
         if(Constant.isAuthorised(role, Constant.DOCTOR)){
             Serializable obj = serviceForDoctor.getConsentData(uhId);
             return new ResponseEntity<>(obj, HttpStatusCode.valueOf(Constant.HTTP_OK));

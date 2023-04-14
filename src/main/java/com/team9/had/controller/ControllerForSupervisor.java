@@ -1,8 +1,7 @@
 package com.team9.had.controller;
 
-import com.team9.had.exception.UserNotFoundException;
-import com.team9.had.model.sup.ReassignedForSup;
-import com.team9.had.model.sup.SubmitAssignedForSup;
+import com.team9.had.customModel.sup.ReassignedForSup;
+import com.team9.had.customModel.sup.SubmitAssignedForSup;
 import com.team9.had.service.supervisor.ServiceForSupervisor;
 import com.team9.had.utils.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,7 @@ public class ControllerForSupervisor {
     private ServiceForSupervisor serviceForSupervisor;
 
     @GetMapping("/getUnassignedCitizens")
-    public ResponseEntity<Serializable> getUnassignedCitizens(@RequestParam String loginId, @RequestAttribute String role){
+    public ResponseEntity<Serializable> getUnassignedCitizens(@RequestParam String loginId, @RequestAttribute String role) throws Exception{
         if(Constant.isAuthorised(role, Constant.SUPERVISOR)){
             Serializable obj = serviceForSupervisor.getUnassignedCitizens(loginId, role);
             return new ResponseEntity<>(obj, HttpStatusCode.valueOf(Constant.HTTP_OK));
@@ -30,7 +29,7 @@ public class ControllerForSupervisor {
     }
 
     @PostMapping("/submitAssignment")
-    public ResponseEntity<Serializable> submitAssignment(@RequestBody  SubmitAssignedForSup submitAssignedForSup, @RequestAttribute String role) throws UserNotFoundException {
+    public ResponseEntity<Serializable> submitAssignment(@RequestBody  SubmitAssignedForSup submitAssignedForSup, @RequestAttribute String role) throws Exception{
         if(Constant.isAuthorised(role, Constant.SUPERVISOR)){
             if(serviceForSupervisor.submitAssignment(submitAssignedForSup))
                 return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(Constant.HTTP_OK));
@@ -41,7 +40,7 @@ public class ControllerForSupervisor {
     }
 
     @GetMapping("/getFhws")
-    public ResponseEntity<Serializable> getFhws(@RequestParam String loginId, @RequestAttribute String role){
+    public ResponseEntity<Serializable> getFhws(@RequestParam String loginId, @RequestAttribute String role) throws Exception{
         if(Constant.isAuthorised(role, Constant.SUPERVISOR)){
             Serializable obj = serviceForSupervisor.getFhws(loginId, role);
             return new ResponseEntity<>(obj, HttpStatusCode.valueOf(Constant.HTTP_OK));
@@ -50,7 +49,7 @@ public class ControllerForSupervisor {
     }
 
     @PostMapping("/reassign")
-    public ResponseEntity<Serializable> reassign(@RequestBody ReassignedForSup reassignedForSup, @RequestAttribute String role){
+    public ResponseEntity<Serializable> reassign(@RequestBody ReassignedForSup reassignedForSup, @RequestAttribute String role) throws Exception{
         if(Constant.isAuthorised(role, Constant.SUPERVISOR)){
             Serializable obj = serviceForSupervisor.reassign(reassignedForSup);
             return new ResponseEntity<>(obj, HttpStatusCode.valueOf(Constant.HTTP_OK));
@@ -59,7 +58,7 @@ public class ControllerForSupervisor {
     }
 
     @GetMapping("/stats")
-    public ResponseEntity<Serializable> stats(@RequestParam String loginId, @RequestAttribute String role){
+    public ResponseEntity<Serializable> stats(@RequestParam String loginId, @RequestAttribute String role) throws Exception{
         if(Constant.isAuthorised(role, Constant.SUPERVISOR)){
             Serializable obj = serviceForSupervisor.stats(loginId);
             return new ResponseEntity<>(obj, HttpStatusCode.valueOf(Constant.HTTP_OK));

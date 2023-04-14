@@ -1,5 +1,7 @@
 package com.team9.had.utils;
 
+import com.team9.had.model.Citizen;
+import com.team9.had.model.HealthRecord;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -142,8 +144,10 @@ public interface Constant {
 
     //-------------------------------------------Strings---------------------------//
     String MOBILE_PREFIX = "+91";
-    String USER_NOT_FOUND_MSG = "User Not Found!!";
+    String RESOURCE_NOT_FOUND_MSG = "Resource Not Found!!";
+    String BAD_REQUEST_MSG = "Bad Request";
     Character HASH = '#';
+    String BAD_CREDS = "Invalid Credentials!!";
     //----------------------------------------------------------------------------//
 
 
@@ -158,88 +162,88 @@ public interface Constant {
 
     //--------------Encrypting and Decrypting PII information------------------------//
 
-//    static Citizen encryptPII(Citizen decryptedCitizen) throws Exception {
-//        Citizen encryptedCitizen = new Citizen();
-//        if(decryptedCitizen.getUhId()!=null)
-//            encryptedCitizen.setUhId(decryptedCitizen.getUhId());
-//        if(decryptedCitizen.getCity()!=null)
-//            encryptedCitizen.setCity(EncryptDecrypt.encrypt(decryptedCitizen.getCity(), Constant.SECRET_KEY));
-//        if(decryptedCitizen.getDistrict()!=null)
-//            encryptedCitizen.setDistrict(EncryptDecrypt.encrypt(decryptedCitizen.getDistrict(), Constant.SECRET_KEY));
-//        if(decryptedCitizen.getDob()!=null)
-//            encryptedCitizen.setDob(decryptedCitizen.getDob());
-//        if(decryptedCitizen.getFname()!=null)
-//            encryptedCitizen.setFname(EncryptDecrypt.encrypt(decryptedCitizen.getFname(), Constant.SECRET_KEY));
-////        if(decryptedCitizen.getGender())
-//        encryptedCitizen.setGender(decryptedCitizen.getGender());
-//        if(decryptedCitizen.getGovId()!=null)
-//            encryptedCitizen.setGovId(EncryptDecrypt.encrypt(decryptedCitizen.getGovId(), Constant.SECRET_KEY));
-//        if(decryptedCitizen.getLname()!=null)
-//            encryptedCitizen.setLname(EncryptDecrypt.encrypt(decryptedCitizen.getLname(), Constant.SECRET_KEY));
-//        if(decryptedCitizen.getMobileNo()!=null)
-//            encryptedCitizen.setMobileNo(EncryptDecrypt.encrypt(decryptedCitizen.getMobileNo(), Constant.SECRET_KEY));
-//        if(decryptedCitizen.getPincode()!=null)
-//            encryptedCitizen.setPincode(EncryptDecrypt.encrypt(decryptedCitizen.getPincode(), Constant.SECRET_KEY));
-//        if(decryptedCitizen.getState()!=null)
-//            encryptedCitizen.setState(EncryptDecrypt.encrypt(decryptedCitizen.getState(), Constant.SECRET_KEY));
-//        if(decryptedCitizen.getStreet1()!=null)
-//            encryptedCitizen.setStreet1(EncryptDecrypt.encrypt(decryptedCitizen.getStreet1(), Constant.SECRET_KEY));
-//        if(decryptedCitizen.getFieldHealthWorker()!=null)
-//            encryptedCitizen.setFieldHealthWorker(decryptedCitizen.getFieldHealthWorker());
-//
-//        return encryptedCitizen;
-//    }
-//    static Citizen decryptPII(Citizen encryptedCitizen) throws Exception {
-//        Citizen decryptedCitizen = new Citizen();
-//        if(encryptedCitizen.getUhId()!=null)
-//            decryptedCitizen.setUhId(encryptedCitizen.getUhId());
-//        if(encryptedCitizen.getCity()!=null)
-//            decryptedCitizen.setCity(EncryptDecrypt.decrypt(encryptedCitizen.getCity(), Constant.SECRET_KEY));
-//        if(encryptedCitizen.getDistrict()!=null)
-//            decryptedCitizen.setDistrict(EncryptDecrypt.decrypt(encryptedCitizen.getDistrict(), Constant.SECRET_KEY));
-//        if(encryptedCitizen.getDob()!=null)
-//            decryptedCitizen.setDob(encryptedCitizen.getDob());
-//        if(encryptedCitizen.getFname()!=null)
-//            decryptedCitizen.setFname(EncryptDecrypt.decrypt(encryptedCitizen.getFname(), Constant.SECRET_KEY));
-////        if(encryptedCitizen.getGender()=='\0')
-//            decryptedCitizen.setGender(encryptedCitizen.getGender());
-//        if(encryptedCitizen.getGovId()!=null)
-//            decryptedCitizen.setGovId(EncryptDecrypt.decrypt(encryptedCitizen.getGovId(), Constant.SECRET_KEY));
-//        if(encryptedCitizen.getLname()!=null)
-//            decryptedCitizen.setLname(EncryptDecrypt.decrypt(encryptedCitizen.getLname(), Constant.SECRET_KEY));
-//        if(encryptedCitizen.getMobileNo()!=null)
-//            decryptedCitizen.setMobileNo(EncryptDecrypt.decrypt(encryptedCitizen.getMobileNo(), Constant.SECRET_KEY));
-//        if(encryptedCitizen.getPincode()!=null)
-//            decryptedCitizen.setPincode(EncryptDecrypt.decrypt(encryptedCitizen.getPincode(), Constant.SECRET_KEY));
-//        if(encryptedCitizen.getState()!=null)
-//            decryptedCitizen.setState(EncryptDecrypt.decrypt(encryptedCitizen.getState(), Constant.SECRET_KEY));
-//        if(encryptedCitizen.getStreet1()!=null)
-//            decryptedCitizen.setStreet1(EncryptDecrypt.decrypt(encryptedCitizen.getStreet1(), Constant.SECRET_KEY));
-//        if(encryptedCitizen.getFieldHealthWorker()!=null)
-//            decryptedCitizen.setFieldHealthWorker(encryptedCitizen.getFieldHealthWorker());
-//
-//        return decryptedCitizen;
-//    }
+    static Citizen encryptPII(Citizen decryptedCitizen) throws Exception {
+        Citizen encryptedCitizen = new Citizen();
+        if(decryptedCitizen.getUhId()!=null)
+            encryptedCitizen.setUhId(decryptedCitizen.getUhId());
+        if(decryptedCitizen.getCity()!=null)
+            encryptedCitizen.setCity(EncryptDecrypt.encrypt(decryptedCitizen.getCity(), Constant.SECRET_KEY));
+        if(decryptedCitizen.getDistrict()!=null)
+            encryptedCitizen.setDistrict(EncryptDecrypt.encrypt(decryptedCitizen.getDistrict(), Constant.SECRET_KEY));
+        if(decryptedCitizen.getDob()!=null)
+            encryptedCitizen.setDob(decryptedCitizen.getDob());
+        if(decryptedCitizen.getFname()!=null)
+            encryptedCitizen.setFname(EncryptDecrypt.encrypt(decryptedCitizen.getFname(), Constant.SECRET_KEY));
+//        if(decryptedCitizen.getGender())
+        encryptedCitizen.setGender(decryptedCitizen.getGender());
+        if(decryptedCitizen.getGovId()!=null)
+            encryptedCitizen.setGovId(EncryptDecrypt.encrypt(decryptedCitizen.getGovId(), Constant.SECRET_KEY));
+        if(decryptedCitizen.getLname()!=null)
+            encryptedCitizen.setLname(EncryptDecrypt.encrypt(decryptedCitizen.getLname(), Constant.SECRET_KEY));
+        if(decryptedCitizen.getMobileNo()!=null)
+            encryptedCitizen.setMobileNo(EncryptDecrypt.encrypt(decryptedCitizen.getMobileNo(), Constant.SECRET_KEY));
+        if(decryptedCitizen.getPincode()!=null)
+            encryptedCitizen.setPincode(EncryptDecrypt.encrypt(decryptedCitizen.getPincode(), Constant.SECRET_KEY));
+        if(decryptedCitizen.getState()!=null)
+            encryptedCitizen.setState(EncryptDecrypt.encrypt(decryptedCitizen.getState(), Constant.SECRET_KEY));
+        if(decryptedCitizen.getStreet1()!=null)
+            encryptedCitizen.setStreet1(EncryptDecrypt.encrypt(decryptedCitizen.getStreet1(), Constant.SECRET_KEY));
+        if(decryptedCitizen.getFieldHealthWorker()!=null)
+            encryptedCitizen.setFieldHealthWorker(decryptedCitizen.getFieldHealthWorker());
+
+        return encryptedCitizen;
+    }
+    static Citizen decryptPII(Citizen encryptedCitizen) throws Exception {
+        Citizen decryptedCitizen = new Citizen();
+        if(encryptedCitizen.getUhId()!=null)
+            decryptedCitizen.setUhId(encryptedCitizen.getUhId());
+        if(encryptedCitizen.getCity()!=null)
+            decryptedCitizen.setCity(EncryptDecrypt.decrypt(encryptedCitizen.getCity(), Constant.SECRET_KEY));
+        if(encryptedCitizen.getDistrict()!=null)
+            decryptedCitizen.setDistrict(EncryptDecrypt.decrypt(encryptedCitizen.getDistrict(), Constant.SECRET_KEY));
+        if(encryptedCitizen.getDob()!=null)
+            decryptedCitizen.setDob(encryptedCitizen.getDob());
+        if(encryptedCitizen.getFname()!=null)
+            decryptedCitizen.setFname(EncryptDecrypt.decrypt(encryptedCitizen.getFname(), Constant.SECRET_KEY));
+//        if(encryptedCitizen.getGender()=='\0')
+            decryptedCitizen.setGender(encryptedCitizen.getGender());
+        if(encryptedCitizen.getGovId()!=null)
+            decryptedCitizen.setGovId(EncryptDecrypt.decrypt(encryptedCitizen.getGovId(), Constant.SECRET_KEY));
+        if(encryptedCitizen.getLname()!=null)
+            decryptedCitizen.setLname(EncryptDecrypt.decrypt(encryptedCitizen.getLname(), Constant.SECRET_KEY));
+        if(encryptedCitizen.getMobileNo()!=null)
+            decryptedCitizen.setMobileNo(EncryptDecrypt.decrypt(encryptedCitizen.getMobileNo(), Constant.SECRET_KEY));
+        if(encryptedCitizen.getPincode()!=null)
+            decryptedCitizen.setPincode(EncryptDecrypt.decrypt(encryptedCitizen.getPincode(), Constant.SECRET_KEY));
+        if(encryptedCitizen.getState()!=null)
+            decryptedCitizen.setState(EncryptDecrypt.decrypt(encryptedCitizen.getState(), Constant.SECRET_KEY));
+        if(encryptedCitizen.getStreet1()!=null)
+            decryptedCitizen.setStreet1(EncryptDecrypt.decrypt(encryptedCitizen.getStreet1(), Constant.SECRET_KEY));
+        if(encryptedCitizen.getFieldHealthWorker()!=null)
+            decryptedCitizen.setFieldHealthWorker(encryptedCitizen.getFieldHealthWorker());
+
+        return decryptedCitizen;
+    }
     //--------------------------------------------------------------------------------//
 
 
 
     //------------------------------------------------------------------------------------//
-//    static void getDecryptedHealthRecord(HealthRecord healthRecord) throws Exception {
-//        if(healthRecord.getCitizen()!=null) healthRecord.setCitizen(Constant.decryptPII(healthRecord.getCitizen()));
-//        if(healthRecord.getDoctor()!=null) healthRecord.getDoctor().setCitizen(Constant.decryptPII(healthRecord.getDoctor().getCitizen()));
-//        if(healthRecord.getSupervisor()!=null) healthRecord.getSupervisor().setCitizen(Constant.decryptPII(healthRecord.getSupervisor().getCitizen()));
-//        if(healthRecord.getFieldHealthWorker()!=null) healthRecord.getFieldHealthWorker().setCitizen(Constant.decryptPII(healthRecord.getFieldHealthWorker().getCitizen()));
-//        if(healthRecord.getReceptionist()!=null) healthRecord.getReceptionist().setCitizen(Constant.decryptPII(healthRecord.getReceptionist().getCitizen()));
-//    }
-//
-//
-//
-//    static void getEncryptedHealthRecord(HealthRecord healthRecord) throws Exception {
-//        if(healthRecord.getCitizen()!=null) healthRecord.setCitizen(Constant.encryptPII(healthRecord.getCitizen()));
-//        if(healthRecord.getDoctor()!=null) healthRecord.getDoctor().setCitizen(Constant.encryptPII(healthRecord.getDoctor().getCitizen()));
-//        if(healthRecord.getSupervisor()!=null) healthRecord.getSupervisor().setCitizen(Constant.encryptPII(healthRecord.getSupervisor().getCitizen()));
-//        if(healthRecord.getFieldHealthWorker()!=null) healthRecord.getFieldHealthWorker().setCitizen(Constant.encryptPII(healthRecord.getFieldHealthWorker().getCitizen()));
-//        if(healthRecord.getReceptionist()!=null) healthRecord.getReceptionist().setCitizen(Constant.encryptPII(healthRecord.getReceptionist().getCitizen()));
-//    }
+    static void getDecryptedHealthRecord(HealthRecord healthRecord) throws Exception {
+        if(healthRecord.getCitizen()!=null) healthRecord.setCitizen(Constant.decryptPII(healthRecord.getCitizen()));
+        if(healthRecord.getDoctor()!=null) healthRecord.getDoctor().setCitizen(Constant.decryptPII(healthRecord.getDoctor().getCitizen()));
+        if(healthRecord.getSupervisor()!=null) healthRecord.getSupervisor().setCitizen(Constant.decryptPII(healthRecord.getSupervisor().getCitizen()));
+        if(healthRecord.getFieldHealthWorker()!=null) healthRecord.getFieldHealthWorker().setCitizen(Constant.decryptPII(healthRecord.getFieldHealthWorker().getCitizen()));
+        if(healthRecord.getReceptionist()!=null) healthRecord.getReceptionist().setCitizen(Constant.decryptPII(healthRecord.getReceptionist().getCitizen()));
+    }
+
+
+
+    static void getEncryptedHealthRecord(HealthRecord healthRecord) throws Exception {
+        if(healthRecord.getCitizen()!=null) healthRecord.setCitizen(Constant.encryptPII(healthRecord.getCitizen()));
+        if(healthRecord.getDoctor()!=null) healthRecord.getDoctor().setCitizen(Constant.encryptPII(healthRecord.getDoctor().getCitizen()));
+        if(healthRecord.getSupervisor()!=null) healthRecord.getSupervisor().setCitizen(Constant.encryptPII(healthRecord.getSupervisor().getCitizen()));
+        if(healthRecord.getFieldHealthWorker()!=null) healthRecord.getFieldHealthWorker().setCitizen(Constant.encryptPII(healthRecord.getFieldHealthWorker().getCitizen()));
+        if(healthRecord.getReceptionist()!=null) healthRecord.getReceptionist().setCitizen(Constant.encryptPII(healthRecord.getReceptionist().getCitizen()));
+    }
 }

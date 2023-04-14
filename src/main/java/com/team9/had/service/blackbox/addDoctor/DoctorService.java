@@ -1,6 +1,6 @@
 package com.team9.had.service.blackbox.addDoctor;
 
-import com.team9.had.entity.Doctor;
+import com.team9.had.model.Doctor;
 
 import java.util.List;
 

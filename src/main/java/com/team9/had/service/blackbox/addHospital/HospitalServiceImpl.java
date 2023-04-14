@@ -1,6 +1,6 @@
 package com.team9.had.service.blackbox.addHospital;
 
-import com.team9.had.entity.Hospital;
+import com.team9.had.model.Hospital;
 import com.team9.had.repository.HospitalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,7 +1,7 @@
 package com.team9.had.exception;
 
 
-import com.team9.had.model.ErrorMessage;
+import com.team9.had.customModel.ErrorMessage;
 import com.team9.had.utils.Constant;
 import jakarta.transaction.TransactionRequiredException;
 import org.hibernate.exception.ConstraintViolationException;
@@ -20,8 +20,8 @@ import java.util.ArrayList;
 @ResponseStatus
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<Serializable> userNotFoundException(UserNotFoundException exception){
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<Serializable> userNotFoundException(ResourceNotFoundException exception){
         ArrayList<Object> obj = new ArrayList<>();
         ErrorMessage errorMessage = new ErrorMessage(exception.getMessage());
         obj.add(errorMessage);

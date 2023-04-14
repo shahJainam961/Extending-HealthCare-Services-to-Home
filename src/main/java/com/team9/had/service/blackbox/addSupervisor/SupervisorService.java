@@ -1,6 +1,6 @@
 package com.team9.had.service.blackbox.addSupervisor;
 
-import com.team9.had.entity.Supervisor;
+import com.team9.had.model.Supervisor;
 
 import java.util.List;
 

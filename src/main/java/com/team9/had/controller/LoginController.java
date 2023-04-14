@@ -1,11 +1,11 @@
 package com.team9.had.controller;
 
 import com.team9.had.config.JwtService;
-import com.team9.had.entity.Doctor;
-import com.team9.had.entity.FieldHealthWorker;
-import com.team9.had.entity.Receptionist;
-import com.team9.had.entity.Supervisor;
-import com.team9.had.model.LoginModel;
+import com.team9.had.customModel.LoginModel;
+import com.team9.had.model.Doctor;
+import com.team9.had.model.FieldHealthWorker;
+import com.team9.had.model.Receptionist;
+import com.team9.had.model.Supervisor;
 import com.team9.had.service.login.LoginService;
 import com.team9.had.utils.Constant;
 import jakarta.servlet.http.HttpServletResponse;

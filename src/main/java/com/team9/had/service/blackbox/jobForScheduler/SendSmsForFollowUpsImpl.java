@@ -1,9 +1,9 @@
 package com.team9.had.service.blackbox.jobForScheduler;
 
-import com.team9.had.entity.Citizen;
-import com.team9.had.entity.FieldHealthWorker;
-import com.team9.had.entity.FollowUp;
-import com.team9.had.entity.HealthRecord;
+import com.team9.had.model.Citizen;
+import com.team9.had.model.FieldHealthWorker;
+import com.team9.had.model.FollowUp;
+import com.team9.had.model.HealthRecord;
 import com.team9.had.repository.FollowUpRepository;
 import com.team9.had.service.twilio.TwilioMessaging;
 import com.team9.had.utils.Constant;

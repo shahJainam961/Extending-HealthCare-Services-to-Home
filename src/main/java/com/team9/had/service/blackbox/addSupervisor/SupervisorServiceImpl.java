@@ -1,7 +1,7 @@
 package com.team9.had.service.blackbox.addSupervisor;
 
-import com.team9.had.entity.Citizen;
-import com.team9.had.entity.Supervisor;
+import com.team9.had.model.Citizen;
+import com.team9.had.model.Supervisor;
 import com.team9.had.repository.CitizenRepository;
 import com.team9.had.repository.SupervisorRepository;
 import com.team9.had.utils.Constant;

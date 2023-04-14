@@ -1,6 +1,6 @@
 package com.team9.had.repository;
 
-import com.team9.had.entity.Doctor;
+import com.team9.had.model.Doctor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

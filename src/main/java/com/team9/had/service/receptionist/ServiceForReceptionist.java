@@ -1,6 +1,6 @@
 package com.team9.had.service.receptionist;
 
-import com.team9.had.model.rec.HrModelForRec;
+import com.team9.had.customModel.rec.HrModelForRec;
 
 import java.io.Serializable;
 

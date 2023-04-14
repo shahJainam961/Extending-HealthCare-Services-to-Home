@@ -1,6 +1,6 @@
 package com.team9.had.service.blackbox.addFieldHealthWorker;
 
-import com.team9.had.entity.FieldHealthWorker;
+import com.team9.had.model.FieldHealthWorker;
 
 import java.util.List;
 

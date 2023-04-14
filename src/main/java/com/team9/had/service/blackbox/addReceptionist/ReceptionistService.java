@@ -1,6 +1,6 @@
 package com.team9.had.service.blackbox.addReceptionist;
 
-import com.team9.had.entity.Receptionist;
+import com.team9.had.model.Receptionist;
 
 import java.util.List;
 

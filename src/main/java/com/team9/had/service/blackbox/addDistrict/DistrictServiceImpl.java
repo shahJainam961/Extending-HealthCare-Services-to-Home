@@ -1,6 +1,6 @@
 package com.team9.had.service.blackbox.addDistrict;
 
-import com.team9.had.entity.District;
+import com.team9.had.model.District;
 import com.team9.had.repository.DistrictRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
