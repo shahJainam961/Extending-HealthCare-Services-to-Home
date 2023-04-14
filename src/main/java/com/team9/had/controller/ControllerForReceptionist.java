@@ -1,6 +1,5 @@
 package com.team9.had.controller;
 
-import com.team9.had.exception.UserNotFoundException;
 import com.team9.had.model.rec.HrModelForRec;
 import com.team9.had.service.receptionist.ServiceForReceptionist;
 import com.team9.had.utils.Constant;
@@ -20,7 +19,7 @@ public class ControllerForReceptionist {
     private ServiceForReceptionist serviceForReceptionist;
 
     @PostMapping("/createHealthRecord")
-    public ResponseEntity<Serializable> createHealthRecord(@RequestBody HrModelForRec hrModelForRec, @RequestAttribute String role) throws UserNotFoundException {
+    public ResponseEntity<Serializable> createHealthRecord(@RequestBody HrModelForRec hrModelForRec, @RequestAttribute String role) throws Exception {
         if(Constant.isAuthorised(role, Constant.RECEPTIONIST)){
             if(serviceForReceptionist.createHealthRecord(hrModelForRec, role))
                 return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(Constant.HTTP_OK));
@@ -31,7 +30,7 @@ public class ControllerForReceptionist {
     }
 
     @GetMapping("/confirmation")
-    public ResponseEntity<Serializable> confirmation(@RequestParam Integer uhId, @RequestAttribute String role) throws UserNotFoundException {
+    public ResponseEntity<Serializable> confirmation(@RequestParam Integer uhId, @RequestAttribute String role) throws Exception {
         if(Constant.isAuthorised(role, Constant.RECEPTIONIST)){
             Serializable obj = serviceForReceptionist.confirmation(uhId);
             return new ResponseEntity<>(obj, HttpStatusCode.valueOf(Constant.HTTP_OK));

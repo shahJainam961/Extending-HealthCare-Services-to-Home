@@ -2,7 +2,6 @@ package com.team9.had.service.blackbox.addCitizen;
 
 import com.team9.had.entity.Citizen;
 import com.team9.had.repository.CitizenRepository;
-import com.team9.had.utils.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +16,7 @@ public class CitizenServiceImpl implements CitizenService {
     @Override
     public boolean addCitizen(Citizen citizen) {
         try{
-            citizenRepository.save(Constant.encryptPII(citizen));
+            citizenRepository.save(citizen);
             return true;
         }
         catch(Exception e){
@@ -31,7 +30,7 @@ public class CitizenServiceImpl implements CitizenService {
         try{
             citizens.forEach(citizen -> {
                 try {
-                    citizenRepository.save(Constant.encryptPII(citizen));
+                    citizenRepository.save(citizen);
                 } catch (Exception e) {
                     System.out.println("e = " + e);
                 }

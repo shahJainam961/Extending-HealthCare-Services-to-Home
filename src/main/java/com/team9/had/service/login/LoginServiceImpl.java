@@ -5,7 +5,6 @@ import com.team9.had.entity.FieldHealthWorker;
 import com.team9.had.entity.Receptionist;
 import com.team9.had.entity.Supervisor;
 import com.team9.had.exception.BadCredentialException;
-import com.team9.had.exception.BadRequestException;
 import com.team9.had.exception.UserNotFoundException;
 import com.team9.had.model.LoginModel;
 import com.team9.had.model.doc.DocModelForDoc;
@@ -42,7 +41,7 @@ public class LoginServiceImpl implements LoginService{
     private AuthenticationManager authenticationManager;
 
     @Override
-    public Serializable loggingIn(LoginModel loginModel) throws UserNotFoundException, BadCredentialException {
+    public Serializable loggingIn(LoginModel loginModel) throws Exception {
         // todo validation of loginModel, if any null then throw bad request
         String loginId = loginModel.getLoginId().trim();
         String password = loginModel.getPassword();

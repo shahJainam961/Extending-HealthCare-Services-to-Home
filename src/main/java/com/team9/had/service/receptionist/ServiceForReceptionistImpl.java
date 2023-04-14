@@ -32,7 +32,7 @@ public class ServiceForReceptionistImpl implements ServiceForReceptionist{
     private ReceptionistRepository receptionistRepository;
 
     @Override
-    public boolean createHealthRecord(HrModelForRec hrModelForRec, String role) throws UserNotFoundException {
+    public boolean createHealthRecord(HrModelForRec hrModelForRec, String role) throws Exception {
         // todo validation of hrModelForRec, if any required null then --> return false
         Integer uhId = hrModelForRec.getCitizen().getUhId();
         Citizen citizen = citizenRepository.findByUhId(uhId);
@@ -45,7 +45,6 @@ public class ServiceForReceptionistImpl implements ServiceForReceptionist{
         try{
             HealthRecord healthRecord = Constant.getModelMapper().map(hrModelForRec, HealthRecord.class);
 
-            ArrayList<Object> obj = new ArrayList<>();
             healthRecord.setCreationDate(new Date(System.currentTimeMillis()));
             healthRecord.setCreationTime(new Time(System.currentTimeMillis()));
             healthRecord.setStatus(Constant.HEALTH_RECORD_NOT_ASSESSED);
@@ -63,7 +62,7 @@ public class ServiceForReceptionistImpl implements ServiceForReceptionist{
     }
 
     @Override
-    public Serializable confirmation(Integer uhId) throws UserNotFoundException {
+    public Serializable confirmation(Integer uhId) throws Exception {
         // todo validation of the request object!
         Citizen citizen = citizenRepository.findByUhId(uhId);
         if(citizen==null) throw new UserNotFoundException("User Not Found!!");

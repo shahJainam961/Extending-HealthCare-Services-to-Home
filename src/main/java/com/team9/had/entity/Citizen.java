@@ -31,7 +31,7 @@ public class Citizen {
     @Column(nullable = false, columnDefinition = "DATE")
     private Date dob;
 
-    @Column(nullable = false, length = 1000)
+    @Column(nullable = false)
     private String street1;
 
     @Column(nullable = false)
@@ -40,16 +40,16 @@ public class Citizen {
     @Column(nullable = false)
     private String state;
 
-    @Column(nullable = false, length=6)
+    @Column(nullable = false)
     private String pincode;
 
     @Column(nullable = false)
     private String district;
 
-    @Column(nullable = false, length=10)
+    @Column(nullable = false)
     private String mobileNo;
 
-    @Column(unique = true, nullable = false, length=12)
+    @Column(unique = true, nullable = false)
     private String govId;
 
     @ManyToOne
