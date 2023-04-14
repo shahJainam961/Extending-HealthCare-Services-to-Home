@@ -1,10 +1,7 @@
 package com.team9.had.service.doctor;
 
 import com.team9.had.entity.*;
-import com.team9.had.model.doc.FupModelForDocRes;
 import com.team9.had.model.doc.HrModelForDoc;
-import com.team9.had.model.doc.HrModelForDocRes;
-import com.team9.had.model.doc.StartDateEndDateModel;
 import com.team9.had.repository.*;
 import com.team9.had.utils.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,30 +44,7 @@ public class ServiceForDoctorImpl implements ServiceForDoctor{
         return obj;
     }
 
-    @Override
-    public Serializable getOldHealthRecords(String loginId, StartDateEndDateModel startDateEndDateModel) throws Exception {
-        // todo validations  --> loginId null hoi to bad request moklvaani
-        ArrayList<Object> obj = new ArrayList<>();
-        Date startDate = startDateEndDateModel.getStartDate();
-        Date endDate = startDateEndDateModel.getEndDate();
-        ArrayList<HealthRecord> healthRecords =
-                healthRecordRepository
-                        .findAllByDoctor_LoginIdAndStatusAndCreationDateBetweenOrderByCreationDateDescCreationTimeDesc(
-                                loginId, Constant.HEALTH_RECORD_ASSESSED, startDate, endDate
-                        );
-        ArrayList<HrModelForDocRes> hrModelForDocs = new ArrayList<>();
 
-        for(HealthRecord healthRecord : healthRecords){
-            HrModelForDocRes hrModelForDoc = Constant.getModelMapper().map(healthRecord, HrModelForDocRes.class);
-            ArrayList<FollowUp> followUps = followUpRepository.findAllByHealthRecord_HrId(healthRecord.getHrId());
-            for(FollowUp followUp : followUps){
-                hrModelForDoc.getFollowUps().add(Constant.getModelMapper().map(followUp, FupModelForDocRes.class));
-            }
-            hrModelForDocs.add(hrModelForDoc);
-        }
-        obj.add(hrModelForDocs);
-        return obj;
-    }
     @Override
     public boolean submitHealthRecord(HrModelForDoc hrModelForDoc) {
         // todo validations  --> nullity check for hrModelForDoc, if any null then return false
