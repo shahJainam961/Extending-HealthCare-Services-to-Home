@@ -72,6 +72,7 @@ public class ServiceForReceptionistImpl implements ServiceForReceptionist{
 
         Citizen citizen = citizenRepository.findByUhId(uhId);
         if(citizen==null) throw new ResourceNotFoundException(Constant.RESOURCE_NOT_FOUND_MSG);
+        citizen = Constant.decryptPII(citizen);
 
         ArrayList<Object> obj = new ArrayList<>();
         CizModelForRec cizModelForRec = Constant.getModelMapper().map(citizen, CizModelForRec.class);

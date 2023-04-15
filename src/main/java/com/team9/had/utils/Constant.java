@@ -1,8 +1,8 @@
 package com.team9.had.utils;
 
-import com.team9.had.model.Citizen;
-import com.team9.had.model.HealthRecord;
+import com.team9.had.model.*;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.internal.bytebuddy.implementation.bind.annotation.Super;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -52,7 +52,7 @@ public interface Constant {
 
     //----------------------Twilio Credentials----------------------------//
     String ACCOUNT_SID = "AC4dc6465df71d2b5f60edc0facfa02cd1";
-    String AUTH_TOKEN = "b5e6209098fbe4bff5ba6d2055fd0d85";
+    String AUTH_TOKEN = "a0eb2806d8abd89956a2f87bffd05685";
     //--------------------------------------------------------------------//
 
 
@@ -174,7 +174,6 @@ public interface Constant {
             encryptedCitizen.setDob(decryptedCitizen.getDob());
         if(decryptedCitizen.getFname()!=null)
             encryptedCitizen.setFname(EncryptDecrypt.encrypt(decryptedCitizen.getFname(), Constant.SECRET_KEY));
-//        if(decryptedCitizen.getGender())
         encryptedCitizen.setGender(decryptedCitizen.getGender());
         if(decryptedCitizen.getGovId()!=null)
             encryptedCitizen.setGovId(EncryptDecrypt.encrypt(decryptedCitizen.getGovId(), Constant.SECRET_KEY));
@@ -205,8 +204,7 @@ public interface Constant {
             decryptedCitizen.setDob(encryptedCitizen.getDob());
         if(encryptedCitizen.getFname()!=null)
             decryptedCitizen.setFname(EncryptDecrypt.decrypt(encryptedCitizen.getFname(), Constant.SECRET_KEY));
-//        if(encryptedCitizen.getGender()=='\0')
-            decryptedCitizen.setGender(encryptedCitizen.getGender());
+        decryptedCitizen.setGender(encryptedCitizen.getGender());
         if(encryptedCitizen.getGovId()!=null)
             decryptedCitizen.setGovId(EncryptDecrypt.decrypt(encryptedCitizen.getGovId(), Constant.SECRET_KEY));
         if(encryptedCitizen.getLname()!=null)
@@ -229,21 +227,45 @@ public interface Constant {
 
 
     //------------------------------------------------------------------------------------//
-    static void getDecryptedHealthRecord(HealthRecord healthRecord) throws Exception {
+    static HealthRecord getDecryptedHealthRecord(HealthRecord healthRecord1) throws Exception {
+        HealthRecord healthRecord = healthRecord1;
         if(healthRecord.getCitizen()!=null) healthRecord.setCitizen(Constant.decryptPII(healthRecord.getCitizen()));
         if(healthRecord.getDoctor()!=null) healthRecord.getDoctor().setCitizen(Constant.decryptPII(healthRecord.getDoctor().getCitizen()));
         if(healthRecord.getSupervisor()!=null) healthRecord.getSupervisor().setCitizen(Constant.decryptPII(healthRecord.getSupervisor().getCitizen()));
         if(healthRecord.getFieldHealthWorker()!=null) healthRecord.getFieldHealthWorker().setCitizen(Constant.decryptPII(healthRecord.getFieldHealthWorker().getCitizen()));
         if(healthRecord.getReceptionist()!=null) healthRecord.getReceptionist().setCitizen(Constant.decryptPII(healthRecord.getReceptionist().getCitizen()));
+        return healthRecord;
     }
 
-
-
-    static void getEncryptedHealthRecord(HealthRecord healthRecord) throws Exception {
-        if(healthRecord.getCitizen()!=null) healthRecord.setCitizen(Constant.encryptPII(healthRecord.getCitizen()));
-        if(healthRecord.getDoctor()!=null) healthRecord.getDoctor().setCitizen(Constant.encryptPII(healthRecord.getDoctor().getCitizen()));
-        if(healthRecord.getSupervisor()!=null) healthRecord.getSupervisor().setCitizen(Constant.encryptPII(healthRecord.getSupervisor().getCitizen()));
-        if(healthRecord.getFieldHealthWorker()!=null) healthRecord.getFieldHealthWorker().setCitizen(Constant.encryptPII(healthRecord.getFieldHealthWorker().getCitizen()));
-        if(healthRecord.getReceptionist()!=null) healthRecord.getReceptionist().setCitizen(Constant.encryptPII(healthRecord.getReceptionist().getCitizen()));
+    static Doctor getDecryptedDoctor(Doctor doctor1) throws Exception {
+        Doctor doctor = doctor1;
+        doctor.setCitizen(decryptPII(doctor.getCitizen()));
+        return doctor;
     }
+
+    static FieldHealthWorker getDecryptedFieldHealthWorker(FieldHealthWorker fieldHealthWorker1) throws Exception {
+        FieldHealthWorker fieldHealthWorker = fieldHealthWorker1;
+        fieldHealthWorker.setCitizen(decryptPII(fieldHealthWorker.getCitizen()));
+        return fieldHealthWorker;
+    }
+
+    static Supervisor getDecryptedSupervisor(Supervisor supervisor1) throws Exception {
+        Supervisor supervisor = supervisor1;
+        supervisor.setCitizen(decryptPII(supervisor.getCitizen()));
+        return supervisor;
+    }
+
+    static Receptionist getDecryptedReceptionist(Receptionist receptionist1) throws Exception {
+        Receptionist receptionist = receptionist1;
+        receptionist.setCitizen(decryptPII(receptionist.getCitizen()));
+        return receptionist;
+    }
+
+    static FollowUp getDecryptedFollowUp(FollowUp followUp1) throws Exception {
+        FollowUp followUp = followUp1;
+        if(followUp.getHealthRecord()!=null)
+            followUp.setHealthRecord(getDecryptedHealthRecord(followUp.getHealthRecord()));
+        return followUp;
+    }
+    //---------------------------------------------------------------------------------------//
 }

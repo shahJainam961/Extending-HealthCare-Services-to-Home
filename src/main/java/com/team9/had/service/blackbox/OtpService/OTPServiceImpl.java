@@ -5,6 +5,7 @@ import com.team9.had.model.*;
 import com.team9.had.repository.*;
 import com.team9.had.service.twilio.TwilioMessaging;
 import com.team9.had.utils.Constant;
+import com.team9.had.utils.EncryptDecrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,8 +28,8 @@ public class OTPServiceImpl implements OTPService{
 
     public boolean getOtp(String loginId) throws ResourceNotFoundException {
         // todo validations --> loginId null hoi to Bad Request moklvaani
-        String mobileNo = Constant.MOBILE_PREFIX;
-
+        String mobileNo=null;
+        String mobilePrefix = Constant.MOBILE_PREFIX;
         if(loginId.startsWith(Constant.DOCTOR)){
             Doctor doctor = doctorRepository.findByLoginId(loginId);
             if(doctor==null) {throw new ResourceNotFoundException(Constant.RESOURCE_NOT_FOUND_MSG);}
@@ -54,6 +55,8 @@ public class OTPServiceImpl implements OTPService{
         }
 
         try{
+//            mobileNo = EncryptDecrypt.decrypt(mobileNo, Constant.SECRET_KEY);
+            mobileNo = mobilePrefix + mobileNo;
             System.out.println("mobileNo = " + mobileNo);
             String otp = Constant.generateOtp();
             Date date = new Date(System.currentTimeMillis()+ Constant.OTP_EXPIRATION_TIME);

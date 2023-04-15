@@ -65,6 +65,7 @@ public class LoginServiceImpl implements LoginService{
         if(loginId.startsWith(Constant.DOCTOR)){
             Doctor doctor = doctorRepository.findByLoginId(loginId);
             if(doctor==null) throw new ResourceNotFoundException(Constant.RESOURCE_NOT_FOUND_MSG);
+            doctor = Constant.getDecryptedDoctor(doctor);
 
             ArrayList<Object> obj = new ArrayList<>();
             DocModelForDoc docModelForDoc = Constant.getModelMapper().map(doctor, DocModelForDoc.class);
@@ -75,21 +76,28 @@ public class LoginServiceImpl implements LoginService{
         else if(loginId.startsWith(Constant.RECEPTIONIST)){
             Receptionist receptionist = receptionistRepository.findByLoginId(loginId);
             if(receptionist==null) throw new ResourceNotFoundException(Constant.RESOURCE_NOT_FOUND_MSG);
+            receptionist = Constant.getDecryptedReceptionist(receptionist);
 
             Integer hospitalId = receptionist.getHospital().getHospId();
             ArrayList<Doctor> doctors = doctorRepository.findAllByHospital_HospId(hospitalId);
             ArrayList<DocModelForRec> docModelForRecs = new ArrayList<>();
             ArrayList<Object> obj = new ArrayList<>();
             obj.add(Constant.getModelMapper().map(receptionist, RecModelForRec.class));
-            doctors.stream().forEach((doctor)->{
+            for(Doctor doctor : doctors){
+                try {
+                    doctor = Constant.getDecryptedDoctor(doctor);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
                 docModelForRecs.add(Constant.getModelMapper().map(doctor, DocModelForRec.class));
-            });
+            }
             obj.add(docModelForRecs);
             return obj;
         }
         else if(loginId.startsWith(Constant.SUPERVISOR)){
             Supervisor supervisor = supervisorRepository.findByLoginId(loginId);
             if(supervisor==null) throw new ResourceNotFoundException(Constant.RESOURCE_NOT_FOUND_MSG);
+            supervisor = Constant.getDecryptedSupervisor(supervisor);
 
             ArrayList<Object> obj = new ArrayList<>();
             SupModelForSup supModelForSup = Constant.getModelMapper().map(supervisor, SupModelForSup.class);
@@ -99,6 +107,7 @@ public class LoginServiceImpl implements LoginService{
         else if(loginId.startsWith(Constant.FIELD_HEALTH_WORKER)){
             FieldHealthWorker fieldHealthWorker = fieldHealthWorkerRepository.findByLoginId(loginId);
             if(fieldHealthWorker==null) throw new ResourceNotFoundException(Constant.RESOURCE_NOT_FOUND_MSG);
+            fieldHealthWorker = Constant.getDecryptedFieldHealthWorker(fieldHealthWorker);
 
             ArrayList<Object> obj = new ArrayList<>();
             FhwModelForFhw fhwModelForFhw = Constant.getModelMapper().map(fieldHealthWorker, FhwModelForFhw.class);

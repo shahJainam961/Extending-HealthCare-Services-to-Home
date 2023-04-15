@@ -7,6 +7,7 @@ import com.team9.had.model.*;
 import com.team9.had.repository.*;
 import com.team9.had.utils.Constant;
 import com.team9.had.utils.V;
+import org.apache.tomcat.util.bcel.Const;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,9 +48,14 @@ public class ServiceForSupervisorImpl implements ServiceForSupervisor{
             Citizen citizen = unassignedHealthRecord.getCitizen();
             if(st.contains(citizen) == true) continue;
             st.add(citizen);
+            citizen = Constant.decryptPII(citizen);
             CizModelForSup cizModelForSup = Constant.getModelMapper().map(citizen, CizModelForSup.class);
             ArrayList<FieldHealthWorker> fieldHealthWorkers = fieldHealthWorkerRepository.findAllByAssignedPincode(unassignedHealthRecord.getPincode());
             ArrayList<FhwModelForSup> fhwModelForSups = new ArrayList<>();
+            for(FieldHealthWorker fieldHealthWorker : fieldHealthWorkers){
+                Constant.getDecryptedFieldHealthWorker(fieldHealthWorker);
+            }
+
             for(FieldHealthWorker fieldHealthWorker : fieldHealthWorkers)
             {
                 FhwModelForSup fhwModelForSup = Constant.getModelMapper().map(fieldHealthWorker, FhwModelForSup.class);
@@ -101,30 +107,34 @@ public class ServiceForSupervisorImpl implements ServiceForSupervisor{
 
         ArrayList<Object> obj = new ArrayList<>();
         Supervisor supervisor = supervisorRepository.findByLoginId(loginId);
-
         if(supervisor==null) throw new ResourceNotFoundException(Constant.RESOURCE_NOT_FOUND_MSG);
+        supervisor = Constant.getDecryptedSupervisor(supervisor);
 
         String districtName = cityRepository.findByPincode(supervisor.getAssignedPincode()).getCityName();
         Integer did = districtRepository.findByDistrictName(districtName).getDid();
         ArrayList<City> cities = cityRepository.findAllByDistrict_Did(did);
         ArrayList<GetFhwModelForSup> getFhwModelForSups = new ArrayList<>();
-        cities.forEach((city)->{
+        for(City city : cities){
             String assignedPincode = city.getPincode();
             ArrayList<FieldHealthWorker> fieldHealthWorkers = fieldHealthWorkerRepository.findAllByAssignedPincode(assignedPincode);
-            fieldHealthWorkers.forEach((fieldHealthWorker)->{
+            for(FieldHealthWorker fieldHealthWorker : fieldHealthWorkers){
+                Constant.getDecryptedFieldHealthWorker(fieldHealthWorker);
+            }
+            for(FieldHealthWorker fieldHealthWorker : fieldHealthWorkers){
                 ArrayList<FhwModelForSup> otherFhwModelForSups = new ArrayList<>();
-                fieldHealthWorkers.forEach(other->{
+                for(FieldHealthWorker other : fieldHealthWorkers){
                     if(other!=fieldHealthWorker){
                         FhwModelForSup otherFhwModelForSup = Constant.getModelMapper().map(other, FhwModelForSup.class);
                         otherFhwModelForSup.setCitizenAssigned(citizenRepository.findAllByFieldHealthWorker_LoginId(otherFhwModelForSup.getLoginId()).size());
                         otherFhwModelForSups.add(otherFhwModelForSup);
                     }
-                });
+                }
                 ArrayList<CizModelForSup> cizModelForSups = new ArrayList<>();
                 ArrayList<Citizen> citizens = citizenRepository.findAllByFieldHealthWorker_LoginId(fieldHealthWorker.getLoginId());
-                citizens.forEach((citizen)->{
+                for(Citizen citizen : citizens){
+                    citizen = Constant.decryptPII(citizen);
                     cizModelForSups.add(Constant.getModelMapper().map(citizen, CizModelForSup.class));
-                });
+                }
                 FhwModelForSup fhwModelForSup = Constant.getModelMapper().map(fieldHealthWorker, FhwModelForSup.class);
                 fhwModelForSup.setCitizenAssigned(cizModelForSups.size());
                 GetFhwModelForSup getFhwModelForSup = new GetFhwModelForSup(
@@ -133,8 +143,8 @@ public class ServiceForSupervisorImpl implements ServiceForSupervisor{
                         otherFhwModelForSups
                 );
                 getFhwModelForSups.add(getFhwModelForSup);
-            });
-        });
+            }
+        }
         obj.add(getFhwModelForSups);
         return obj;
     }
@@ -167,28 +177,34 @@ public class ServiceForSupervisorImpl implements ServiceForSupervisor{
 
         ArrayList<Object> obj = new ArrayList<>();
         Supervisor supervisor = supervisorRepository.findByLoginId(loginId);
+        if(supervisor==null) throw new ResourceNotFoundException(Constant.RESOURCE_NOT_FOUND_MSG);
+        supervisor = Constant.getDecryptedSupervisor(supervisor);
+
         Integer did = cityRepository.findByPincode(supervisor.getAssignedPincode()).getDistrict().getDid();
 
         ArrayList<City> cities = cityRepository.findAllByDistrict_Did(did);
         ArrayList<FhwModelForStat> fhwModelForStats = new ArrayList<>();
-        cities.forEach(city -> {
+        for(City city : cities){
             String assignedPincode = city.getPincode();
             ArrayList<FieldHealthWorker> fieldHealthWorkers = fieldHealthWorkerRepository.findAllByAssignedPincode(assignedPincode);
-            fieldHealthWorkers.forEach(fieldHealthWorker -> {
+            for(FieldHealthWorker fieldHealthWorker : fieldHealthWorkers){
+                Constant.getDecryptedFieldHealthWorker(fieldHealthWorker);
+            }
+            for(FieldHealthWorker fieldHealthWorker : fieldHealthWorkers){
                 FhwModelForStat fhwModelForStat = new FhwModelForStat();
                 FhwModelForSup fhwModelForSup = Constant.getModelMapper().map(fieldHealthWorker, FhwModelForSup.class);
                 fhwModelForSup.setCitizenAssigned(citizenRepository.findAllByFieldHealthWorker_LoginId(fieldHealthWorker.getLoginId()).size());
                 fhwModelForStat.setFieldHealthWorker(fhwModelForSup);
                 ArrayList<HealthRecord> healthRecords = healthRecordRepository.findAllByFieldHealthWorker_LoginId(fieldHealthWorker.getLoginId());
-                healthRecords.forEach(healthRecord -> {
+                for(HealthRecord healthRecord : healthRecords){
                     ArrayList<FollowUp> followUps = followUpRepository.findAllByHealthRecord_HrId(healthRecord.getHrId());
-                    followUps.forEach(followUp -> {
+                    for(FollowUp followUp : followUps){
                         fhwModelForStat.getFollowUps().add(Constant.getModelMapper().map(followUp, FollowUpModelForSup.class));
-                    });
-                });
+                    }
+                }
                 fhwModelForStats.add(fhwModelForStat);
-            });
-        });
+            }
+        }
         obj.add(fhwModelForStats);
         return obj;
     }

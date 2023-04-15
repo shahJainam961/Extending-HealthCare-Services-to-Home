@@ -45,9 +45,10 @@ public class ServiceForDoctorImpl implements ServiceForDoctor{
                                 new Date(System.currentTimeMillis())
                         );
         ArrayList<HrModelForDoc> hrModelForDocs = new ArrayList<>();
-        healthRecords.stream().forEach((healthRecord) -> {
+        for(HealthRecord healthRecord : healthRecords){
+            healthRecord = Constant.getDecryptedHealthRecord(healthRecord);
             hrModelForDocs.add(Constant.getModelMapper().map(healthRecord, HrModelForDoc.class));
-        });
+        }
         obj.add(hrModelForDocs);
         return obj;
     }
@@ -68,6 +69,7 @@ public class ServiceForDoctorImpl implements ServiceForDoctor{
         ArrayList<HrModelForDocRes> hrModelForDocs = new ArrayList<>();
 
         for(HealthRecord healthRecord : healthRecords){
+            healthRecord = Constant.getDecryptedHealthRecord(healthRecord);
             HrModelForDocRes hrModelForDoc = Constant.getModelMapper().map(healthRecord, HrModelForDocRes.class);
             ArrayList<FollowUp> followUps = followUpRepository.findAllByHealthRecord_HrId(healthRecord.getHrId());
             for(FollowUp followUp : followUps){
@@ -135,10 +137,11 @@ public class ServiceForDoctorImpl implements ServiceForDoctor{
 
         ArrayList<Object> obj = new ArrayList<>();
         ArrayList<HrModelForDoc> hrModelForDocs = new ArrayList<>();
-        healthRecords.forEach((healthRecord)->{
+        for(HealthRecord healthRecord : healthRecords){
+            healthRecord = Constant.getDecryptedHealthRecord(healthRecord);
             HrModelForDoc hrModelForDoc = Constant.getModelMapper().map(healthRecord, HrModelForDoc.class);
             hrModelForDocs.add(hrModelForDoc);
-        });
+        }
         obj.add(hrModelForDocs);
         return obj;
     }

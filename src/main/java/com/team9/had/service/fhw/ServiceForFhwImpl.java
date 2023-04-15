@@ -5,6 +5,7 @@ import com.team9.had.customModel.fhw.SyncModelForFhw;
 import com.team9.had.model.FollowUp;
 import com.team9.had.repository.FollowUpRepository;
 import com.team9.had.utils.Constant;
+import com.team9.had.utils.EncryptDecrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,8 +37,16 @@ public class ServiceForFhwImpl implements ServiceForFhw{
                 syncModelForFhw1.setPincode(followUp.getHealthRecord().getPincode());
                 syncModelForFhw1.setMobileNo(followUp.getHealthRecord().getMobileNo());
                 syncModelForFhw1.setUhId(followUp.getHealthRecord().getCitizen().getUhId());
-                syncModelForFhw1.setFname(followUp.getHealthRecord().getCitizen().getFname());
-                syncModelForFhw1.setLname(followUp.getHealthRecord().getCitizen().getLname());
+                try {
+                    syncModelForFhw1.setFname(EncryptDecrypt.decrypt(followUp.getHealthRecord().getCitizen().getFname(), Constant.SECRET_KEY));
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+                try {
+                    syncModelForFhw1.setLname(EncryptDecrypt.decrypt(followUp.getHealthRecord().getCitizen().getLname(), Constant.SECRET_KEY));
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
                 syncModelForFhw1.setGender(followUp.getHealthRecord().getCitizen().getGender());
                 syncModelForFhw1.setDob(followUp.getHealthRecord().getCitizen().getDob());
                 syncModelForFhw1.setState(followUp.getHealthRecord().getState());
