@@ -58,4 +58,9 @@ public class LoginController {
             return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(Constant.HTTP_UNAUTHENTICATED));
         }
     }
+
+    @GetMapping("/authenticate")
+    public ResponseEntity<Serializable> authenticate(){
+        return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(Constant.HTTP_OK));
+    }
 }

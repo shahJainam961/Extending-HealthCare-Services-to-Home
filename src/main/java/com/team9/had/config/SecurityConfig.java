@@ -29,7 +29,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                 .csrf().disable()
                 .authorizeHttpRequests()
                 .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
-                .requestMatchers("/common/**").permitAll()
+                .requestMatchers("/common/login").permitAll()
                 .requestMatchers("/blackbox/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
