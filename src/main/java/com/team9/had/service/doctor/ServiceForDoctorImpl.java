@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 import java.io.Serializable;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 public class ServiceForDoctorImpl implements ServiceForDoctor{
@@ -35,7 +37,7 @@ public class ServiceForDoctorImpl implements ServiceForDoctor{
     public Serializable getNewHealthRecords(String loginId) throws Exception {
 
         if(loginId==null) throw new BadRequestException(Constant.BAD_REQUEST_MSG);
-
+        Set<Citizen> citizenSet = new HashSet<>();
         ArrayList<Object> obj = new ArrayList<>();
 
         ArrayList<HealthRecord> healthRecords =
@@ -46,7 +48,7 @@ public class ServiceForDoctorImpl implements ServiceForDoctor{
                         );
         ArrayList<HrModelForDoc> hrModelForDocs = new ArrayList<>();
         for(HealthRecord healthRecord : healthRecords){
-            healthRecord = Constant.getDecryptedHealthRecord(healthRecord);
+            Constant.getDecryptedHealthRecord(healthRecord, citizenSet);
             hrModelForDocs.add(Constant.getModelMapper().map(healthRecord, HrModelForDoc.class));
         }
         obj.add(hrModelForDocs);
@@ -57,7 +59,7 @@ public class ServiceForDoctorImpl implements ServiceForDoctor{
     public Serializable getOldHealthRecords(String loginId, StartDateEndDateModel startDateEndDateModel) throws Exception {
 
         if(loginId==null || !V.validateStartDateEndDateModel(startDateEndDateModel)) throw new BadRequestException(Constant.BAD_REQUEST_MSG);
-
+        Set<Citizen> citizenSet = new HashSet<>();
         ArrayList<Object> obj = new ArrayList<>();
         Date startDate = startDateEndDateModel.getStartDate();
         Date endDate = startDateEndDateModel.getEndDate();
@@ -69,7 +71,7 @@ public class ServiceForDoctorImpl implements ServiceForDoctor{
         ArrayList<HrModelForDocRes> hrModelForDocs = new ArrayList<>();
 
         for(HealthRecord healthRecord : healthRecords){
-            healthRecord = Constant.getDecryptedHealthRecord(healthRecord);
+            Constant.getDecryptedHealthRecord(healthRecord, citizenSet);
             HrModelForDocRes hrModelForDoc = Constant.getModelMapper().map(healthRecord, HrModelForDocRes.class);
             ArrayList<FollowUp> followUps = followUpRepository.findAllByHealthRecord_HrId(healthRecord.getHrId());
             for(FollowUp followUp : followUps){
@@ -130,7 +132,7 @@ public class ServiceForDoctorImpl implements ServiceForDoctor{
     public Serializable getConsentData(Integer uhId) throws Exception{
 
         if(uhId==null) throw new BadRequestException((Constant.BAD_REQUEST_MSG));
-
+        Set<Citizen> citizenSet = new HashSet<>();
         ArrayList<HealthRecord> healthRecords = healthRecordRepository.findAllByCitizen_UhIdAndStatusOrderByCreationDateDescCreationTimeDesc(
                 uhId, Constant.HEALTH_RECORD_ASSESSED
         );
@@ -138,7 +140,7 @@ public class ServiceForDoctorImpl implements ServiceForDoctor{
         ArrayList<Object> obj = new ArrayList<>();
         ArrayList<HrModelForDoc> hrModelForDocs = new ArrayList<>();
         for(HealthRecord healthRecord : healthRecords){
-            healthRecord = Constant.getDecryptedHealthRecord(healthRecord);
+            Constant.getDecryptedHealthRecord(healthRecord, citizenSet);
             HrModelForDoc hrModelForDoc = Constant.getModelMapper().map(healthRecord, HrModelForDoc.class);
             hrModelForDocs.add(hrModelForDoc);
         }

@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 public class SendSmsForFollowUpsImpl implements SendSmsForFollowUps {
@@ -25,8 +27,8 @@ public class SendSmsForFollowUpsImpl implements SendSmsForFollowUps {
     @Override
     public boolean sendMessage() {
 
-
-        ArrayList<FollowUp> followUps = followUpRepository.findAllByDateOfFollowUp((new Date(System.currentTimeMillis() + Constant.DAY)));
+        Set<Citizen> citizenSet = new HashSet<>();
+        ArrayList<FollowUp> followUps = followUpRepository.findAllByDateOfFollowUpAndStatus((new Date(System.currentTimeMillis() + Constant.DAY)), Constant.FOLLOW_UP_PENDING);
         if(followUps.size()==0) return true;
         try{
             followUps.forEach(followUp -> {
@@ -36,15 +38,36 @@ public class SendSmsForFollowUpsImpl implements SendSmsForFollowUps {
                     Date date = followUp.getDateOfFollowUp();
                     FieldHealthWorker fieldHealthWorker = followUp.getHealthRecord().getFieldHealthWorker();
                     String secretKey = followUp.getSecretKey();
-                    String msg = null;
+                    String msg;
+
                     try {
-                        msg = "\n\nHello "+ EncryptDecrypt.decrypt(citizen.getFname(), Constant.SECRET_KEY) +" "+EncryptDecrypt.decrypt(citizen.getLname(), Constant.SECRET_KEY)+", hope you are doing well. Your follow-up is scheduled for the date "+date+" of Health Record Id "+healthRecord.getHrId()+", will be done by the field health worker, "+EncryptDecrypt.decrypt(fieldHealthWorker.getCitizen().getFname(), Constant.SECRET_KEY)+" "+EncryptDecrypt.decrypt(fieldHealthWorker.getCitizen().getLname(), Constant.SECRET_KEY)+". Please share this secret key to him/her after he/she has completed their work. Find below the secret key. Thank You.\n Secret Key: "+secretKey;
+                        Constant.getDecryptedCitizen(citizen, citizenSet);
+                        Constant.getDecryptedHealthRecord(healthRecord, citizenSet);
+                        Constant.getDecryptedFieldHealthWorker(fieldHealthWorker, citizenSet);
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
-                    String mobileNo = null;
                     try {
-                        mobileNo = Constant.MOBILE_PREFIX + EncryptDecrypt.decrypt(citizen.getMobileNo(), Constant.SECRET_KEY);
+                        msg = "\n\nHello "+ citizen.getFname() +" "
+                                + citizen.getLname()
+                                + ", hope you are doing well. Your follow-up is scheduled for the date "
+                                + date
+                                + " of Health Record Id "
+                                + healthRecord.getHrId()
+                                + ", will be done by the field health worker, "
+                                + fieldHealthWorker.getCitizen().getFname()
+                                + " "
+                                + fieldHealthWorker.getCitizen().getLname()
+                                + ". Please share this secret key to him/her after he/she has completed their work. Find below the secret key. Thank You.\n Secret Key: "
+                                + secretKey;
+
+
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                    String mobileNo;
+                    try {
+                        mobileNo = citizen.getMobileNo();
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }

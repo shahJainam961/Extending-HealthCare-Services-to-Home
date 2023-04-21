@@ -2,7 +2,9 @@ package com.team9.had.service.fhw;
 
 import com.team9.had.customModel.fhw.ModelForFhw;
 import com.team9.had.customModel.fhw.SyncModelForFhw;
+import com.team9.had.model.Citizen;
 import com.team9.had.model.FollowUp;
+import com.team9.had.model.HealthRecord;
 import com.team9.had.repository.FollowUpRepository;
 import com.team9.had.utils.Constant;
 import com.team9.had.utils.EncryptDecrypt;
@@ -11,6 +13,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 public class ServiceForFhwImpl implements ServiceForFhw{
@@ -26,7 +30,7 @@ public class ServiceForFhwImpl implements ServiceForFhw{
                 FollowUp followUp = Constant.getModelMapper().map(syncModelForFhw, FollowUp.class);
                 followUpRepository.save(followUp);
             });
-
+            Set<Citizen> citizenSet = new HashSet<>();
             ArrayList<SyncModelForFhw> followUps1 = new ArrayList<>();
             ArrayList<FollowUp> followUps = followUpRepository.findAllByHealthRecord_FieldHealthWorker_LoginIdAndStatus(role, Constant.FOLLOW_UP_PENDING);
             followUps.forEach((followUp)->{
@@ -37,20 +41,18 @@ public class ServiceForFhwImpl implements ServiceForFhw{
                 syncModelForFhw1.setPincode(followUp.getHealthRecord().getPincode());
                 syncModelForFhw1.setMobileNo(followUp.getHealthRecord().getMobileNo());
                 syncModelForFhw1.setUhId(followUp.getHealthRecord().getCitizen().getUhId());
+                HealthRecord healthRecord = followUp.getHealthRecord();
                 try {
-                    syncModelForFhw1.setFname(EncryptDecrypt.decrypt(followUp.getHealthRecord().getCitizen().getFname(), Constant.SECRET_KEY));
+                    Constant.getDecryptedHealthRecord(healthRecord, citizenSet);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
-                try {
-                    syncModelForFhw1.setLname(EncryptDecrypt.decrypt(followUp.getHealthRecord().getCitizen().getLname(), Constant.SECRET_KEY));
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-                syncModelForFhw1.setGender(followUp.getHealthRecord().getCitizen().getGender());
-                syncModelForFhw1.setDob(followUp.getHealthRecord().getCitizen().getDob());
-                syncModelForFhw1.setState(followUp.getHealthRecord().getState());
-                syncModelForFhw1.setPrescription(followUp.getHealthRecord().getPrescription());
+                syncModelForFhw1.setFname(healthRecord.getCitizen().getFname());
+                syncModelForFhw1.setLname(healthRecord.getCitizen().getLname());
+                syncModelForFhw1.setGender(healthRecord.getCitizen().getGender());
+                syncModelForFhw1.setDob(healthRecord.getCitizen().getDob());
+                syncModelForFhw1.setState(healthRecord.getState());
+                syncModelForFhw1.setPrescription(healthRecord.getPrescription());
                 followUps1.add(syncModelForFhw1);
             });
             ModelForFhw modelForFhw1 = new ModelForFhw();

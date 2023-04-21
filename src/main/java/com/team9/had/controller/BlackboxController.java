@@ -198,7 +198,7 @@ public class BlackboxController {
     }
 
     @GetMapping("/getOtp")
-    public ResponseEntity<Serializable> getOtp(@RequestParam String loginId) throws ResourceNotFoundException {
+    public ResponseEntity<Serializable> getOtp(@RequestParam String loginId) throws Exception {
         if(otpService.getOtp(loginId)){
             return new ResponseEntity<>(Constant.EMPTY, HttpStatusCode.valueOf(Constant.HTTP_OK));
         }

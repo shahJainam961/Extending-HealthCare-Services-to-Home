@@ -5,7 +5,7 @@ import com.team9.had.model.OTP;
 
 public interface OTPService {
 
-    boolean getOtp(String loginId) throws ResourceNotFoundException;
+    boolean getOtp(String loginId) throws Exception;
 
     String validateOtp(OTP otpModel);
 

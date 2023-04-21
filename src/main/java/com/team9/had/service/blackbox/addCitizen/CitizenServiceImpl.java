@@ -17,7 +17,8 @@ public class CitizenServiceImpl implements CitizenService {
     @Override
     public boolean addCitizen(Citizen citizen) {
         try{
-            citizenRepository.save(Constant.encryptPII(citizen));
+            Constant.encryptPII(citizen);
+            citizenRepository.save(citizen);
             return true;
         }
         catch(Exception e){
@@ -31,7 +32,8 @@ public class CitizenServiceImpl implements CitizenService {
         try{
             citizens.forEach(citizen -> {
                 try {
-                    citizenRepository.save(Constant.encryptPII(citizen));
+                    Constant.encryptPII(citizen);
+                    citizenRepository.save(citizen);
                 } catch (Exception e) {
                     System.out.println("e = " + e);
                 }

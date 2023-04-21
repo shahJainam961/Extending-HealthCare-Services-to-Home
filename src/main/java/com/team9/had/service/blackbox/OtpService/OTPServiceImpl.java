@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 public class OTPServiceImpl implements OTPService{
@@ -26,28 +28,32 @@ public class OTPServiceImpl implements OTPService{
     private FieldHealthWorkerRepository fieldHealthWorkerRepository;
 
 
-    public boolean getOtp(String loginId) throws ResourceNotFoundException {
+    public boolean getOtp(String loginId) throws Exception {
         // todo validations --> loginId null hoi to Bad Request moklvaani
-        String mobileNo=null;
-        String mobilePrefix = Constant.MOBILE_PREFIX;
+        Set<Citizen> citizenSet = new HashSet<>();
+        String mobileNo = "";
         if(loginId.startsWith(Constant.DOCTOR)){
             Doctor doctor = doctorRepository.findByLoginId(loginId);
             if(doctor==null) {throw new ResourceNotFoundException(Constant.RESOURCE_NOT_FOUND_MSG);}
+//            Constant.getDecryptedDoctor(doctor, citizenSet);
             mobileNo += doctor.getCitizen().getMobileNo();
         }
         else if(loginId.startsWith(Constant.RECEPTIONIST)){
             Receptionist receptionist = receptionistRepository.findByLoginId(loginId);
             if(receptionist==null){throw new ResourceNotFoundException(Constant.RESOURCE_NOT_FOUND_MSG);}
+//            Constant.getDecryptedReceptionist(receptionist, citizenSet);
             mobileNo += receptionist.getCitizen().getMobileNo();
         }
         else if(loginId.startsWith(Constant.SUPERVISOR)){
             Supervisor supervisor = supervisorRepository.findByLoginId(loginId);
             if(supervisor==null){throw new ResourceNotFoundException(Constant.RESOURCE_NOT_FOUND_MSG);}
+//            Constant.getDecryptedSupervisor(supervisor, citizenSet);
             mobileNo += supervisor.getCitizen().getMobileNo();
         }
         else if(loginId.startsWith(Constant.FIELD_HEALTH_WORKER)){
             FieldHealthWorker fieldHealthWorker = fieldHealthWorkerRepository.findByLoginId(loginId);
             if(fieldHealthWorker==null){throw new ResourceNotFoundException(Constant.RESOURCE_NOT_FOUND_MSG);}
+//            Constant.getDecryptedFieldHealthWorker(fieldHealthWorker, citizenSet);
             mobileNo += fieldHealthWorker.getCitizen().getMobileNo();
         }
         else{
@@ -55,8 +61,7 @@ public class OTPServiceImpl implements OTPService{
         }
 
         try{
-//            mobileNo = EncryptDecrypt.decrypt(mobileNo, Constant.SECRET_KEY);
-            mobileNo = mobilePrefix + mobileNo;
+            mobileNo = Constant.MOBILE_PREFIX + EncryptDecrypt.decrypt(mobileNo, Constant.SECRET_KEY);
             System.out.println("mobileNo = " + mobileNo);
             String otp = Constant.generateOtp();
             Date date = new Date(System.currentTimeMillis()+ Constant.OTP_EXPIRATION_TIME);

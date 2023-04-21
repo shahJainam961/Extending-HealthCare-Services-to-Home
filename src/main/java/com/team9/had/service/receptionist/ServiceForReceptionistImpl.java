@@ -20,6 +20,8 @@ import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 public class ServiceForReceptionistImpl implements ServiceForReceptionist{
@@ -69,10 +71,10 @@ public class ServiceForReceptionistImpl implements ServiceForReceptionist{
     public Serializable confirmation(Integer uhId) throws Exception {
 
         if(uhId==null) throw new BadRequestException(Constant.BAD_REQUEST_MSG);
-
+        Set<Citizen> citizenSet = new HashSet<>();
         Citizen citizen = citizenRepository.findByUhId(uhId);
         if(citizen==null) throw new ResourceNotFoundException(Constant.RESOURCE_NOT_FOUND_MSG);
-        citizen = Constant.decryptPII(citizen);
+        Constant.getDecryptedCitizen(citizen, citizenSet);
 
         ArrayList<Object> obj = new ArrayList<>();
         CizModelForRec cizModelForRec = Constant.getModelMapper().map(citizen, CizModelForRec.class);

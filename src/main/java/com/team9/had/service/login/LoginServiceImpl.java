@@ -9,10 +9,7 @@ import com.team9.had.customModel.sup.SupModelForSup;
 import com.team9.had.exception.BadCredentialException;
 import com.team9.had.exception.BadRequestException;
 import com.team9.had.exception.ResourceNotFoundException;
-import com.team9.had.model.Doctor;
-import com.team9.had.model.FieldHealthWorker;
-import com.team9.had.model.Receptionist;
-import com.team9.had.model.Supervisor;
+import com.team9.had.model.*;
 import com.team9.had.repository.DoctorRepository;
 import com.team9.had.repository.FieldHealthWorkerRepository;
 import com.team9.had.repository.ReceptionistRepository;
@@ -24,8 +21,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.Cipher;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 public class LoginServiceImpl implements LoginService{
@@ -60,12 +60,12 @@ public class LoginServiceImpl implements LoginService{
             System.out.println("e = " + e);
             throw new BadCredentialException(Constant.BAD_CREDS);
         }
-
+        Set<Citizen> citizenSet = new HashSet<>();
 
         if(loginId.startsWith(Constant.DOCTOR)){
             Doctor doctor = doctorRepository.findByLoginId(loginId);
             if(doctor==null) throw new ResourceNotFoundException(Constant.RESOURCE_NOT_FOUND_MSG);
-            doctor = Constant.getDecryptedDoctor(doctor);
+            Constant.getDecryptedDoctor(doctor, citizenSet);
 
             ArrayList<Object> obj = new ArrayList<>();
             DocModelForDoc docModelForDoc = Constant.getModelMapper().map(doctor, DocModelForDoc.class);
@@ -76,7 +76,7 @@ public class LoginServiceImpl implements LoginService{
         else if(loginId.startsWith(Constant.RECEPTIONIST)){
             Receptionist receptionist = receptionistRepository.findByLoginId(loginId);
             if(receptionist==null) throw new ResourceNotFoundException(Constant.RESOURCE_NOT_FOUND_MSG);
-            receptionist = Constant.getDecryptedReceptionist(receptionist);
+            Constant.getDecryptedReceptionist(receptionist, citizenSet);
 
             Integer hospitalId = receptionist.getHospital().getHospId();
             ArrayList<Doctor> doctors = doctorRepository.findAllByHospital_HospId(hospitalId);
@@ -85,7 +85,7 @@ public class LoginServiceImpl implements LoginService{
             obj.add(Constant.getModelMapper().map(receptionist, RecModelForRec.class));
             for(Doctor doctor : doctors){
                 try {
-                    doctor = Constant.getDecryptedDoctor(doctor);
+                    Constant.getDecryptedDoctor(doctor, citizenSet);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
@@ -97,7 +97,7 @@ public class LoginServiceImpl implements LoginService{
         else if(loginId.startsWith(Constant.SUPERVISOR)){
             Supervisor supervisor = supervisorRepository.findByLoginId(loginId);
             if(supervisor==null) throw new ResourceNotFoundException(Constant.RESOURCE_NOT_FOUND_MSG);
-            supervisor = Constant.getDecryptedSupervisor(supervisor);
+            Constant.getDecryptedSupervisor(supervisor, citizenSet);
 
             ArrayList<Object> obj = new ArrayList<>();
             SupModelForSup supModelForSup = Constant.getModelMapper().map(supervisor, SupModelForSup.class);
@@ -107,7 +107,7 @@ public class LoginServiceImpl implements LoginService{
         else if(loginId.startsWith(Constant.FIELD_HEALTH_WORKER)){
             FieldHealthWorker fieldHealthWorker = fieldHealthWorkerRepository.findByLoginId(loginId);
             if(fieldHealthWorker==null) throw new ResourceNotFoundException(Constant.RESOURCE_NOT_FOUND_MSG);
-            fieldHealthWorker = Constant.getDecryptedFieldHealthWorker(fieldHealthWorker);
+            Constant.getDecryptedFieldHealthWorker(fieldHealthWorker, citizenSet);
 
             ArrayList<Object> obj = new ArrayList<>();
             FhwModelForFhw fhwModelForFhw = Constant.getModelMapper().map(fieldHealthWorker, FhwModelForFhw.class);

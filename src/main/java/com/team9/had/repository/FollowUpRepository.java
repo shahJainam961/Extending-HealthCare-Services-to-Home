@@ -13,5 +13,5 @@ public interface FollowUpRepository extends JpaRepository<FollowUp, Integer> {
 
     ArrayList<FollowUp> findAllByHealthRecord_FieldHealthWorker_LoginIdAndStatus(String loginId, Integer status);
 
-    ArrayList<FollowUp> findAllByDateOfFollowUp(Date date);
+    ArrayList<FollowUp> findAllByDateOfFollowUpAndStatus(Date date, Integer status);
 }

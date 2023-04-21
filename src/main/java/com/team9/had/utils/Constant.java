@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Set;
 
 public interface Constant {
 
@@ -52,7 +53,7 @@ public interface Constant {
 
     //----------------------Twilio Credentials----------------------------//
     String ACCOUNT_SID = "AC4dc6465df71d2b5f60edc0facfa02cd1";
-    String AUTH_TOKEN = "a0eb2806d8abd89956a2f87bffd05685";
+    String AUTH_TOKEN = "42ae716a1df9911917e93b40415599c7";
     //--------------------------------------------------------------------//
 
 
@@ -162,110 +163,114 @@ public interface Constant {
 
     //--------------Encrypting and Decrypting PII information------------------------//
 
-    static Citizen encryptPII(Citizen decryptedCitizen) throws Exception {
-        Citizen encryptedCitizen = new Citizen();
-        if(decryptedCitizen.getUhId()!=null)
-            encryptedCitizen.setUhId(decryptedCitizen.getUhId());
-        if(decryptedCitizen.getCity()!=null)
-            encryptedCitizen.setCity(EncryptDecrypt.encrypt(decryptedCitizen.getCity(), Constant.SECRET_KEY));
-        if(decryptedCitizen.getDistrict()!=null)
-            encryptedCitizen.setDistrict(EncryptDecrypt.encrypt(decryptedCitizen.getDistrict(), Constant.SECRET_KEY));
-        if(decryptedCitizen.getDob()!=null)
-            encryptedCitizen.setDob(decryptedCitizen.getDob());
-        if(decryptedCitizen.getFname()!=null)
-            encryptedCitizen.setFname(EncryptDecrypt.encrypt(decryptedCitizen.getFname(), Constant.SECRET_KEY));
-        encryptedCitizen.setGender(decryptedCitizen.getGender());
-        if(decryptedCitizen.getGovId()!=null)
-            encryptedCitizen.setGovId(EncryptDecrypt.encrypt(decryptedCitizen.getGovId(), Constant.SECRET_KEY));
-        if(decryptedCitizen.getLname()!=null)
-            encryptedCitizen.setLname(EncryptDecrypt.encrypt(decryptedCitizen.getLname(), Constant.SECRET_KEY));
-        if(decryptedCitizen.getMobileNo()!=null)
-            encryptedCitizen.setMobileNo(EncryptDecrypt.encrypt(decryptedCitizen.getMobileNo(), Constant.SECRET_KEY));
-        if(decryptedCitizen.getPincode()!=null)
-            encryptedCitizen.setPincode(EncryptDecrypt.encrypt(decryptedCitizen.getPincode(), Constant.SECRET_KEY));
-        if(decryptedCitizen.getState()!=null)
-            encryptedCitizen.setState(EncryptDecrypt.encrypt(decryptedCitizen.getState(), Constant.SECRET_KEY));
-        if(decryptedCitizen.getStreet1()!=null)
-            encryptedCitizen.setStreet1(EncryptDecrypt.encrypt(decryptedCitizen.getStreet1(), Constant.SECRET_KEY));
-        if(decryptedCitizen.getFieldHealthWorker()!=null)
-            encryptedCitizen.setFieldHealthWorker(decryptedCitizen.getFieldHealthWorker());
-
-        return encryptedCitizen;
+    static void encryptPII(Citizen citizen) throws Exception {
+        if(citizen.getUhId()!=null)
+            citizen.setUhId(citizen.getUhId());
+        if(citizen.getCity()!=null)
+            citizen.setCity(EncryptDecrypt.encrypt(citizen.getCity(), Constant.SECRET_KEY));
+        if(citizen.getDistrict()!=null)
+            citizen.setDistrict(EncryptDecrypt.encrypt(citizen.getDistrict(), Constant.SECRET_KEY));
+        if(citizen.getDob()!=null)
+            citizen.setDob(citizen.getDob());
+        if(citizen.getFname()!=null)
+            citizen.setFname(EncryptDecrypt.encrypt(citizen.getFname(), Constant.SECRET_KEY));
+        citizen.setGender(citizen.getGender());
+        if(citizen.getGovId()!=null)
+            citizen.setGovId(EncryptDecrypt.encrypt(citizen.getGovId(), Constant.SECRET_KEY));
+        if(citizen.getLname()!=null)
+            citizen.setLname(EncryptDecrypt.encrypt(citizen.getLname(), Constant.SECRET_KEY));
+        if(citizen.getMobileNo()!=null)
+            citizen.setMobileNo(EncryptDecrypt.encrypt(citizen.getMobileNo(), Constant.SECRET_KEY));
+        if(citizen.getPincode()!=null)
+            citizen.setPincode(EncryptDecrypt.encrypt(citizen.getPincode(), Constant.SECRET_KEY));
+        if(citizen.getState()!=null)
+            citizen.setState(EncryptDecrypt.encrypt(citizen.getState(), Constant.SECRET_KEY));
+        if(citizen.getStreet1()!=null)
+            citizen.setStreet1(EncryptDecrypt.encrypt(citizen.getStreet1(), Constant.SECRET_KEY));
+        if(citizen.getFieldHealthWorker()!=null)
+            citizen.setFieldHealthWorker(citizen.getFieldHealthWorker());
     }
-    static Citizen decryptPII(Citizen encryptedCitizen) throws Exception {
-        Citizen decryptedCitizen = new Citizen();
-        if(encryptedCitizen.getUhId()!=null)
-            decryptedCitizen.setUhId(encryptedCitizen.getUhId());
-        if(encryptedCitizen.getCity()!=null)
-            decryptedCitizen.setCity(EncryptDecrypt.decrypt(encryptedCitizen.getCity(), Constant.SECRET_KEY));
-        if(encryptedCitizen.getDistrict()!=null)
-            decryptedCitizen.setDistrict(EncryptDecrypt.decrypt(encryptedCitizen.getDistrict(), Constant.SECRET_KEY));
-        if(encryptedCitizen.getDob()!=null)
-            decryptedCitizen.setDob(encryptedCitizen.getDob());
-        if(encryptedCitizen.getFname()!=null)
-            decryptedCitizen.setFname(EncryptDecrypt.decrypt(encryptedCitizen.getFname(), Constant.SECRET_KEY));
-        decryptedCitizen.setGender(encryptedCitizen.getGender());
-        if(encryptedCitizen.getGovId()!=null)
-            decryptedCitizen.setGovId(EncryptDecrypt.decrypt(encryptedCitizen.getGovId(), Constant.SECRET_KEY));
-        if(encryptedCitizen.getLname()!=null)
-            decryptedCitizen.setLname(EncryptDecrypt.decrypt(encryptedCitizen.getLname(), Constant.SECRET_KEY));
-        if(encryptedCitizen.getMobileNo()!=null)
-            decryptedCitizen.setMobileNo(EncryptDecrypt.decrypt(encryptedCitizen.getMobileNo(), Constant.SECRET_KEY));
-        if(encryptedCitizen.getPincode()!=null)
-            decryptedCitizen.setPincode(EncryptDecrypt.decrypt(encryptedCitizen.getPincode(), Constant.SECRET_KEY));
-        if(encryptedCitizen.getState()!=null)
-            decryptedCitizen.setState(EncryptDecrypt.decrypt(encryptedCitizen.getState(), Constant.SECRET_KEY));
-        if(encryptedCitizen.getStreet1()!=null)
-            decryptedCitizen.setStreet1(EncryptDecrypt.decrypt(encryptedCitizen.getStreet1(), Constant.SECRET_KEY));
-        if(encryptedCitizen.getFieldHealthWorker()!=null)
-            decryptedCitizen.setFieldHealthWorker(encryptedCitizen.getFieldHealthWorker());
-
-        return decryptedCitizen;
+    static void decryptPII(Citizen citizen) throws Exception {
+        if(citizen.getUhId()!=null)
+            citizen.setUhId(citizen.getUhId());
+        if(citizen.getCity()!=null)
+            citizen.setCity(EncryptDecrypt.decrypt(citizen.getCity(), Constant.SECRET_KEY));
+        if(citizen.getDistrict()!=null)
+            citizen.setDistrict(EncryptDecrypt.decrypt(citizen.getDistrict(), Constant.SECRET_KEY));
+        if(citizen.getDob()!=null)
+            citizen.setDob(citizen.getDob());
+        if(citizen.getFname()!=null)
+            citizen.setFname(EncryptDecrypt.decrypt(citizen.getFname(), Constant.SECRET_KEY));
+        citizen.setGender(citizen.getGender());
+        if(citizen.getGovId()!=null)
+            citizen.setGovId(EncryptDecrypt.decrypt(citizen.getGovId(), Constant.SECRET_KEY));
+        if(citizen.getLname()!=null)
+            citizen.setLname(EncryptDecrypt.decrypt(citizen.getLname(), Constant.SECRET_KEY));
+        if(citizen.getMobileNo()!=null)
+            citizen.setMobileNo(EncryptDecrypt.decrypt(citizen.getMobileNo(), Constant.SECRET_KEY));
+        if(citizen.getPincode()!=null)
+            citizen.setPincode(EncryptDecrypt.decrypt(citizen.getPincode(), Constant.SECRET_KEY));
+        if(citizen.getState()!=null)
+            citizen.setState(EncryptDecrypt.decrypt(citizen.getState(), Constant.SECRET_KEY));
+        if(citizen.getStreet1()!=null)
+            citizen.setStreet1(EncryptDecrypt.decrypt(citizen.getStreet1(), Constant.SECRET_KEY));
+        if(citizen.getFieldHealthWorker()!=null)
+            citizen.setFieldHealthWorker(citizen.getFieldHealthWorker());
     }
     //--------------------------------------------------------------------------------//
 
 
 
     //------------------------------------------------------------------------------------//
-    static HealthRecord getDecryptedHealthRecord(HealthRecord healthRecord1) throws Exception {
-        HealthRecord healthRecord = healthRecord1;
-        if(healthRecord.getCitizen()!=null) healthRecord.setCitizen(Constant.decryptPII(healthRecord.getCitizen()));
-        if(healthRecord.getDoctor()!=null) healthRecord.getDoctor().setCitizen(Constant.decryptPII(healthRecord.getDoctor().getCitizen()));
-        if(healthRecord.getSupervisor()!=null) healthRecord.getSupervisor().setCitizen(Constant.decryptPII(healthRecord.getSupervisor().getCitizen()));
-        if(healthRecord.getFieldHealthWorker()!=null) healthRecord.getFieldHealthWorker().setCitizen(Constant.decryptPII(healthRecord.getFieldHealthWorker().getCitizen()));
-        if(healthRecord.getReceptionist()!=null) healthRecord.getReceptionist().setCitizen(Constant.decryptPII(healthRecord.getReceptionist().getCitizen()));
-        return healthRecord;
+    static void getDecryptedHealthRecord(HealthRecord healthRecord, Set<Citizen> citizenSet) throws Exception {
+        if(!citizenSet.contains(healthRecord.getCitizen())){
+            decryptPII(healthRecord.getCitizen());
+            citizenSet.add(healthRecord.getCitizen());
+        }
+        if(healthRecord.getDoctor()!=null)
+            getDecryptedDoctor(healthRecord.getDoctor(), citizenSet);
+        if(healthRecord.getReceptionist()!=null)
+            getDecryptedReceptionist(healthRecord.getReceptionist(), citizenSet);
+        if(healthRecord.getSupervisor()!=null)
+            getDecryptedSupervisor(healthRecord.getSupervisor(), citizenSet);
+        if(healthRecord.getFieldHealthWorker()!=null)
+            getDecryptedFieldHealthWorker(healthRecord.getFieldHealthWorker(), citizenSet);
     }
 
-    static Doctor getDecryptedDoctor(Doctor doctor1) throws Exception {
-        Doctor doctor = doctor1;
-        doctor.setCitizen(decryptPII(doctor.getCitizen()));
-        return doctor;
+    static void getDecryptedCitizen(Citizen citizen, Set<Citizen> citizenSet) throws Exception {
+        if(citizen==null) return;
+        if(citizenSet.contains(citizen)) return;
+        decryptPII(citizen);
+        citizenSet.add(citizen);
     }
 
-    static FieldHealthWorker getDecryptedFieldHealthWorker(FieldHealthWorker fieldHealthWorker1) throws Exception {
-        FieldHealthWorker fieldHealthWorker = fieldHealthWorker1;
-        fieldHealthWorker.setCitizen(decryptPII(fieldHealthWorker.getCitizen()));
-        return fieldHealthWorker;
+    static void getDecryptedDoctor(Doctor doctor, Set<Citizen> citizenSet) throws Exception {
+        if(doctor==null) return;
+        if(citizenSet.contains(doctor.getCitizen())) return;
+        decryptPII(doctor.getCitizen());
+        citizenSet.add(doctor.getCitizen());
     }
 
-    static Supervisor getDecryptedSupervisor(Supervisor supervisor1) throws Exception {
-        Supervisor supervisor = supervisor1;
-        supervisor.setCitizen(decryptPII(supervisor.getCitizen()));
-        return supervisor;
+    static void getDecryptedFieldHealthWorker(FieldHealthWorker fieldHealthWorker, Set<Citizen> citizenSet) throws Exception {
+        if(fieldHealthWorker==null) return;
+        if(citizenSet.contains(fieldHealthWorker.getCitizen())) return;
+        decryptPII(fieldHealthWorker.getCitizen());
+        citizenSet.add(fieldHealthWorker.getCitizen());
     }
 
-    static Receptionist getDecryptedReceptionist(Receptionist receptionist1) throws Exception {
-        Receptionist receptionist = receptionist1;
-        receptionist.setCitizen(decryptPII(receptionist.getCitizen()));
-        return receptionist;
+    static void getDecryptedSupervisor(Supervisor supervisor, Set<Citizen> citizenSet) throws Exception {
+        if(supervisor==null) return;
+        if(citizenSet.contains(supervisor.getCitizen())) return;
+        decryptPII(supervisor.getCitizen());
+        citizenSet.add(supervisor.getCitizen());
     }
 
-    static FollowUp getDecryptedFollowUp(FollowUp followUp1) throws Exception {
-        FollowUp followUp = followUp1;
-        if(followUp.getHealthRecord()!=null)
-            followUp.setHealthRecord(getDecryptedHealthRecord(followUp.getHealthRecord()));
-        return followUp;
+    static void getDecryptedReceptionist(Receptionist receptionist, Set<Citizen> citizenSet) throws Exception {
+        if(receptionist==null) return;
+        if(citizenSet.contains(receptionist.getCitizen())) return;
+        decryptPII(receptionist.getCitizen());
+        citizenSet.add(receptionist.getCitizen());
     }
+
     //---------------------------------------------------------------------------------------//
 }

@@ -39,6 +39,7 @@ public class ServiceForSupervisorImpl implements ServiceForSupervisor{
 
         if(loginId==null) throw new ResourceNotFoundException(Constant.RESOURCE_NOT_FOUND_MSG);
 
+        Set<Citizen> citizenSet = new HashSet<>();
         ArrayList<Object> obj = new ArrayList<>();
         ArrayList<HealthRecord> unassignedHealthRecords = healthRecordRepository.findAllByFieldHealthWorkerNullAndSupervisor_LoginId(loginId);
         ArrayList<UnassignedCitizenModelForSup> unassignedCitizenModelForSups = new ArrayList<>();
@@ -48,16 +49,14 @@ public class ServiceForSupervisorImpl implements ServiceForSupervisor{
             Citizen citizen = unassignedHealthRecord.getCitizen();
             if(st.contains(citizen) == true) continue;
             st.add(citizen);
-            citizen = Constant.decryptPII(citizen);
+            Constant.getDecryptedCitizen(citizen, citizenSet);
             CizModelForSup cizModelForSup = Constant.getModelMapper().map(citizen, CizModelForSup.class);
             ArrayList<FieldHealthWorker> fieldHealthWorkers = fieldHealthWorkerRepository.findAllByAssignedPincode(unassignedHealthRecord.getPincode());
+            Set<Citizen> citizenSet1 = new HashSet<>();
             ArrayList<FhwModelForSup> fhwModelForSups = new ArrayList<>();
-            for(FieldHealthWorker fieldHealthWorker : fieldHealthWorkers){
-                Constant.getDecryptedFieldHealthWorker(fieldHealthWorker);
-            }
-
             for(FieldHealthWorker fieldHealthWorker : fieldHealthWorkers)
             {
+                Constant.getDecryptedFieldHealthWorker(fieldHealthWorker, citizenSet1);
                 FhwModelForSup fhwModelForSup = Constant.getModelMapper().map(fieldHealthWorker, FhwModelForSup.class);
                 ArrayList<Citizen> citizens = citizenRepository.findAllByFieldHealthWorker_LoginId(fieldHealthWorker.getLoginId());
                 Integer citizenAssigned = citizens.size();
@@ -104,11 +103,11 @@ public class ServiceForSupervisorImpl implements ServiceForSupervisor{
     public Serializable getFhws(String loginId, String role) throws Exception{
 
         if(loginId==null) throw new ResourceNotFoundException(Constant.RESOURCE_NOT_FOUND_MSG);
-
+        Set<Citizen> citizenSet = new HashSet<>();
         ArrayList<Object> obj = new ArrayList<>();
         Supervisor supervisor = supervisorRepository.findByLoginId(loginId);
         if(supervisor==null) throw new ResourceNotFoundException(Constant.RESOURCE_NOT_FOUND_MSG);
-        supervisor = Constant.getDecryptedSupervisor(supervisor);
+        Constant.getDecryptedSupervisor(supervisor, citizenSet);
 
         String districtName = cityRepository.findByPincode(supervisor.getAssignedPincode()).getCityName();
         Integer did = districtRepository.findByDistrictName(districtName).getDid();
@@ -116,9 +115,10 @@ public class ServiceForSupervisorImpl implements ServiceForSupervisor{
         ArrayList<GetFhwModelForSup> getFhwModelForSups = new ArrayList<>();
         for(City city : cities){
             String assignedPincode = city.getPincode();
+            Set<Citizen> citizenSet1 = new HashSet<>();
             ArrayList<FieldHealthWorker> fieldHealthWorkers = fieldHealthWorkerRepository.findAllByAssignedPincode(assignedPincode);
             for(FieldHealthWorker fieldHealthWorker : fieldHealthWorkers){
-                Constant.getDecryptedFieldHealthWorker(fieldHealthWorker);
+                Constant.getDecryptedFieldHealthWorker(fieldHealthWorker, citizenSet1);
             }
             for(FieldHealthWorker fieldHealthWorker : fieldHealthWorkers){
                 ArrayList<FhwModelForSup> otherFhwModelForSups = new ArrayList<>();
@@ -132,7 +132,7 @@ public class ServiceForSupervisorImpl implements ServiceForSupervisor{
                 ArrayList<CizModelForSup> cizModelForSups = new ArrayList<>();
                 ArrayList<Citizen> citizens = citizenRepository.findAllByFieldHealthWorker_LoginId(fieldHealthWorker.getLoginId());
                 for(Citizen citizen : citizens){
-                    citizen = Constant.decryptPII(citizen);
+                    Constant.getDecryptedCitizen(citizen, citizenSet);
                     cizModelForSups.add(Constant.getModelMapper().map(citizen, CizModelForSup.class));
                 }
                 FhwModelForSup fhwModelForSup = Constant.getModelMapper().map(fieldHealthWorker, FhwModelForSup.class);
@@ -174,11 +174,11 @@ public class ServiceForSupervisorImpl implements ServiceForSupervisor{
     public Serializable stats(String loginId) throws Exception{
 
         if(loginId==null) throw new BadRequestException(Constant.BAD_REQUEST_MSG);
-
+        Set<Citizen> citizenSet = new HashSet<>();
         ArrayList<Object> obj = new ArrayList<>();
         Supervisor supervisor = supervisorRepository.findByLoginId(loginId);
         if(supervisor==null) throw new ResourceNotFoundException(Constant.RESOURCE_NOT_FOUND_MSG);
-        supervisor = Constant.getDecryptedSupervisor(supervisor);
+        Constant.getDecryptedSupervisor(supervisor, citizenSet);
 
         Integer did = cityRepository.findByPincode(supervisor.getAssignedPincode()).getDistrict().getDid();
 
@@ -187,10 +187,9 @@ public class ServiceForSupervisorImpl implements ServiceForSupervisor{
         for(City city : cities){
             String assignedPincode = city.getPincode();
             ArrayList<FieldHealthWorker> fieldHealthWorkers = fieldHealthWorkerRepository.findAllByAssignedPincode(assignedPincode);
+
             for(FieldHealthWorker fieldHealthWorker : fieldHealthWorkers){
-                Constant.getDecryptedFieldHealthWorker(fieldHealthWorker);
-            }
-            for(FieldHealthWorker fieldHealthWorker : fieldHealthWorkers){
+                Constant.getDecryptedFieldHealthWorker(fieldHealthWorker, citizenSet);
                 FhwModelForStat fhwModelForStat = new FhwModelForStat();
                 FhwModelForSup fhwModelForSup = Constant.getModelMapper().map(fieldHealthWorker, FhwModelForSup.class);
                 fhwModelForSup.setCitizenAssigned(citizenRepository.findAllByFieldHealthWorker_LoginId(fieldHealthWorker.getLoginId()).size());

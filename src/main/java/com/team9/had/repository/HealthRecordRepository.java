@@ -1,7 +1,9 @@
 package com.team9.had.repository;
 
+import com.team9.had.model.FieldHealthWorker;
 import com.team9.had.model.HealthRecord;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
