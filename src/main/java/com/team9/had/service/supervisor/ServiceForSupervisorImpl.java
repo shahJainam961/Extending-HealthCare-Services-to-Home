@@ -44,6 +44,7 @@ public class ServiceForSupervisorImpl implements ServiceForSupervisor{
         ArrayList<HealthRecord> unassignedHealthRecords = healthRecordRepository.findAllByFieldHealthWorkerNullAndSupervisor_LoginId(loginId);
         ArrayList<UnassignedCitizenModelForSup> unassignedCitizenModelForSups = new ArrayList<>();
         Set<Citizen> st = new HashSet<>();
+//        Set<Citizen> citizenSet1 = new HashSet<>();
         for (HealthRecord unassignedHealthRecord : unassignedHealthRecords)
         {
             Citizen citizen = unassignedHealthRecord.getCitizen();
@@ -52,11 +53,11 @@ public class ServiceForSupervisorImpl implements ServiceForSupervisor{
             Constant.getDecryptedCitizen(citizen, citizenSet);
             CizModelForSup cizModelForSup = Constant.getModelMapper().map(citizen, CizModelForSup.class);
             ArrayList<FieldHealthWorker> fieldHealthWorkers = fieldHealthWorkerRepository.findAllByAssignedPincode(unassignedHealthRecord.getPincode());
-            Set<Citizen> citizenSet1 = new HashSet<>();
+
             ArrayList<FhwModelForSup> fhwModelForSups = new ArrayList<>();
             for(FieldHealthWorker fieldHealthWorker : fieldHealthWorkers)
             {
-                Constant.getDecryptedFieldHealthWorker(fieldHealthWorker, citizenSet1);
+                Constant.getDecryptedFieldHealthWorker(fieldHealthWorker, citizenSet);
                 FhwModelForSup fhwModelForSup = Constant.getModelMapper().map(fieldHealthWorker, FhwModelForSup.class);
                 ArrayList<Citizen> citizens = citizenRepository.findAllByFieldHealthWorker_LoginId(fieldHealthWorker.getLoginId());
                 Integer citizenAssigned = citizens.size();
@@ -115,10 +116,9 @@ public class ServiceForSupervisorImpl implements ServiceForSupervisor{
         ArrayList<GetFhwModelForSup> getFhwModelForSups = new ArrayList<>();
         for(City city : cities){
             String assignedPincode = city.getPincode();
-            Set<Citizen> citizenSet1 = new HashSet<>();
             ArrayList<FieldHealthWorker> fieldHealthWorkers = fieldHealthWorkerRepository.findAllByAssignedPincode(assignedPincode);
             for(FieldHealthWorker fieldHealthWorker : fieldHealthWorkers){
-                Constant.getDecryptedFieldHealthWorker(fieldHealthWorker, citizenSet1);
+                Constant.getDecryptedFieldHealthWorker(fieldHealthWorker, citizenSet);
             }
             for(FieldHealthWorker fieldHealthWorker : fieldHealthWorkers){
                 ArrayList<FhwModelForSup> otherFhwModelForSups = new ArrayList<>();
