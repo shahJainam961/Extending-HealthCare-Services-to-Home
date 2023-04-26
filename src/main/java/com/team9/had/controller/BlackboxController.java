@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.Serializable;
@@ -189,7 +190,7 @@ public class BlackboxController {
         return new ResponseEntity<>("Something went wrong!!", HttpStatusCode.valueOf(Constant.HTTP_BAD_REQUEST));
     }
 
-//    @Scheduled(cron = "0 * * * * *")
+    @Scheduled(cron = "0 30 22 * * *") //--> seconds,min, hour, dayofMonth, month, dayOfWeek -> 0 0 23 * * *
     @GetMapping("/f")
     public void f(){
         System.out.println("===========================================================================================");
