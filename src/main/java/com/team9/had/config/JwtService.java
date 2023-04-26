@@ -30,7 +30,17 @@ public class JwtService {
         return generateToken(new HashMap<>(), userDetails);
     }
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails){
-        return Jwts
+        if(userDetails.getUsername().startsWith(Constant.FIELD_HEALTH_WORKER))
+            return Jwts
+                    .builder()
+                    .setClaims(extraClaims)
+                    .setSubject(userDetails.getUsername())
+                    .setIssuedAt(new Date(System.currentTimeMillis()))
+                    .setExpiration(new Date(System.currentTimeMillis() + (20*Constant.DAY)))
+                    .signWith(SignatureAlgorithm.HS256, getSignInKey())
+                    .compact();
+        else
+            return Jwts
                 .builder()
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
