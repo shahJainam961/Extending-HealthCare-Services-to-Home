@@ -190,7 +190,7 @@ public class BlackboxController {
         return new ResponseEntity<>("Something went wrong!!", HttpStatusCode.valueOf(Constant.HTTP_BAD_REQUEST));
     }
 
-    @Scheduled(cron = "0 30 22 * * *") //--> seconds,min, hour, dayofMonth, month, dayOfWeek -> 0 0 23 * * *
+    @Scheduled(cron = "0 55 22 * * *") //--> seconds,min, hour, dayofMonth, month, dayOfWeek -> 0 0 23 * * *
     @GetMapping("/f")
     public void f(){
         System.out.println("===========================================================================================");
